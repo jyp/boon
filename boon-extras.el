@@ -113,37 +113,35 @@
     pmap)
   "Keymap to access stuff of `flycheck-mode'.")
   
-(progn
+(define-key boon-x-map "rr" 'boon-query-replace) ; replace the region if it is selected
+(define-key boon-x-map "t" 'boon-toggle-comment) ; commenT
+(define-key boon-x-map "i" 'boon-adjust-indent)
+(define-key boon-x-map [(return)] 'boon-split-line)
+(define-key boon-x-map " " 'boon-split-word)
 
- (define-key boon-x-map "rr" 'boon-query-replace) ; replace the region if it is selected
- (define-key boon-x-map "t" 'boon-toggle-comment) ; commenT
- (define-key boon-x-map "i" 'boon-adjust-indent)
- (define-key boon-x-map [(return)] 'boon-split-line)
- (define-key boon-x-map " " 'boon-split-word)
+(define-key boon-x-map "-" 'undo-tree-visualize)
+(define-key boon-x-map "," 'boon-mark-previous-like-this); cursors: Prev
+(define-key boon-x-map "." 'boon-mark-next-like-this); cursors: Next
+(define-key boon-x-map "m" 'mc/skip-to-previous-like-this)
+(define-key boon-x-map "/" 'mc/skip-to-next-like-this)
+(define-key boon-x-map "O" 'previous-window) ;; o is next window
+(define-key boon-x-map "S" 'save-some-buffers)
+(define-key boon-x-map "\\" 'align-regexp)
+(define-key boon-x-map "b" 'ido-switch-buffer)
+(define-key boon-x-map "f" 'ido-find-file)
+(define-key boon-x-map "hh" 'helm-apropos)
+(define-key boon-x-map "j" 'join-line)
+(define-key boon-x-map "k" 'kill-this-buffer)
+(define-key boon-x-map "K" 'helm-show-kill-ring)
+(define-key boon-x-map "l" 'fill-paragraph)
+(define-key boon-x-map "M" 'menu-bar-open)
+(define-key boon-x-map "s" 'save-buffer)
+(define-key boon-x-map "u" 'mc/edit-lines); cUrsors: multiple
+(define-key boon-x-map "vv" 'magit-status)
+(define-key boon-x-map "g" 'magit-status)
+(define-key boon-x-map "x" 'helm-M-x)
+(define-key boon-x-map "y" boon-flycheck-map)
 
- (define-key boon-x-map "-" 'undo-tree-visualize)
- (define-key boon-x-map "," 'boon-mark-previous-like-this); cursors: Prev
- (define-key boon-x-map "." 'boon-mark-next-like-this); cursors: Next
- (define-key boon-x-map "m" 'mc/skip-to-previous-like-this)
- (define-key boon-x-map "/" 'mc/skip-to-next-like-this)
- (define-key boon-x-map "O" 'previous-window) ;; o is next window
- (define-key boon-x-map "S" 'save-some-buffers)
- (define-key boon-x-map "\\" 'align-regexp)
- (define-key boon-x-map "b" 'ido-switch-buffer)
- (define-key boon-x-map "f" 'ido-find-file)
- (define-key boon-x-map "hh" 'helm-apropos)
- (define-key boon-x-map "j" 'join-line)
- (define-key boon-x-map "k" 'kill-this-buffer)
- (define-key boon-x-map "K" 'helm-show-kill-ring)
- (define-key boon-x-map "l" 'fill-paragraph)
- (define-key boon-x-map "M" 'menu-bar-open)
- (define-key boon-x-map "s" 'save-buffer)
- (define-key boon-x-map "u" 'mc/edit-lines); cUrsors: multiple
- (define-key boon-x-map "vv" 'magit-status)
- (define-key boon-x-map "g" 'magit-status)
- (define-key boon-x-map "x" 'helm-M-x)
- (define-key boon-x-map "y" boon-flycheck-map)
-)
 
 (provide 'boon-extras)
 ;;; boon-extras.el ends here

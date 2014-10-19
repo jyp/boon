@@ -113,9 +113,6 @@
 (define-key boon-moves-map "wb"  'previous-buffer)
 (define-key boon-moves-map "fb"  'next-buffer)
 
-(define-key boon-command-map "fa" 'agda2-goto-definition-keyboard)
-
-
 ;; p
 ;; Pinpoint Place
 (define-key boon-command-map "p" 'helm-occur)
@@ -124,16 +121,8 @@
 (define-key boon-command-map "P" 'kmacro-end-or-call-macro) ; Play
 (define-key boon-command-map "X" 'boon-highlight-regexp)
 
-;; g Go to
-(define-key boon-command-map "gg" 'helm-resume)
-(define-key boon-command-map "gf" 'helm-for-files) ;; see http://amitp.blogspot.se/2012/10/emacs-helm-for-finding-files.html
-(define-key boon-command-map "gl" 'goto-line)
-
-(define-key boon-command-map "gi" 'helm-git-grep)
-(define-key boon-command-map "gt" 'helm-etags-select)
-(define-key boon-command-map "gy" 'helm-flycheck)
-(define-key boon-command-map "gb" 'helm-buffers-list)
-(define-key boon-command-map "gm" 'helm-multi-occur)
+;; g Gather/Go To
+(define-key boon-command-map "g" 'boon-goto-map)
 
 ;; home row
 ;; a
