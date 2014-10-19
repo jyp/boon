@@ -92,7 +92,8 @@
   (cons (+ (car reg) 1) (- (cdr reg) 1)))
 
 (defun boon-select-borders (how-much regs)
-  (interactive (cons prefix-arg (boon-spec-region "select contents")))
+  "Return the bordering (of size (as HOW-MUCH)) of a region (as REGS)."
+  (interactive (cons (prefix-numeric-value prefix-arg) (boon-spec-region "select contents")))
   (cons 'region (apply 'append (mapcar (lambda (reg) (boon-borders reg how-much)) (mapcar 'boon-normalize-reg regs)))))
 
 (defun boon-select-content (regs)
