@@ -34,8 +34,9 @@
   "non-nil if the helm command mode is active. Makes sense only
   in a helm minibuffer.")
 
+(defvar-local boon-modeline-face-cookie nil)
 (defun boon-set-state (state)
-  "Set the boon state for this buffer."
+  "Set the boon state (as STATE) for this buffer."
   (setq boon-command-state nil)
   (setq boon-insert-state nil)
   (setq boon-off-state nil)
@@ -58,7 +59,7 @@
                           (line-number-at-pos (mark)))))
            (push-mark)) ; remember where the last edition was by pushing a mark
          (setq cursor-type 'box)
-         (set (make-local-variable 'boon-modeline-face-cookie)
+         (setq boon-modeline-face-cookie
               (face-remap-add-relative
                'mode-line '((:foreground "darkred") mode-line))))
         (boon-off-state)
@@ -93,7 +94,6 @@
 
 ;;; Initialisation and activation
 (defun special-mode-p ()
-  (interactive)
   (memq major-mode '(Buffer-menu-mode
                      Custom-mode
                      completion-list-mode

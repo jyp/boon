@@ -129,6 +129,7 @@
 (define-key boon-x-map "\\" 'align-regexp)
 (define-key boon-x-map "b" 'ido-switch-buffer)
 (define-key boon-x-map "f" 'ido-find-file)
+(define-key boon-x-map "h" help-map)
 (define-key boon-x-map "hh" 'helm-apropos)
 (define-key boon-x-map "j" 'join-line)
 (define-key boon-x-map "k" 'kill-this-buffer)
