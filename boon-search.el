@@ -1,5 +1,12 @@
+;;; boon --- An Ergonomic Command Mode  -*- lexical-binding: t -*-
+
+;;; Commentary:
+
+;;; Code:
+
+(require 'boon-main)
+
 (defun boon-search-regexp (forward)
-  (interactive)
   (when (not boon-regexp)
     (error "Search string not set"))
   (when (not isearch-success)
@@ -79,3 +86,6 @@
   "after isearch, highlight the search term "
   (setq boon-regexp isearch-string)
   (boon-highlight-regexp))
+
+(provide 'boon-search)
+;;; boon-search.el ends here

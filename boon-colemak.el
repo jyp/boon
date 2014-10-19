@@ -1,19 +1,27 @@
-  (define-key boon-select-map "d"  'boon-select-document)
-  (define-key boon-select-map "p"  'boon-select-paragraph)
-  (define-key boon-select-map "w"  'boon-select-word)
-  (define-key boon-select-map "f"  'boon-select-word) ;; 'rf' is easier to type than 'rw'
-  (define-key boon-select-map "x"  'boon-select-outside-pairs) ;; eXpression
-  (define-key boon-select-map "c"  'boon-select-inside-pairs) ;; Contents
-  (define-key boon-select-map "s"  'boon-select-wim) ;; symbol
-  (define-key boon-select-map "q"  'boon-select-outside-quotes)
-  (define-key boon-select-map "'"  'boon-select-blanks) ;; blanKs
-  (define-key boon-select-map " "  'boon-select-line)
-  (define-key boon-select-map "r"  'boon-select-justline) ;; Ribbon
-  (define-key boon-select-map "a"  'boon-select-borders) ;; Around
-  (define-key boon-select-map "z"  'boon-select-content) ;; inZide
+;;; boon --- An Ergonomic Command Mode  -*- lexical-binding: t -*-
 
-  (define-key boon-moves-map "k" 'boon-switch-mark) ; bacK to marK 
-  (define-key boon-moves-map "K" 'boon-switch-mark-quick) ; quicK bacK to marK
+;;; Commentary:
+;;; Code:
+(require 'boon-core)
+(require 'boon-main)
+(require 'boon-search)
+
+(define-key boon-select-map "d"  'boon-select-document)
+(define-key boon-select-map "p"  'boon-select-paragraph)
+(define-key boon-select-map "w"  'boon-select-word)
+(define-key boon-select-map "f"  'boon-select-word) ;; 'rf' is easier to type than 'rw'
+(define-key boon-select-map "x"  'boon-select-outside-pairs) ;; eXpression
+(define-key boon-select-map "c"  'boon-select-inside-pairs) ;; Contents
+(define-key boon-select-map "s"  'boon-select-wim) ;; symbol
+(define-key boon-select-map "q"  'boon-select-outside-quotes)
+(define-key boon-select-map "'"  'boon-select-blanks) ;; blanKs
+(define-key boon-select-map " "  'boon-select-line)
+(define-key boon-select-map "r"  'boon-select-justline) ;; Ribbon
+(define-key boon-select-map "a"  'boon-select-borders) ;; Around
+(define-key boon-select-map "z"  'boon-select-content) ;; inZide
+
+(define-key boon-moves-map "k" 'boon-switch-mark) ; bacK to marK
+(define-key boon-moves-map "K" 'boon-switch-mark-quick) ; quicK bacK to marK
 
 (define-key boon-moves-map "j"  'boon-find-char-backward)
 (define-key boon-moves-map "J"  'boon-find-char-forward)
@@ -88,7 +96,6 @@
 (define-key isearch-mode-map [(control f)] 'isearch-repeat-forward)
 
 
-(progn
   (suppress-keymap boon-command-map 't)  ; so that typing is disabled altogether in command mode
 
   ;; Special keys
@@ -207,9 +214,8 @@
   (define-key boon-command-map [(escape)] 'boon-quit)
 
   (define-key boon-insert-map [remap newline] 'boon-newline-dwim)
-  (progn
-    (setq boon-indent-map (make-sparse-keymap))
-    (define-key boon-indent-map "e" 'boon-unindent-rigidly)
-    (define-key boon-indent-map "i" 'indent-rigidly))
+  
 
-)
+
+(provide 'boon-colemak)
+;;; boon-colemak.el ends here

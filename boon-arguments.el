@@ -1,3 +1,39 @@
+;;; boon --- An Ergonomic Command Mode  -*- lexical-binding: t -*-
+
+;;; Commentary:
+
+;;; Code:
+
+(require 'boon-core)
+
+(defvar boon-enclosures
+      '(
+        (?$ . ("$" "$")) 
+        (?| . ("|" "|")) 
+        (?@ . ("@" "@")) 
+        (?/ . ("/" "/")) 
+        (?` . ("`" "`"))
+        (?A . ("⟨" "⟩"))
+        (?a . ("<" ">"))
+        (?b . ("[" "]"))
+        (?c . ("{-" "-}"))
+        (?d . ("\"" "\""))
+        (?f . ("«" "»")) ;; french quotes
+        (?h . ("#" "#")) ;; hash
+        (?m . ("`" "'"))
+        (?p . ("(" ")"))
+        (?q . ("'" "'"))
+        (?r . ("{" "}"))
+        (?o . ("⟦" "⟧")) ;; oxford brackets
+        (?t . ("~" "~")) ;; tilda
+        ))
+
+(defun boon-spec-enclosure ()
+  "Specify an enclosure style."
+  (let ((c (read-char "Specify the enclosure")))
+    (message "Char: %c " c)
+    (list (cdr (assoc c boon-enclosures)))))
+
 (defun boon-select-thing-at-point (thing)
   (list 'region (bounds-of-thing-at-point thing)))
 
@@ -13,6 +49,14 @@
                     (bounds-of-thing-at-point 'sexp))))
     ;; TODO: use expand-region if bounds is nil.
     (list 'region bounds)))
+(defun boon-jump-over-blanks ()
+  (interactive)
+  (skip-chars-forward "\n\t "))
+
+(defun boon-jump-over-blanks-backward ()
+  (interactive)
+  (skip-chars-backward "\n\t "))
+
 
 (defun boon-select-justline () (interactive) (list 'region (line-beginning-position) (line-end-position)))
 (defun boon-select-line () (interactive) (boon-select-thing-at-point 'line))
@@ -57,7 +101,8 @@
 
 ;; TODO: this should not return a list
 (defun boon-spec-region (msg)
-  "specify a region concisely using the keyboard"
+  "Specify a region concisely using the keyboard.
+The prompt (as MSG) is displayed."
   (list (if (use-region-p) (list (cons (region-beginning) (region-end)))
           (let (prefix-arg
                 ;; this code fiddles with the prefix arg; but if we do
@@ -85,3 +130,6 @@
                       (cdr regs)
                     (list (cons orig final))))
               (error "Unknown region specifier"))))))
+
+(provide 'boon-arguments)
+;;; boon-arguments.el ends here

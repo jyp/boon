@@ -1,8 +1,11 @@
 ;;; boon --- An Ergonomic Command Mode  -*- lexical-binding: t -*-
 
 ;;; Commentary:
+;;; Code:
 
 (require 'boon-core)
+(require 'boon-arguments)
+
 (require 'er-basic-expansions)
 
 (defmacro with-ordered-region (body)
@@ -61,42 +64,6 @@
           (insert (car enclosure))))
        (t (message "unknown enclosure"))))))
 
-(defvar boon-enclosures
-      '(
-        (?$ . ("$" "$")) 
-        (?| . ("|" "|")) 
-        (?@ . ("@" "@")) 
-        (?/ . ("/" "/")) 
-        (?` . ("`" "`"))
-        (?A . ("⟨" "⟩"))
-        (?a . ("<" ">"))
-        (?b . ("[" "]"))
-        (?c . ("{-" "-}"))
-        (?d . ("\"" "\""))
-        (?f . ("«" "»")) ;; french quotes
-        (?h . ("#" "#")) ;; hash
-        (?m . ("`" "'"))
-        (?p . ("(" ")"))
-        (?q . ("'" "'"))
-        (?r . ("{" "}"))
-        (?o . ("⟦" "⟧")) ;; oxford brackets
-        (?t . ("~" "~")) ;; tilda
-        ))
-
-(defun boon-spec-enclosure ()
-  "specify an enclosure style"
-  (let ((c (read-char "Specify the enclosure")))
-    (message "Char: %c " c)
-    (list (cdr (assoc c boon-enclosures)))))
-
-(defun boon-adjust-indent ()
- "switch temporarily to adjust indentation mode"
- (interactive)
- (unless (use-region-p)
-   (set-mark (line-beginning-position))
-   (end-of-line)
-   (deactivate-mark))
- (set-temporary-overlay-map boon-indent-map t))
 
 
 (defun boon-find-char-backward (char)
@@ -106,13 +73,13 @@
   (forward-char 1))
 
 (defun boon-find-char-forward (char)
-  "find the given character, forwards"
+  "Find the given character (as CHAR), forwards."
   (interactive "cType the character to find")
   (search-forward (make-string 1 char))
   (backward-char 1))
 
 (defun boon-edge-of-expression (forward)
-  "Jump to the forward or backward limit of the current expression"
+  "Jump to the forward or backward (as FORWARD) limit of the current expression."
   (interactive "P")
   (let ((orig-point (point))) 
     (goto-char
@@ -133,14 +100,6 @@
 (defun boon-beginning-of-expression ()
   (interactive)
   (boon-edge-of-expression nil))
-
-(defun boon-jump-over-blanks ()
-  (interactive)
-  (skip-chars-forward "\n\t "))
-
-(defun boon-jump-over-blanks-backward ()
-  (interactive)
-  (skip-chars-backward "\n\t "))
 
 (defun boon-extract-region ()
   (when (use-region-p)
@@ -252,10 +211,7 @@ indentation"
     ;; (when (and no-spaces-skipped (not in-middle)) 
     ;;   (skip-chars-forward "\t\n "))
     )
-(defun boon-unindent-rigidly (beg end count)
-  "opposite of `indent-rigidly'"
-  (interactive "r\np")
-  (indent-rigidly beg end (- count)))
+
 
 (defun boon-toggle-character-case ()
   "Toggle the case of the character at point"
@@ -601,6 +557,6 @@ over it."
  "apply the argument to the current region"
    (funcall f (region-beginning) (region-end)))
 
-          
+(provide 'boon-main)          
 ;;; boon-main ends here
 

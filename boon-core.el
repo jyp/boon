@@ -7,6 +7,8 @@
 (require 'face-remap)
 ;; Maps
 
+(defvar boon-x-map (make-sparse-keymap))
+(set-keymap-parent boon-x-map ctl-x-map)
 (defvar boon-helm-command-map (make-sparse-keymap))
 (defvar boon-moves-map (make-sparse-keymap) "Keymap for moves.")
 (defvar boon-command-map (make-sparse-keymap) "Keymap used in Boon command mode.")
