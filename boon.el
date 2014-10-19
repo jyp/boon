@@ -23,11 +23,8 @@
 
 ;;; Code:
 
-(require 'boon-keys)
 (require 'boon-colemak)
 (require 'boon-extras)
-
-(provide 'boon)
 
 (provide 'boon)
 ;;; boon.el ends here

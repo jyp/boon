@@ -10,9 +10,11 @@
 (defvar boon-x-map (make-sparse-keymap))
 (set-keymap-parent boon-x-map ctl-x-map)
 (defvar boon-helm-command-map (make-sparse-keymap))
+(suppress-keymap boon-helm-command-map 't)
 (defvar boon-moves-map (make-sparse-keymap) "Keymap for moves.")
 (defvar boon-command-map (make-sparse-keymap) "Keymap used in Boon command mode.")
 (set-keymap-parent boon-command-map boon-moves-map)
+(suppress-keymap boon-command-map 't)  ; so that typing is disabled altogether in command mode
 (defvar boon-select-map (make-sparse-keymap) "Keymap for non-moves text regions.")
 (set-keymap-parent boon-select-map boon-moves-map)
 (defvar boon-off-map (make-sparse-keymap))
