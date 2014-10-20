@@ -147,10 +147,11 @@
 ;; Bottom row
 ;; z
 ;; reserved (repeat?)
+(define-key boon-command-map "z" 'undefined)
 ;; x
 (define-key boon-command-map "x" boon-x-map)
 ;; c
-(define-key boon-command-map "c" 'undefined)
+(define-key boon-command-map "c" 'nil)
 ;; v
 (define-key boon-command-map (kbd "C-v") 'boon-open-line-and-insert)
 (define-key boon-command-map "V" 'boon-open-next-line-and-insert)
