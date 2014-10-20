@@ -5,6 +5,7 @@
 ;;; Code:
 
 (require 'face-remap)
+(require 'cl-macs)
 ;; Maps
 
 (defvar boon-x-map (make-sparse-keymap))
@@ -67,43 +68,50 @@
         (t (message "Unknown state!")))
   (force-mode-line-update))
 
-(defun boon-set-insert-state ()
-  (interactive) (boon-set-state 'boon-insert-state))
-
 (defun boon-set-insert-like-state ()
+  "Switch to off or insert state, depending on mode."
   (interactive)
-  (if (special-mode-p) (boon-set-off-state) (boon-set-insert-state)))
+  (if (boon-special-mode-p) (boon-set-off-state) (boon-set-state 'boon-insert-state)))
 
 (defun boon-set-command-state ()
   "Switch to command state and push a mark to remember the last edition point."
   (interactive) (boon-set-state 'boon-command-state))
 
 (defun boon-set-off-state ()
+  "Switch to off state."
   (interactive) (boon-set-state 'boon-off-state))
 
 (defun boon-helm-set-insert-state ()
+  "Switch to insert state in an helm minibuffer."
   (interactive)
   (setq boon-helm-command-state nil)
   (setq cursor-type 'bar))
 
 (defun boon-helm-set-command-state ()
+  "Switch to command state in an helm minibuffer."
   (interactive)
   (setq boon-helm-command-state t)
   (setq cursor-type 'box))
 
+(defvar boon-special-mode-list
+  '(Buffer-menu-mode
+    Custom-mode
+    completion-list-mode
+    debugger-mode
+    ediff-mode
+    magit-key-mode
+    magit-branch-manager-mode
+    git-rebase-mode
+    magit-log-mode
+    magit-status-mode)
+    "List of modes which start in boon-off-state."
+)
+
+(defun boon-special-mode-p ()
+  "Is the major mode in boon-special-mode-list?"
+  (memq major-mode boon-special-mode-list))
 
 ;;; Initialisation and activation
-(defun special-mode-p ()
-  (memq major-mode '(Buffer-menu-mode
-                     Custom-mode
-                     completion-list-mode
-                     debugger-mode
-                     ediff-mode
-                     magit-key-mode
-                     magit-branch-manager-mode
-                     git-rebase-mode
-                     magit-log-mode
-                     magit-status-mode)))
 
 (define-minor-mode boon-local-mode
   "Minor mode for setting up command mode in a single buffer."
@@ -119,14 +127,13 @@
     ;; the major-mode in a buffer changes. This preliminary
     ;; initialization is only for the case when `boon-local-mode' is
     ;; called directly for the first time in a buffer.
-    (set (make-local-variable 'boon-regexp) nil)
     (cond
-     ((special-mode-p)
+     ((boon-special-mode-p)
       (boon-set-off-state))
      ((memq major-mode '(magit-commit-mode
                          git-commit-mode
                          ))
-      (boon-set-insert-state))
+      (boon-set-insert-like-state))
      (t (boon-set-command-state))))
    (t
     (boon-set-off-state)
@@ -135,40 +142,41 @@
 
 (add-hook 'minibuffer-setup-hook 'boon-minibuf-hook)
 
-(defun eq-if-bound (sym val)
-  (and (boundp sym) (eq (eval sym) val)))
-
 (defun boon-minibuf-hook ()
   "Detect if the minibuffer is a helm minibuffer, and activate boon helm command mode if so."
-  (cond
-   ((eq-if-bound 'helm-map (current-local-map))
-    (boon-helm-set-command-state))
-   ((eq-if-bound 'helm-git-grep-map (current-local-map))
-    (boon-helm-set-command-state))
-  (t (setq cursor-type 'bar))))
+  (cl-flet ((eq-if-bound (sym val) (and (boundp sym) (eq (eval sym) val))))
+    (cond
+     ((eq-if-bound 'helm-map (current-local-map))
+      (boon-helm-set-command-state))
+     ((eq-if-bound 'helm-git-grep-map (current-local-map))
+      (boon-helm-set-command-state))
+     (t (setq cursor-type 'bar)))))
 
+
+;; The function `boon-initialize' should only be used to initialize
+;; `boon-local-mode' from the globalized minor-mode `boon-mode'. It is
+;; called whenever boon is enabled in a buffer for the first time or
+;; when boon is active and the major-mode of the buffer changes.
 (defun boon-initialize ()
   "Enable Boon in the current buffer, if appropriate.  To enable Boon globally, do (boon-mode 1)."
   (unless (minibufferp)
     (boon-local-mode 1)))
 
+;;;###autoload (autoload 'boon-mode "boon" "Toggle boon in all buffers" t)
 (define-globalized-minor-mode boon-mode
   boon-local-mode boon-initialize)
 
-;; The function `boon-initialize' should only be used to initialize
-;; `boon-local-mode' from the globalized minor-mode `boon-mode'. It is
-;; called whenever boon is enabled in a buffer for the first time or
-;; when boon is active and the major-mode of the buffer changes. 
-
-(defun turn-on-boon-mode (&optional arg)
+;;;###autoload
+(defun turn-on-boon-mode ()
   "Turn on Boon in the current buffer."
   (interactive)
-  (boon-local-mode (or arg 1)))
+  (boon-local-mode 1))
 
-(defun turn-off-boon-mode (&optional arg)
+;;;###autoload
+(defun turn-off-boon-mode ()
   "Turn off Boon in the current buffer."
   (interactive)
-  (boon-local-mode (or arg -1)))
+  (boon-local-mode -1))
 
 (defun boon-modeline-string ()
   "Return a string describing the current state."
