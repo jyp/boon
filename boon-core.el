@@ -139,6 +139,7 @@
   (and (boundp sym) (eq (eval sym) val)))
 
 (defun boon-minibuf-hook ()
+  "Detect if the minibuffer is a helm minibuffer, and activate boon helm command mode if so."
   (cond
    ((eq-if-bound 'helm-map (current-local-map))
     (boon-helm-set-command-state))
@@ -147,11 +148,8 @@
   (t (setq cursor-type 'bar))))
 
 (defun boon-initialize ()
-  "Enable Boon in the current buffer, if appropriate. To enable Boon globally, do (boon-mode 1)."
-  (unless (or (minibufferp) 
-              ;; (eq major-mode 'inferior-haskell-mode)
-              ;; (eq major-mode 'compilation-mode)
-              )
+  "Enable Boon in the current buffer, if appropriate.  To enable Boon globally, do (boon-mode 1)."
+  (unless (minibufferp)
     (boon-local-mode 1)))
 
 (define-globalized-minor-mode boon-mode
