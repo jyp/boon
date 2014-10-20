@@ -122,7 +122,7 @@
 (define-key boon-command-map "X" 'boon-highlight-regexp)
 
 ;; g Gather/Go To
-(define-key boon-command-map "g" 'boon-goto-map)
+(define-key boon-command-map "g" boon-goto-map)
 
 ;; home row
 ;; a
