@@ -75,7 +75,7 @@
   (if (special-mode-p) (boon-set-off-state) (boon-set-insert-state)))
 
 (defun boon-set-command-state ()
-  "(and push a mark to remember the last edition point)"
+  "Switch to command state and push a mark to remember the last edition point."
   (interactive) (boon-set-state 'boon-command-state))
 
 (defun boon-set-off-state ()
