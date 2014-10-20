@@ -93,7 +93,7 @@
 
 (defun boon-select-borders (how-much regs)
   "Return the bordering (of size (as HOW-MUCH)) of a region (as REGS)."
-  (interactive (cons (prefix-numeric-value prefix-arg) (boon-spec-region "select contents")))
+  (interactive (cons (prefix-numeric-value current-prefix-arg) (boon-spec-region "select contents")))
   (cons 'region (apply 'append (mapcar (lambda (reg) (boon-borders reg how-much)) (mapcar 'boon-normalize-reg regs)))))
 
 (defun boon-select-content (regs)
@@ -105,20 +105,20 @@
   "Specify a region concisely using the keyboard.
 The prompt (as MSG) is displayed."
   (list (if (use-region-p) (list (cons (region-beginning) (region-end)))
-          (let (prefix-arg
+          (let (current-prefix-arg
                 ;; this code fiddles with the prefix arg; but if we do
                 ;; not hide our fiddling, the next command will use
                 ;; the prefix arg that we have set.
                 (orig (point))
                 (km boon-select-map))
-            (setq prefix-arg 0)
+            (setq current-prefix-arg 0)
             (while (and km (keymapp km))
-              (let ((last-char (read-char (format "%s %s" msg prefix-arg))))
+              (let ((last-char (read-char (format "%s %s" msg current-prefix-arg))))
                (if (and (>= last-char ?0) (<= last-char ?9))
-                   (setq prefix-arg (+ (- last-char ?0) (* 10 prefix-arg )))
+                   (setq current-prefix-arg (+ (- last-char ?0) (* 10 current-prefix-arg )))
                  (setq km (lookup-key km (make-string 1 last-char))))))
-            (when (eq prefix-arg 0)
-              (setq prefix-arg nil))
+            (when (eq current-prefix-arg 0)
+              (setq current-prefix-arg nil))
             (if km
                 (let (regs final)
                   (save-excursion
