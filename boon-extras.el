@@ -39,7 +39,7 @@
   (unless (eq (following-char) 32)
     (insert (make-string 1 32))
     (backward-char 1))
-  (boon-set-insert-like-state))
+  (boon-set-insert-state))
 
 (defun boon-split-line ()
   "split the current line"

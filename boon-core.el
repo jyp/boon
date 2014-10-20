@@ -73,6 +73,11 @@
   (interactive)
   (if (boon-special-mode-p) (boon-set-off-state) (boon-set-state 'boon-insert-state)))
 
+(defun boon-set-insert-state ()
+  "Switch to insert state."
+  (interactive)
+  (boon-set-state 'boon-insert-state))
+
 (defun boon-set-command-state ()
   "Switch to command state and push a mark to remember the last edition point."
   (interactive) (boon-set-state 'boon-command-state))
