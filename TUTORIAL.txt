@@ -143,8 +143,7 @@ If you want to insert text, type 'v' (can you remember the mnemonic?).
 Ordinary characters, like A, 7, *, etc., are then inserted as you type
 them.  To insert a Newline character, type <Return>.
 
-In insert mode, regular emacs editing commands can be used. An
-important exception is C-n which is rebound to dabbrev-expand.
+In insert mode, regular emacs editing commands can be used.
 
 >> Type v to insert some text; then <ESC> to go back to command mode.
 
