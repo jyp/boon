@@ -122,6 +122,12 @@
   (boon-extract-region)
   (yank))
 
+(defun boon-line-prefix ()
+  "return the text between beginning of line and position"
+  (buffer-substring-no-properties
+   (line-beginning-position) 
+   (point)))
+
 (defun boon-at-indent-or-more-p ()
   "return non-nil if the point is at the current line
 indentation; or to the right."
@@ -265,12 +271,6 @@ indentation"
     (comment-or-uncomment-region (min (car reg) (cdr reg))
                                  (max (car reg) (cdr reg)))))
 
-(defun boon-line-prefix ()
-  "return the text between beginning of line and position"
-  (buffer-substring-no-properties
-   (line-beginning-position) 
-   (point)))
-
 (defun boon-beginning-of-line ()
   "Move point to the first non-whitespace character on this line.
 If point was already at that position, move point to beginning of
@@ -318,12 +318,6 @@ line."
       ;; we're now at the last non-blank character of the line
       (unless (funcall progress)
         (end-of-line)))))
-
-(defun boon-line-prefix ()
-  "return the text between beginning of line and position"
-  (buffer-substring-no-properties
-   (line-beginning-position)
-   (point)))
 
 (defun blank-string-p (string)
   "Is the argument composed only of spaces and other blank characters?"
