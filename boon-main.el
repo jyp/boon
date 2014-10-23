@@ -460,7 +460,7 @@ remaining"
   (electric-pair-mode)
 ;; (define-key boon-insert-map "\'" 'self-insert-quote)
 
-(defun empty-pair-p ()
+(defun boon-empty-pair-p ()
   "Is the point at the middle of an empty pair of matched parens?"
   (interactive)
   (eq (caddr
@@ -468,23 +468,23 @@ remaining"
              (or skeleton-pair-alist skeleton-pair-default-alist)))
            (following-char)))
 
-(defun empty-quotes-p ()
+(defun boon-empty-quotes-p ()
   "Is the point in the middle of an empty pair of quotes?"
   (interactive)
   (and (eq (preceding-char) (following-char))
        (member (following-char) '(?\" ?\'))))
 
-(defun smart-insert-backspace2 ()
+(defun boon-smart-insert-backspace2 ()
   (interactive)
-  (when (or (empty-pair-p) (empty-quotes-p))
+  (when (or (boon-empty-pair-p) (boon-empty-quotes-p))
     (delete-char 1))
   (backward-delete-char-untabify 1))
 
-(defun self-insert-quote ()
-  "Insert doubled quote, unless 1. the previous character is a
-backslash, in which case a single quote is inserted or 2. the
-next character is a quote in which case the cursor simply jumps
-over it."
+(defun boon-self-insert-quote ()
+  "Insert doubled quote.
+unless: 1. the previous character is a backslash, in which case a
+  single quote is inserted or 2. the next character is a quote in
+  which case the cursor simply jumps over it."
   (interactive)
   (cond
    ((equal (this-command-keys) (make-string 1 (following-char)))
