@@ -5,6 +5,7 @@
 ;;; Code:
 
 (require 'boon-core)
+(require 'boon-main)
 (defvar boon-indent-map (make-sparse-keymap))
 
 (defun boon-adjust-indent ()
