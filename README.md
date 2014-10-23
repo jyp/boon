@@ -50,27 +50,29 @@ manipulation) are bound to the home row. The top row is (mainly) for
 searching. The bottom row gives access to regular emacs stuff (C-x
 ...) (C-c ...) and registers.
 
-Text operators take as argument a region, which can either be provided by:
- - an anterior selection,
- - a movement command (vi style),
- - or a region specifier such as word, paragraph, ... (temporarily
-   overriding the commands, which are meaningless as text regions)
+Installation/Configuration
+--------------------------
 
-
-The keymap looks as follows:
-
-<link to cheat sheet>
-
-Configuration
--------------
-
-NOTE: Emacs 24.3 is required.
+REQUIREMENTS
+- Emacs version >= 24.3
+- Colemak layout
 
 Install Boon (prehaps using MELPA), and add the following to your configuration:
 
 (require 'boon-colemak) ;; qwerty mode not implemented (contributions welcome)
 (require 'boon-extras) ;; optional
 (boon-mode)
+
+Documentation
+-------------
+
+You can jump-start by reading the cheat sheet directly:
+
+<link to cheat sheet>
+
+Or go through this modified (and shortened) version of the emacs tutorial:
+
+TUTORIAL.txt
 
 
 Comparison with other modal layers for emacs
