@@ -46,7 +46,7 @@
  "switch to insert mode; replacing the current region if there is one"
  (interactive) 
  (when (use-region-p)
-   (on-region #'kill-region))
+   (boon-on-region #'kill-region))
  (boon-set-insert-state))
 
 (defun boon-enclose (enclosure regs)
@@ -496,7 +496,7 @@ over it."
     (backward-char 1))))
 
 
-(defun on-region (f)
+(defun boon-on-region (f)
  "apply the argument to the current region"
    (funcall f (region-beginning) (region-end)))
 

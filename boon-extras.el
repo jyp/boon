@@ -62,7 +62,7 @@
   "Query replace; but if the region is active, replace its contents"
   (interactive)
   (if (and (use-region-p) (eq (- (line-number-at-pos (region-end)) (line-number-at-pos (region-beginning))) 0))
-      (let ((selection (on-region #'buffer-substring-no-properties))) 
+      (let ((selection (boon-on-region #'buffer-substring-no-properties))) 
       (perform-replace 
        selection
        (read-string "Replace region with:")
