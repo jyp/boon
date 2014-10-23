@@ -2,6 +2,9 @@
 
 ;;; Commentary:
 
+;; This module sets up the emulation keymaps for each boon state.
+;; Functions to switch to each state is also provided.
+
 ;;; Code:
 
 (require 'face-remap)
@@ -99,17 +102,21 @@
   (setq cursor-type 'box))
 
 (defvar boon-special-mode-list
-  '(Buffer-menu-mode
+  '(
+    Buffer-menu-mode
     Custom-mode
     completion-list-mode
     debugger-mode
+    dired-mode
     ediff-mode
-    magit-key-mode
-    magit-branch-manager-mode
     git-rebase-mode
+    magit-branch-manager-mode
+    magit-key-mode
     magit-log-mode
-    magit-status-mode)
-    "List of modes which start in boon-off-state."
+    magit-status-mode
+    package-menu-mode
+    )
+    "List of modes which start in boon-off-state, and go back to off state instead of inserting."
 )
 
 (defun boon-special-mode-p ()

@@ -46,7 +46,7 @@
  "switch to insert mode; replacing the current region if there is one"
  (interactive) 
  (when (use-region-p)
-   (on-region #'kill-region))
+   (boon-on-region #'kill-region))
  (boon-set-insert-state))
 
 (defun boon-enclose (enclosure regs)
@@ -122,19 +122,25 @@
   (boon-extract-region)
   (yank))
 
+(defun boon-line-prefix ()
+  "return the text between beginning of line and position"
+  (buffer-substring-no-properties
+   (line-beginning-position) 
+   (point)))
+
 (defun boon-at-indent-or-more-p ()
   "return non-nil if the point is at the current line
 indentation; or to the right."
   (or (eolp)
       (and (not (boon-at-indent-p))
-           (blank-string-p (boon-line-prefix)))))
+           (boon-blank-string-p (boon-line-prefix)))))
 
 (defun boon-at-indent-p ()
   "return non-nil if the point is at the current line
 indentation"
 (eq (save-excursion (back-to-indentation) (point)) (point)))
 
-(defun smarter-upward ()
+(defun boon-smarter-upward ()
   "move upward, to a line with the same level of indentation, or less"
   (interactive)
   (back-to-indentation)
@@ -142,7 +148,7 @@ indentation"
   (while (boon-at-indent-or-more-p) (previous-logical-line))
   (back-to-indentation))
 
-(defun smarter-downward ()
+(defun boon-smarter-downward ()
   "move downward, to a line with the same level of indentation, or less"
   (interactive)
   (back-to-indentation)
@@ -150,7 +156,7 @@ indentation"
   (while (boon-at-indent-or-more-p) (next-logical-line))
   (back-to-indentation))
 
-(defun smarter-backward ()
+(defun boon-smarter-backward ()
   "move backward, over a whole syntactic unit"
   (interactive)
     (boon-jump-over-blanks-backward)
@@ -178,11 +184,11 @@ indentation"
       (backward-char)))
     )
 
-(defun smarter-forward ()
+(defun boon-smarter-forward ()
   (interactive)
     (boon-jump-over-blanks)
     (cond
-     ((looking-at-line-comment-start-p)
+     ((boon-looking-at-line-comment-start-p)
       (end-of-line)
       (boon-jump-over-blanks))
      ((boon-looking-at-comment 1);;
@@ -265,12 +271,6 @@ indentation"
     (comment-or-uncomment-region (min (car reg) (cdr reg))
                                  (max (car reg) (cdr reg)))))
 
-(defun boon-line-prefix ()
-  "return the text between beginning of line and position"
-  (buffer-substring-no-properties
-   (line-beginning-position) 
-   (point)))
-
 (defun boon-beginning-of-line ()
   "Move point to the first non-whitespace character on this line.
 If point was already at that position, move point to beginning of
@@ -290,7 +290,7 @@ line."
   "Determine if the point is inside a string"
   (nth 3 (syntax-ppss)))
 
-(defun looking-at-line-comment-start-p ()
+(defun boon-looking-at-line-comment-start-p ()
   "Are we looking at a comment-start? (and not in a string)"
   (interactive)
   (and (boundp 'comment-start)
@@ -307,7 +307,7 @@ line."
          (orig-eol (eolp))
          (progress (lambda () (and (not (bolp)) (or orig-eol (> (point) orig))))))
     (beginning-of-line)
-    (while (not (or (looking-at-line-comment-start-p) (eolp))) 
+    (while (not (or (boon-looking-at-line-comment-start-p) (eolp))) 
       (forward-char))
     ;; we're now at the last non-comment character of the line
     (skip-chars-backward "\n\t " (line-beginning-position))
@@ -319,64 +319,7 @@ line."
       (unless (funcall progress)
         (end-of-line)))))
 
-(defun blank-string-p (string)
-  "Is the argument composed only of spaces and other blank characters?"
-  (equal "" (replace-regexp-in-string "[[:space:]]" "" string)))
-(defun boon-line-prefix ()
-  "return the text between beginning of line and position"
-  (buffer-substring-no-properties
-   (line-beginning-position) 
-   (point)))
-
-(defun boon-beginning-of-line ()
-  "Move point to the first non-whitespace character on this line.
-If point was already at that position, move point to beginning of
-line."
-  (interactive)
-  (let ((oldpos (point)))
-    (beginning-of-line)
-    (when (= oldpos (point))
-      (back-to-indentation))))
-
-(defun boon-looking-at-comment (how-many)
-  "Is the current point looking at 'how many' comments? (negative for backwards)"
-  (save-excursion
-    (forward-comment how-many)))
-
-(defun boon-in-string-p ()
-  "Determine if the point is inside a string"
-  (nth 3 (syntax-ppss)))
-
-(defun looking-at-line-comment-start-p ()
-  "Are we looking at a comment-start? (and not in a string)"
-  (interactive)
-  (and (boundp 'comment-start)
-       comment-start
-       (looking-at comment-start)
-       (not (boon-in-string-p))))
-
-(defun boon-end-of-line ()
-  "Toggle between jumping to 1. the last character of code on the
-line 2. the last non-blank char on the line 3. the true end of
-line."
-  (interactive)
-  (let* ((orig (point))
-         (orig-eol (eolp))
-         (progress (lambda () (and (not (bolp)) (or orig-eol (> (point) orig))))))
-    (beginning-of-line)
-    (while (not (or (looking-at-line-comment-start-p) (eolp))) 
-      (forward-char))
-    ;; we're now at the last non-comment character of the line
-    (skip-chars-backward "\n\t " (line-beginning-position))
-    ;; we're now at the last non-blank, non-comment character of the line
-    (unless (funcall progress)
-      (end-of-line)
-      (skip-chars-backward "\n\t " (line-beginning-position))
-      ;; we're now at the last non-blank character of the line
-      (unless (funcall progress)
-        (end-of-line)))))
-
-(defun blank-string-p (string)
+(defun boon-blank-string-p (string)
   "Is the argument composed only of spaces and other blank characters?"
   (equal "" (replace-regexp-in-string "[[:space:]]" "" string)))
 
@@ -399,7 +342,7 @@ line."
     (let ((line-prefix (boon-line-prefix)))
       ;; (message "next-line-prefix is %S" next-line-prefix)
       (open-line 1)
-      (when (blank-string-p line-prefix)
+      (when (boon-blank-string-p line-prefix)
         (progn
           (forward-char 1)
           (insert line-prefix))))))
@@ -424,7 +367,7 @@ line."
 (defun boon-newline-dwim ()
   "insert a new line do-what-i-mean style"
   (interactive)
-  (if (and (not (eolp)) (blank-string-p (boon-line-prefix)))
+  (if (and (not (eolp)) (boon-blank-string-p (boon-line-prefix)))
       (call-interactively 'boon-open-line)
     (boon-split-line)))      
   (defun boon-mark-region (regs)
@@ -517,7 +460,7 @@ remaining"
   (electric-pair-mode)
 ;; (define-key boon-insert-map "\'" 'self-insert-quote)
 
-(defun empty-pair-p ()
+(defun boon-empty-pair-p ()
   "Is the point at the middle of an empty pair of matched parens?"
   (interactive)
   (eq (caddr
@@ -525,23 +468,23 @@ remaining"
              (or skeleton-pair-alist skeleton-pair-default-alist)))
            (following-char)))
 
-(defun empty-quotes-p ()
+(defun boon-empty-quotes-p ()
   "Is the point in the middle of an empty pair of quotes?"
   (interactive)
   (and (eq (preceding-char) (following-char))
        (member (following-char) '(?\" ?\'))))
 
-(defun smart-insert-backspace2 ()
+(defun boon-smart-insert-backspace2 ()
   (interactive)
-  (when (or (empty-pair-p) (empty-quotes-p))
+  (when (or (boon-empty-pair-p) (boon-empty-quotes-p))
     (delete-char 1))
   (backward-delete-char-untabify 1))
 
-(defun self-insert-quote ()
-  "Insert doubled quote, unless 1. the previous character is a
-backslash, in which case a single quote is inserted or 2. the
-next character is a quote in which case the cursor simply jumps
-over it."
+(defun boon-self-insert-quote ()
+  "Insert doubled quote.
+unless: 1. the previous character is a backslash, in which case a
+  single quote is inserted or 2. the next character is a quote in
+  which case the cursor simply jumps over it."
   (interactive)
   (cond
    ((equal (this-command-keys) (make-string 1 (following-char)))
@@ -553,7 +496,7 @@ over it."
     (backward-char 1))))
 
 
-(defun on-region (f)
+(defun boon-on-region (f)
  "apply the argument to the current region"
    (funcall f (region-beginning) (region-end)))
 

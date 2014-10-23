@@ -2,6 +2,9 @@
 
 ;;; Commentary:
 
+
+;; A region list has the following form: ('region (begining . end) (begining . end) ...)
+
 ;;; Code:
 
 (require 'boon-core)
@@ -31,29 +34,34 @@
 (defun boon-spec-enclosure ()
   "Specify an enclosure style."
   (let ((c (read-char "Specify the enclosure")))
-    (message "Char: %c " c)
     (list (cdr (assoc c boon-enclosures)))))
 
 (defun boon-select-thing-at-point (thing)
+  "Return a region list with a single item pointing to the THING at point."
   (list 'region (bounds-of-thing-at-point thing)))
 
 (defun boon-select-from-region (select-fun)
+  "Return a region list with a single item: the region selected after calling SELECT-FUN (interactively)."
   (interactive)
   (save-excursion
     (call-interactively select-fun)
     (list 'region (cons (region-beginning) (region-end)))))
 
 (defun boon-select-wim () ;; what i mean
+  "Return a region list with a single item: either the symbol at point, or, if this fails, the sexp at point."
   (interactive)
   (let ((bounds (or (bounds-of-thing-at-point 'symbol)
                     (bounds-of-thing-at-point 'sexp))))
     ;; TODO: use expand-region if bounds is nil.
     (list 'region bounds)))
+    
 (defun boon-jump-over-blanks ()
+  "Jump over blanks, forward."
   (interactive)
   (skip-chars-forward "\n\t "))
 
 (defun boon-jump-over-blanks-backward ()
+  "Jump over blanks, backward."
   (interactive)
   (skip-chars-backward "\n\t "))
 
@@ -83,20 +91,28 @@
                    (point)))))
 
 (defun boon-normalize-reg (reg)
+  "Normalize the region REG by making sure beginning < end."
   (cons (min (cdr reg) (car reg)) (max (cdr reg) (car reg))))
 
 (defun boon-borders (reg how-much)
+  "Given a normalized region REG, return its borders, whose size is HOW-MUCH."
   (list (cons (cdr reg) (- (cdr reg) how-much))
         (cons (car reg) (+ (car reg) how-much))))
+        
 (defun boon-content (reg)
+  "Given a normalized region REG, return its contents (crop the region by 1)."
   (cons (+ (car reg) 1) (- (cdr reg) 1)))
 
 (defun boon-select-borders (how-much regs)
-  "Return the bordering (of size (as HOW-MUCH)) of a region (as REGS)."
+  "Return the bordering (of size HOW-MUCH) of a region list REGS.
+This function is meant to be called interactively."
   (interactive (cons (prefix-numeric-value current-prefix-arg) (boon-spec-region "select contents")))
   (cons 'region (apply 'append (mapcar (lambda (reg) (boon-borders reg how-much)) (mapcar 'boon-normalize-reg regs)))))
 
+;; TODO: take "how-much" argument.
 (defun boon-select-content (regs)
+  "Return the contents (of size HOW-MUCH) of a region list REGS.
+This function is meant to be called interactively."
   (interactive (boon-spec-region "select borders"))
   (cons 'region (mapcar 'boon-content (mapcar 'boon-normalize-reg regs))))
 

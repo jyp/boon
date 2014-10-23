@@ -77,11 +77,9 @@
 ;;  Insert mode rebinds
 (define-key boon-insert-map [remap newline] 'boon-newline-dwim)
 
-(define-key boon-insert-map (kbd "<up>") 'undefined)
-(define-key boon-insert-map (kbd "<down>") 'undefined)
 (define-key boon-insert-map [(escape)] 'boon-set-command-state)
-(define-key boon-insert-map [backspace] 'smart-insert-backspace2)
-(define-key boon-insert-map "\"" 'self-insert-quote)
+(define-key boon-insert-map [backspace] 'boon-smart-insert-backspace2)
+(define-key boon-insert-map "\"" 'boon-self-insert-quote)
 
 ;; Global rebinds
 (define-key global-map [escape] 'keyboard-quit)
