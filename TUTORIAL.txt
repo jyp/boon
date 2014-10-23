@@ -21,9 +21,15 @@ buffer. If it is not activated, activate it by
 
 M-x turn-on-boon-mode
 
-Boon indicates the difference between command mode and insert mode in two ways:
+Boon indicates the difference between command mode and insert mode in
+several ways:
+
+- The modeline says Boon:STATE (where state can be INS or CMD)
+
 - The cursor is a box in command mode, and a bar in insert mode.
-- The modeline is red in insert mode (and its regular color in command mode)
+
+- The modeline is red in insert mode (and its regular color in command
+  mode)
 
 You can switch to insert mode by typing v (mnemonic: v looks like an
 insert mark) and back to command mode by typing <ESC>.
