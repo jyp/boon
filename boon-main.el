@@ -319,62 +319,11 @@ line."
       (unless (funcall progress)
         (end-of-line)))))
 
-(defun blank-string-p (string)
-  "Is the argument composed only of spaces and other blank characters?"
-  (equal "" (replace-regexp-in-string "[[:space:]]" "" string)))
 (defun boon-line-prefix ()
   "return the text between beginning of line and position"
   (buffer-substring-no-properties
-   (line-beginning-position) 
+   (line-beginning-position)
    (point)))
-
-(defun boon-beginning-of-line ()
-  "Move point to the first non-whitespace character on this line.
-If point was already at that position, move point to beginning of
-line."
-  (interactive)
-  (let ((oldpos (point)))
-    (beginning-of-line)
-    (when (= oldpos (point))
-      (back-to-indentation))))
-
-(defun boon-looking-at-comment (how-many)
-  "Is the current point looking at 'how many' comments? (negative for backwards)"
-  (save-excursion
-    (forward-comment how-many)))
-
-(defun boon-in-string-p ()
-  "Determine if the point is inside a string"
-  (nth 3 (syntax-ppss)))
-
-(defun looking-at-line-comment-start-p ()
-  "Are we looking at a comment-start? (and not in a string)"
-  (interactive)
-  (and (boundp 'comment-start)
-       comment-start
-       (looking-at comment-start)
-       (not (boon-in-string-p))))
-
-(defun boon-end-of-line ()
-  "Toggle between jumping to 1. the last character of code on the
-line 2. the last non-blank char on the line 3. the true end of
-line."
-  (interactive)
-  (let* ((orig (point))
-         (orig-eol (eolp))
-         (progress (lambda () (and (not (bolp)) (or orig-eol (> (point) orig))))))
-    (beginning-of-line)
-    (while (not (or (looking-at-line-comment-start-p) (eolp))) 
-      (forward-char))
-    ;; we're now at the last non-comment character of the line
-    (skip-chars-backward "\n\t " (line-beginning-position))
-    ;; we're now at the last non-blank, non-comment character of the line
-    (unless (funcall progress)
-      (end-of-line)
-      (skip-chars-backward "\n\t " (line-beginning-position))
-      ;; we're now at the last non-blank character of the line
-      (unless (funcall progress)
-        (end-of-line)))))
 
 (defun blank-string-p (string)
   "Is the argument composed only of spaces and other blank characters?"
