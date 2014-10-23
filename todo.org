@@ -4,13 +4,15 @@
 **  h (help) C-c ?
 * When 24.4 rolls out:
 **    use string-blank-p
-**    bind rectangle-mark-mode
-**    checkout electric-pair-mode options (http://www.masteringemacs.org/articles/2013/12/29/whats-new-in-emacs-24-4/)
+**    bind rectangle-mark-mode in extras
+**    checkout electric-pair-mode options (http://www.masteringemacs.org/articles/2013/12/29/whats-new-in-emacs-24-4/) and clean the code
 * Enclosure " "textRET for arbitrary enclosures
 * Region specifier ' (former selected region)
-* Bind c to mode-specific things (instead of x c)
 * Command d should work on the selection if any
 * When inserting a newline; remove spaces before and after the point.
 * Support Fundamental buffers (see evil code)
 * Repeat "last command" (bind on return?)
 No idea how to do that
+
+* Don'ts
+** Bind c to mode-specific things (instead of x c)
