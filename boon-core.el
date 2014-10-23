@@ -50,8 +50,9 @@
         (let ((orig (point)))
           (skip-chars-forward " " (line-end-position))
           (when (eolp) (delete-and-extract-region orig (point))))))
-    (when (bound-and-true-p boon-modeline-face-cookie)
-      (face-remap-remove-relative boon-modeline-face-cookie))
+    (setq boon-modeline-face-cookie
+          (face-remap-add-relative
+           'mode-line '((:foreground "darkred") mode-line)))
     (setq cursor-type 'bar))
   (cond (boon-command-state
          ;; (do-auto-save)
@@ -60,9 +61,8 @@
                           (line-number-at-pos (mark)))))
            (push-mark)) ; remember where the last edition was by pushing a mark
          (setq cursor-type 'box)
-         (setq boon-modeline-face-cookie
-              (face-remap-add-relative
-               'mode-line '((:foreground "darkred") mode-line))))
+         (when (bound-and-true-p boon-modeline-face-cookie)
+           (face-remap-remove-relative boon-modeline-face-cookie)))
         (boon-off-state)
         (boon-insert-state)
         (t (message "Unknown state!")))
