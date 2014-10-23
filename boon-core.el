@@ -102,17 +102,20 @@
   (setq cursor-type 'box))
 
 (defvar boon-special-mode-list
-  '(dired-mode
+  '(
     Buffer-menu-mode
     Custom-mode
     completion-list-mode
     debugger-mode
+    dired-mode
     ediff-mode
-    magit-key-mode
-    magit-branch-manager-mode
     git-rebase-mode
+    magit-branch-manager-mode
+    magit-key-mode
     magit-log-mode
-    magit-status-mode)
+    magit-status-mode
+    package-menu-mode
+    )
     "List of modes which start in boon-off-state, and go back to off state instead of inserting."
 )
 
