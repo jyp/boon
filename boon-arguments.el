@@ -34,7 +34,6 @@
 (defun boon-spec-enclosure ()
   "Specify an enclosure style."
   (let ((c (read-char "Specify the enclosure")))
-    (message "Char: %c " c)
     (list (cdr (assoc c boon-enclosures)))))
 
 (defun boon-select-thing-at-point (thing)
