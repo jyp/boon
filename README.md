@@ -65,13 +65,12 @@ and add the following to your configuration:
     (require 'boon-extras) ;; optional
     (boon-mode)
 
-You can jump-start by reading the cheat sheet directly:
+You can jump-start by reading the
+[cheat sheet](blob/master/cheat-sheet.svg) directly, but reading
+through this modified (and shortened) version of the emacs tutorial is
+recommended:
 
-[![Boon cheat sheet](https://raw.githubusercontent.com/jyp/boon/master/cheat-sheet.svg)]
-
-But reading through this modified (and shortened) version of the emacs tutorial is recommended:
-
-[TUTORIAL](blob/master/TUTORIAL.txt)
+[TUTORIAL.txt](blob/master/TUTORIAL.txt)
 
 Comparison with other modal layers for emacs
 ---------------------------------------------
