@@ -8,7 +8,7 @@
 
 (require 'er-basic-expansions)
 
-(defmacro with-ordered-region (body)
+(defmacro boon-with-ordered-region (body)
   `(if (< (point) (mark)) 
        ,body
        (progn (exchange-point-and-mark) ,body (exchange-point-and-mark))))
@@ -24,7 +24,7 @@
             (pop-mark) ;; load the saved position into the mark
             (goto-char (mark));; jump there
             (deactivate-mark))
-      (with-ordered-region
+      (boon-with-ordered-region
        (progn ;; here we have at least one non-full line selected. Extend to the full lines. 
          (beginning-of-line)
          (exchange-point-and-mark)
@@ -36,7 +36,7 @@
       (push-mark) ;; Save the starting position, so we can go back to it.
       (call-interactively 'boon-mark-region))))
 
-(defun current-line-indentation ()
+(defun boon-current-line-indentation ()
   "Indentation of the curent line"
   (save-excursion
     (back-to-indentation)
@@ -326,7 +326,7 @@ line."
 (defun boon-open-line-and-insert ()
   "Open a new line, indented as much as the current one, and switch to insert mode."
   (interactive)
-  (let ((indent-lvl (current-line-indentation))) 
+  (let ((indent-lvl (boon-current-line-indentation))) 
       (beginning-of-line)
       (open-line 1)
       (insert (make-string indent-lvl 32))

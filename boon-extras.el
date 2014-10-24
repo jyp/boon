@@ -45,7 +45,7 @@
 (defun boon-split-line ()
   "split the current line"
   (interactive)
-  (let ((indent-col (min (current-line-indentation) (current-column))))
+  (let ((indent-col (min (boon-current-line-indentation) (current-column))))
     ;; kill the extra spaces
     (save-excursion
       (delete-and-extract-region (progn
