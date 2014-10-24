@@ -1,9 +1,6 @@
 boon: Ergonomic Command Mode for Emacs
 ======================================
 
-What is Boon?
--------------
-
 Boon brings modal editing capabilities to emacs and...
 
 - It tries to be as ergonomic as possible. (See below)
@@ -80,23 +77,29 @@ As far as I know, none of the other modal mode care about ergonomics
 
 - Evil
 
-In boon, quite a bit of emacs structure and user experience is
-retained. Examples: the x key gives the C-x prefix map.
-Interactive arguments are used for text objects.
+  Evil is a vi (quite) complete emulation layer for emacs.
 
-Besides, Emacs is already customizable enough as it is: the core of
-Boon is just 200 lines or so. Figuring out all the ins and outs of
-Evil to do what I want would probably require more effort.
+  In boon, quite a bit of emacs structure and user experience is
+  retained. Examples: the x key gives the C-x prefix map.
+  Interactive arguments are used for text objects.
+
+  Besides, Emacs is already customizable enough as it is: the core of
+  Boon is just 200 lines or so. Figuring out all the ins and outs of
+  Evil to do what I want would probably require more effort.
 
 - God-mode https://github.com/chrisdone/god-mode
 
-Allows to retain most of emacs. It is similar to "sticky modifier
-keys" in principle.
+  God-mode is similar to "sticky modifier keys" in principle. Its
+  simplicity allows to quickly get up to speed with it. However, it
+  lacks the main benefit of a true modal layer: text operators. (what
+  vi fans call a "language for text edition").
 
 - Modal Mode http://retroj.net/modal-mode
 
-Perhaps the work which is the closest to Boon.
+  Perhaps the work which is the closest to Boon in principle
+  (lightweight and integration with emacs). However, as far as I can
+  see, there is no special attention to ergonomics.
 
 - Modal Emacs https://github.com/joelmccracken/modal-emacs
 
-Modal Emacs does not appear to be complete.
+  Modal Emacs does not appear to be complete.
