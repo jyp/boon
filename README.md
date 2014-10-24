@@ -65,9 +65,9 @@ and add the following to your configuration:
     (require 'boon-extras) ;; optional
     (boon-mode)
 
-You can jump-start by reading the cheat sheet directly (pdf):
+You can jump-start by reading the cheat sheet directly:
 
-<link to cheat sheet>
+[![Boon cheat sheet](https://raw.githubusercontent.com/jyp/boon/master/cheat-sheet.svg)]
 
 But reading through this modified (and shortened) version of the emacs tutorial is recommended:
 
