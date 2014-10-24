@@ -24,7 +24,7 @@ preamble body = do
   usepackage "graphicx" []
   usepackage "amssymb" []
   usepackage "varwidth" []
-  usepackage "geometry" ["margin=1cm","paper=a3paper"]
+  usepackage "geometry" ["margin=1cm","paper=a4paper","landscape"]
   env "document" body
 
 
@@ -161,6 +161,29 @@ keyFull w k act arg = do
 keyDist :: Constant
 keyDist = 5
 
+argDescs =
+  [(Bin Enclosure TextRegion, "First an enclosure, then a region")
+  ,(None,"No Argument")
+  ,(Char,"A character")
+  ,(SearchObject,"A search space")
+  ,(TextRegion,"A region")
+  ,(Prefix,"(Prefix map)")
+  ,(Enclosure,"An enclosure")
+  ,(Reserved,"(Reserved key)")]
+
+legend :: Diagram ()
+legend = do
+  ds <- forM argDescs $
+    \ (arg,desc) -> do
+        b <- box
+        using (set lineWidth thick . fill (argColor arg)) $ draw $ rectangleShape b
+        width b === constant 15
+        height b === constant 15
+        l <- labelObj $ desc
+        b # E .=. l # W
+        return b
+  spread vdist 7 ds
+
 matrixDiag :: Anchored a => [[Diagram a]] -> Diagram [[a]]
 matrixDiag matrix = do
   keys <- mapM sequence $ reverse $ matrix
@@ -189,9 +212,15 @@ main = renderTex "cheat" docu
 
 docu :: TeX
 docu = preamble «
+BOON cheat sheet. It is recommended to read the TUTORIAL to make sense of this.
+
+Command mode bindings:
 @keyBDiag
 
-
+Left-hand text region specifiers:
 @regDiag
+@cmd0"newpage"
+The color of a key indicates the argument(s) it takes.
+@legend
 »
 
