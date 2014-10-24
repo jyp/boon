@@ -57,7 +57,9 @@ REQUIREMENTS
 - Emacs version >= 24.3
 - Colemak layout
 
-Install Boon (prehaps using MELPA), and add the following to your configuration:
+Install Boon (prehaps using
+[![MELPA](http://melpa.org/packages/boon-badge.svg)](http://melpa.org/#/boon)),
+and add the following to your configuration:
 
 (require 'boon-colemak) ;; qwerty mode not implemented (contributions welcome)
 (require 'boon-extras) ;; optional
