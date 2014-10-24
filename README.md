@@ -1,5 +1,5 @@
-boon: Ergonomic Command Mode for Emacs
-======================================
+Boon: An Ergonomic Command Mode for Emacs
+==========================================
 
 Boon brings modal editing capabilities to emacs and...
 
@@ -63,11 +63,11 @@ and add the following to your configuration:
     (boon-mode)
 
 You can jump-start by reading the
-[cheat sheet](blob/master/cheat-sheet.svg) directly, but reading
+[cheat sheet](cheat-sheet.svg) directly, but reading
 through this modified (and shortened) version of the emacs tutorial is
 recommended:
 
-[TUTORIAL.txt](blob/master/TUTORIAL.txt)
+[TUTORIAL.txt](TUTORIAL.txt)
 
 Comparison with other modal layers for emacs
 ---------------------------------------------
@@ -77,7 +77,7 @@ As far as I know, none of the other modal mode care about ergonomics
 
 - Evil
 
-  Evil is a vi (quite) complete emulation layer for emacs.
+  Evil is a (quite) complete vi emulation layer for emacs.
 
   In boon, quite a bit of emacs structure and user experience is
   retained. Examples: the x key gives the C-x prefix map.
