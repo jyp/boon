@@ -61,21 +61,17 @@ Install Boon (prehaps using
 [![MELPA](http://melpa.org/packages/boon-badge.svg)](http://melpa.org/#/boon)),
 and add the following to your configuration:
 
-(require 'boon-colemak) ;; qwerty mode not implemented (contributions welcome)
-(require 'boon-extras) ;; optional
-(boon-mode)
+    (require 'boon-colemak) ;; qwerty mode not implemented (contributions welcome)
+    (require 'boon-extras) ;; optional
+    (boon-mode)
 
-Documentation
--------------
-
-You can jump-start by reading the cheat sheet directly:
+You can jump-start by reading the cheat sheet directly (pdf):
 
 <link to cheat sheet>
 
-Or go through this modified (and shortened) version of the emacs tutorial:
+But reading through this modified (and shortened) version of the emacs tutorial is recommended:
 
-TUTORIAL.txt
-
+[TUTORIAL](blob/master/TUTORIAL.txt)
 
 Comparison with other modal layers for emacs
 ---------------------------------------------

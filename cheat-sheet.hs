@@ -168,7 +168,7 @@ argDescs =
   ,(SearchObject,"A search space")
   ,(TextRegion,"A region")
   ,(Prefix,"(Prefix map)")
-  ,(Enclosure,"An enclosure")
+  -- ,(Enclosure,"An enclosure")
   ,(Reserved,"(Reserved key)")]
 
 legend :: Diagram ()
@@ -201,7 +201,9 @@ keyBDiag = do
   return ()
 
 regDiag = do
+  txt <- mkLabel «Left-hand text region specifiers:»
   keys <- matrixDiag (zzipWith keyHalf leftHandK leftHandR)
+  spread vdist 7 [keys!!0!!0,txt]
   return ()
   
 (+++) :: [[a]] -> [[a]] -> [[a]]
@@ -217,10 +219,7 @@ BOON cheat sheet. It is recommended to read the TUTORIAL to make sense of this.
 Command mode bindings:
 @keyBDiag
 
-Left-hand text region specifiers:
-@regDiag
-@cmd0"newpage"
-The color of a key indicates the argument(s) it takes.
-@legend
+@vspace"1em"
+@regDiag @hfill @legend
 »
 
