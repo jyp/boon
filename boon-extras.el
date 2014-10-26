@@ -2,6 +2,9 @@
 
 ;;; Commentary:
 
+;; This module provides (arguably) more useful bindings to the "x"
+;; prefix map.
+
 ;;; Code:
 
 (require 'boon-core)
