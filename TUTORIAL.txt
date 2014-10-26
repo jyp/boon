@@ -1,6 +1,6 @@
 Boon tutorial.   See end for copying conditions.
 
-This tutorial assumes that you know Emacs aleardy.
+This tutorial assumes that you know Emacs already.
 
 Make sure boon is installed. Load the colemak configuration with:
 
@@ -34,7 +34,7 @@ several ways:
 You can switch to insert mode by typing v (mnemonic: v looks like an
 insert mark) and back to command mode by typing <ESC>.
 
-Most emacs keychoord commands via M-... and C-... are accessible as
+Most Emacs keychord commands via M-... and C-... are accessible as
 normal.  For example, M-x turn-off-boon-mode reverts to your regular
 experience.
 
@@ -81,19 +81,19 @@ will forget the letters that your hand is typing when moving the
 cursor.  You will be using these basic cursor positioning commands a
 lot, but there are faster ways to go about moving the cursor.
 
-The movement of cursor across lines is the same as in regular emacs.
+The movement of cursor across lines is the same as in regular Emacs.
 
 If moving by characters is too slow, you can move by words. The key "o"
 moves forward a word and "n" moves back a word.
 
 >> Type a few o's and n's.
 
-As in regular emacs, when you are in the middle of a word, o moves to
-the end of the word.  When you are in whitespace between words, o
+As in regular Emacs, when you are in the middle of a word, o moves to
+the end of the word.  When you are in white space between words, o
 moves to the end of the following word.  "n" works likewise in the
 opposite direction. In fact, o and n move by whole syntactic units.
 
->> Type o and n a few times within a parenthesised expression. Combine
+>> Type o and n a few times within a parenthesized expression. Combine
    it with e and i to get to the place you want.
 
 
@@ -144,9 +144,9 @@ There are three other movement commands, bound to j, h and k.
 
 >> Move to this line and type j-
 
-- k (menemonic: bacK to marK) jumps pops a mark and jumps to it. (If a region is active, exchange point and mark)
+- k (mnemonic: bacK to marK) jumps pops a mark and jumps to it. (If a region is active, exchange point and mark)
 
-- h (menemonic: hop) activates ace-jump-mode (if installed)
+- h (mnemonic: hop) activates ace-jump-mode (if installed)
 
 * IF EMACS STOPS RESPONDING
 ---------------------------
@@ -176,7 +176,7 @@ If you want to insert text, type 'v' (can you remember the mnemonic?).
 Ordinary characters, like A, 7, *, etc., are then inserted as you type
 them.  To insert a Newline character, type <Return>.
 
-In insert mode, regular emacs editing commands can be used.
+In insert mode, regular Emacs editing commands can be used.
 
 >> Type v to insert some text; then <ESC> to go back to command mode.
 
@@ -188,7 +188,7 @@ Deleting text is mostly done with the 't' command (mnemonic: take).
 In the above "e" is the argument to the "t" command.
 
 
->> Type "tn" to delete backwards, up to the beginnig of a word
+>> Type "tn" to delete backwards, up to the beginning of a word
 
 You can also use a left-hand region specifier to delete
 
@@ -269,7 +269,7 @@ transforms a region spec to its enclosure.
 >> Move the cursor inside another (sexp), and type 'tax' to delete the
    parens.
 
-Region specifiers are freely combinable.
+Region specifiers can be freely combined.
 
 
 
@@ -289,8 +289,8 @@ Helm is a very useful package. Boon provides special support for it.
 
 >> If you have not done it yet, install helm now. (package-install 'helm)
 
-The command 'p' starts helm-occcur; which does a quick serach for all
-occurences of a pattern in the current buffer.
+The command 'p' starts helm-occur; which does a quick search for all
+occurrences of a pattern in the current buffer.
 
 >> Type 'p' now
 
@@ -307,10 +307,10 @@ then
 You can search for the current symbol by typing "s" while in helm
 command state.
 
->> Move the cursor to an occurence of the helm word, and type "ps".
+>> Move the cursor to an occurrence of the helm word, and type "ps".
 
->> Use y and u to select an occurence, then type <return> to jump to
-   the currently selected occurence
+>> Use y and u to select an occurrence, then type <return> to jump to
+   the currently selected occurrence
 
 The keymap for this helm command state is boon-helm-command-map.
 

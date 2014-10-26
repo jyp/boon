@@ -1,23 +1,23 @@
 Boon: An Ergonomic Command Mode for Emacs
 ==========================================
 
-Boon brings modal editing capabilities to emacs and...
+Boon brings modal editing capabilities to Emacs and...
 
 - It tries to be as ergonomic as possible. (See below)
 - It remains lightweight (~300 loc for its core.)
-- It attempts to integrate with emacs as smoothly as possible
+- It attempts to integrate with Emacs as smoothly as possible
 
 
 Design
 ------
 
 It is largely accepted that modal edition is more ergonomic than using
-keychoord.  Boon attempts to make modal editing as comfortable as
+keychord.  Boon attempts to make modal editing as comfortable as
 possible, by adhering to the following design principles:
 
 - Spacial allocation first, mnemonics second: the allocation of keys
   to commands is based in priority on the locations of keys on the
-  keyboard. Whatever is printed on the keycap is a secondary concern.
+  keyboard. Whatever is printed on the key cap is a secondary concern.
 
 - Easy finger rolls: common combination should either be left/right
   hand alternation or easy one-hand rolls.
@@ -44,7 +44,7 @@ Left-hand.
 
 The most common edition commands (cut, paste, parenthesis
 manipulation) are bound to the home row. The top row is (mainly) for
-searching. The bottom row gives access to regular emacs stuff (C-x
+searching. The bottom row gives access to regular Emacs stuff (C-x
 ...) (C-c ...) and registers.
 
 Installation/Configuration
@@ -54,7 +54,7 @@ REQUIREMENTS
 - Emacs version >= 24.3
 - Colemak layout
 
-Install Boon (prehaps using
+Install Boon (perhaps using
 [![MELPA](http://melpa.org/packages/boon-badge.svg)](http://melpa.org/#/boon)),
 and add the following to your configuration:
 
@@ -64,12 +64,12 @@ and add the following to your configuration:
 
 You can jump-start by reading the
 [cheat sheet](cheat-sheet.svg) directly, but reading
-through this modified (and shortened) version of the emacs tutorial is
+through this modified (and shortened) version of the Emacs tutorial is
 recommended:
 
 [TUTORIAL.txt](TUTORIAL.txt)
 
-Comparison with other modal layers for emacs
+Comparison with other modal layers for Emacs
 ---------------------------------------------
 
 As far as I know, none of the other modal mode care about ergonomics
@@ -77,9 +77,9 @@ As far as I know, none of the other modal mode care about ergonomics
 
 - Evil
 
-  Evil is a (quite) complete vi emulation layer for emacs.
+  Evil is a (quite) complete vi emulation layer for Emacs.
 
-  In boon, quite a bit of emacs structure and user experience is
+  In boon, quite a bit of Emacs structure and user experience is
   retained. Examples: the x key gives the C-x prefix map.
   Interactive arguments are used for text objects.
 
@@ -97,7 +97,7 @@ As far as I know, none of the other modal mode care about ergonomics
 - Modal Mode http://retroj.net/modal-mode
 
   Perhaps the work which is the closest to Boon in principle
-  (lightweight and integration with emacs). However, as far as I can
+  (lightweight and integration with Emacs). However, as far as I can
   see, there is no special attention to ergonomics.
 
 - Modal Emacs https://github.com/joelmccracken/modal-emacs
