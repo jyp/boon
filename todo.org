@@ -1,18 +1,14 @@
 * fix swap-region
-* change helm-command-map to call stuff from the (overridden) helm-map ?
-* implement helm command mode as a translation map
-**  h (help) C-c ?
+* change helm-command-map
+** change c to be as in the regular map
 * When 24.4 rolls out:
 **    use string-blank-p
 **    bind rectangle-mark-mode in extras
 **    checkout electric-pair-mode options (http://www.masteringemacs.org/articles/2013/12/29/whats-new-in-emacs-24-4/) and clean the code
-* Enclosure " "textRET for arbitrary enclosures
-* Region specifier ' (former selected region)
-* Command d should work on the selection if any
+* Add enclosure " "text<RET> for arbitrary enclosures
+* Add region specifier ' (former selected region)
 * When inserting a newline; remove spaces before and after the point.
 * Support Fundamental buffers (see evil code)
 * Repeat "last command" (bind on return?)
 No idea how to do that
 
-* Don'ts
-** Bind c to mode-specific things (instead of x c)
