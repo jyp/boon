@@ -14,7 +14,7 @@
        (progn (exchange-point-and-mark) ,body (exchange-point-and-mark))))
 
 (defun boon-drop-mark ()
-  "drop a mark; or extend the region to the next full line; or revert to original state"
+  "Drop a mark; or extend the region to the next full line; or revert to original state."
   (interactive)
   (if mark-active
       (if (and (bolp)
@@ -37,21 +37,14 @@
       (call-interactively 'boon-mark-region))))
 
 (defun boon-current-line-indentation ()
-  "Indentation of the curent line"
+  "Return the indentation of the curent line."
   (save-excursion
     (back-to-indentation)
     (current-column)))
 
-(defun boon-replace-region ()
- "switch to insert mode; replacing the current region if there is one"
- (interactive) 
- (when (use-region-p)
-   (boon-on-region #'kill-region))
- (boon-set-insert-state))
-
 (defun boon-enclose (enclosure regs)
-  "Enclose the region with before and after"
-  (interactive (append (boon-spec-enclosure) (boon-spec-region "enclose")))
+  "Wrap, with the ENCLOSURE the regions given as REGS."
+  (interactive (list (boon-spec-enclosure) (boon-spec-region "enclose")))
   (dolist (reg regs)
     (let ((beg (min (cdr reg) (car reg)))
           (end (max (cdr reg) (car reg))))
@@ -67,7 +60,7 @@
 
 
 (defun boon-find-char-backward (char)
-  "find the given character, backwards"
+  "Move the cursor backwards, until finding an occurence of the character CHAR."
   (interactive "cType the character to find")
   (search-backward (make-string 1 char))
   (forward-char 1))
@@ -264,13 +257,6 @@ indentation"
           (message "mark placed at point"))
       (activate-mark)))
 
-(defun boon-toggle-comment (regs)
-  "Toggle comments in the region"
-  (interactive (boon-spec-region "toggle comment"))
-  (dolist (reg regs)
-    (comment-or-uncomment-region (min (car reg) (cdr reg))
-                                 (max (car reg) (cdr reg)))))
-
 (defun boon-beginning-of-line ()
   "Move point to the first non-whitespace character on this line.
 If point was already at that position, move point to beginning of
@@ -370,32 +356,35 @@ line."
   (if (and (not (eolp)) (boon-blank-string-p (boon-line-prefix)))
       (call-interactively 'boon-open-line)
     (boon-split-line)))      
-  (defun boon-mark-region (regs)
-  (interactive (boon-spec-region "mark"))
+(defun boon-mark-region (regs)
+  (interactive (list (boon-spec-region "mark")))
   (dolist (reg regs)
     (set-mark (car reg))
     (goto-char (cdr reg)))
   (activate-mark))
 
 (defun boon-end-of-region (regs)
-  (interactive (boon-spec-region "go to end"))
+  "Move the point the end region REGS."
+  (interactive (list (boon-spec-region "go to end")))
   (dolist (reg regs)
     (goto-char (cdr reg))))
 
 (defun boon-beginning-of-region (regs)
-  (interactive (boon-spec-region "go to beginnig"))
+  "Move the point to the beginning region REGS."
+  (interactive (list (boon-spec-region "go to beginnig")))
   (dolist (reg regs)
     (goto-char (car reg))))
 
 (defun boon-take-region (regs)
-  (interactive (boon-spec-region "take"))
+  "Kill the region given as REGS."
+  (interactive (list (boon-spec-region "take")))
   (dolist (reg regs)
     (kill-region (car reg) (cdr reg))))
 
 
 (defun boon-swap-region (regs)
   "Swap the region with the top of the kill ring"
-  (interactive (boon-spec-region "swap"))
+  (interactive (list (boon-spec-region "swap")))
   (dolist (reg regs)
     (kill-region (car reg) (cdr reg)))
   (insert-for-yank (current-kill 1))
@@ -406,19 +395,21 @@ line."
   )
   
 (defun boon-treasure-region (regs)
-  (interactive (boon-spec-region "treasure"))
+  (interactive (list (boon-spec-region "treasure")))
   (dolist (reg regs)
     (kill-ring-save (car reg) (cdr reg))))
 
 (defun boon-substitute-region (regs)
-  (interactive (boon-spec-region "replace"))
+  (interactive (list (boon-spec-region "replace")))
   (boon-take-region regs)
   (boon-set-insert-state))
 
 (defun boon-replace-character (replacement)
   "Replace the character at point"
   (interactive "cType the character to use as a replacement")
-  (delete-char 1)
+  (if (use-region-p)
+      (delete-and-extract-region (region-beginning) (region-end ))
+    (delete-char 1))
   (insert replacement))
 
 (defun boon-quote-character (char)

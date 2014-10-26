@@ -34,7 +34,7 @@
 (defun boon-spec-enclosure ()
   "Specify an enclosure style."
   (let ((c (read-char "Specify the enclosure")))
-    (list (cdr (assoc c boon-enclosures)))))
+    (cdr (assoc c boon-enclosures))))
 
 (defun boon-select-thing-at-point (thing)
   "Return a region list with a single item pointing to the THING at point."
@@ -52,7 +52,6 @@
   (interactive)
   (let ((bounds (or (bounds-of-thing-at-point 'symbol)
                     (bounds-of-thing-at-point 'sexp))))
-    ;; TODO: use expand-region if bounds is nil.
     (list 'region bounds)))
     
 (defun boon-jump-over-blanks ()
@@ -106,21 +105,20 @@
 (defun boon-select-borders (how-much regs)
   "Return the bordering (of size HOW-MUCH) of a region list REGS.
 This function is meant to be called interactively."
-  (interactive (cons (prefix-numeric-value current-prefix-arg) (boon-spec-region "select contents")))
+  (interactive (list (prefix-numeric-value current-prefix-arg) (boon-spec-region "select contents")))
   (cons 'region (apply 'append (mapcar (lambda (reg) (boon-borders reg how-much)) (mapcar 'boon-normalize-reg regs)))))
 
-;; TODO: take "how-much" argument.
 (defun boon-select-content (regs)
   "Return the contents (of size HOW-MUCH) of a region list REGS.
 This function is meant to be called interactively."
-  (interactive (boon-spec-region "select borders"))
+  (interactive (list (boon-spec-region "select borders")))
   (cons 'region (mapcar 'boon-content (mapcar 'boon-normalize-reg regs))))
 
-;; TODO: this should not return a list
 (defun boon-spec-region (msg)
   "Specify a region concisely using the keyboard.
-The prompt (as MSG) is displayed."
-  (list (if (use-region-p) (list (cons (region-beginning) (region-end)))
+The prompt (as MSG) is displayed.  This function actually returns
+a list of regions, in the form ((beginning . end) ...)"
+  (if (use-region-p) (list (cons (region-beginning) (region-end)))
           (let (current-prefix-arg
                 ;; this code fiddles with the prefix arg; but if we do
                 ;; not hide our fiddling, the next command will use
@@ -146,7 +144,7 @@ The prompt (as MSG) is displayed."
                            (eq (car regs) 'region))
                       (cdr regs)
                     (list (cons orig final))))
-              (error "Unknown region specifier"))))))
+              (error "Unknown region specifier")))))
 
 (provide 'boon-arguments)
 ;;; boon-arguments.el ends here
