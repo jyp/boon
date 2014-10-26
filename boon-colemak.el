@@ -151,7 +151,7 @@
 ;; x
 (define-key boon-command-map "x" boon-x-map)
 ;; c
-(define-key boon-command-map "c" 'nil)
+(define-key boon-command-map "c" boon-c-map)
 ;; v
 (define-key boon-command-map (kbd "C-v") 'boon-open-line-and-insert)
 (define-key boon-command-map "V" 'boon-open-next-line-and-insert)

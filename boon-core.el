@@ -11,6 +11,7 @@
 (require 'cl-macs)
 ;; Maps
 
+(defvar boon-c-map (make-sparse-keymap))
 (defvar boon-x-map (make-sparse-keymap))
 (set-keymap-parent boon-x-map ctl-x-map)
 (defvar boon-helm-command-map (make-sparse-keymap))

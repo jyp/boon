@@ -57,8 +57,6 @@
           (insert (car enclosure))))
        (t (message "unknown enclosure"))))))
 
-
-
 (defun boon-find-char-backward (char)
   "Move the cursor backwards, until finding an occurence of the character CHAR."
   (interactive "cType the character to find")
