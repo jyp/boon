@@ -104,7 +104,8 @@
   (interactive (list (boon-spec-region "toggle comment"))
   (dolist (reg regs)
     (comment-or-uncomment-region (min (car reg) (cdr reg))
-                                 (max (car reg) (cdr reg)))))
+                                 (max (car reg) (cdr reg))))))
+
 (defvar boon-flycheck-map
   (let ((pmap (make-sparse-keymap)))
     (define-key pmap "m" 'flycheck-mode)
