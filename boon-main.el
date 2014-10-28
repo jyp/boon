@@ -261,9 +261,9 @@ If point was already at that position, move point to beginning of
 line."
   (interactive)
   (let ((oldpos (point)))
-    (beginning-of-line)
+    (back-to-indentation)
     (when (= oldpos (point))
-      (back-to-indentation))))
+      (beginning-of-line))))
 
 (defun boon-looking-at-comment (how-many)
   "Is the current point looking at 'how many' comments? (negative for backwards)"
