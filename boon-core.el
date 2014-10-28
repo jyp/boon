@@ -60,15 +60,13 @@
     (setq cursor-type 'bar))
   (cond (boon-command-state
          ;; (do-auto-save)
-         (when (< 2 (abs (-
-                          (line-number-at-pos (point))
-                          (line-number-at-pos (mark)))))
-           (push-mark)) ; remember where the last edition was by pushing a mark
          (setq cursor-type 'box)
          (when (bound-and-true-p boon-modeline-face-cookie)
            (face-remap-remove-relative boon-modeline-face-cookie)))
         (boon-off-state)
-        (boon-insert-state)
+        (boon-insert-state
+         ;; remember where the last edition was by pushing a mark
+         (push-mark))
         (t (message "Unknown state!")))
   (force-mode-line-update))
 
