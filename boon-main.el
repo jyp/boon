@@ -402,8 +402,8 @@ line."
   (boon-take-region regs)
   (boon-set-insert-state))
 
-(defun boon-replace-character (replacement)
-  "Replace the character at point"
+(defun boon-replace-by-character (replacement)
+  "Replace the character at point, or region if it is active, by the REPLACEMENT character."
   (interactive "cType the character to use as a replacement")
   (if (use-region-p)
       (delete-and-extract-region (region-beginning) (region-end ))
@@ -411,7 +411,7 @@ line."
   (insert replacement))
 
 (defun boon-quote-character (char)
-  "Execute the 1-character command which would be executed if boon was not enabled."
+  "Execute the command bound to the character CHAR if boon was not enabled."
   (interactive "cThe character to insert or command to execute")
   (let ((cmd
          (or (and (current-local-map) (lookup-key (current-local-map) (make-string 1 char)))
@@ -419,10 +419,9 @@ line."
     (setq last-command-event char)
     (message (format "Executing the command bound to %c" char))
     (call-interactively cmd nil [char])))
-    
+
 (defun boon-quit ()
-  "Exit the current modes we're in until no special state is
-remaining"
+  "Exit the current modes we're in until no special state is remaining."
   (interactive)
   (cond
    ((use-region-p)

@@ -42,23 +42,29 @@
 (define-key boon-moves-map "i"  'forward-char)
 (define-key boon-moves-map "<"  'boon-beginning-of-region)
 (define-key boon-moves-map ">"  'boon-end-of-region)
+(define-key boon-moves-map (kbd "C-,")      'beginning-of-buffer)
+(define-key boon-moves-map (kbd "C-.")      'end-of-buffer)
 
+(define-key boon-helm-command-map (kbd "q")    'helm-keyboard-quit)
 (define-key boon-helm-command-map (kbd "f")    'helm-follow-mode)
+(define-key boon-helm-command-map (kbd "p")    'previous-history-element)
 
+;; home row: yanking/killing
 (define-key boon-helm-command-map (kbd "r")    'helm-yank-selection)
 (define-key boon-helm-command-map (kbd "s")        'next-history-element) ;; has the effect of getting the whole symbol at point
 (define-key boon-helm-command-map (kbd "t")        'helm-yank-text-at-point)
 (define-key boon-helm-command-map (kbd "d")        'helm-delete-minibuffer-contents)
 
+;; bottom row: actions
 (define-key boon-helm-command-map (kbd "z")        'helm-select-3rd-action)
 (define-key boon-helm-command-map (kbd "x")        'helm-select-2nd-action)
-(define-key boon-helm-command-map (kbd "c")        'helm-exit-minibuffer)
-(define-key boon-helm-command-map (kbd "v") 'boon-helm-set-insert-state)
+(define-key boon-helm-command-map (kbd "c")        'boon-c-map)
+(define-key boon-helm-command-map (kbd "v")        'boon-helm-set-insert-state) ;; for consistency
 (define-key boon-helm-command-map (kbd "b")        'helm-execute-persistent-action)
 
 (define-key boon-helm-command-map (kbd "'")        'helm-toggle-all-marks)
 (define-key boon-helm-command-map (kbd "K")        'helm-mark-all)
-(define-key boon-helm-command-map (kbd "C-k")        'helm-unmark-all) ;; use M K for this
+(define-key boon-helm-command-map (kbd "C-k")        'helm-unmark-all) ;; use K ' for this
 (define-key boon-helm-command-map (kbd "k")      'helm-toggle-visible-mark)
 
 (define-key boon-helm-command-map (kbd "l")        'previous-history-element)
@@ -142,7 +148,7 @@
 (define-key boon-command-map "T" 'boon-treasure-region) ; "treasure"
 
 ;; d
-(define-key boon-command-map "d" 'boon-replace-character) ; "displace"
+(define-key boon-command-map "d" 'boon-replace-by-character) ; "displace"
 
 ;; Bottom row
 ;; z

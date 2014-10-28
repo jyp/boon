@@ -123,14 +123,18 @@ if some when multiples sources are present."
 
 (defvar boon-goto-map (make-sparse-keymap))
 
-(define-key boon-goto-map "g" 'helm-resume)
+(define-key boon-goto-map "b" 'helm-buffers-list)
 (define-key boon-goto-map "f" 'helm-for-files) ;; see http://amitp.blogspot.se/2012/10/emacs-helm-for-finding-files.html
-(define-key boon-goto-map "l" 'goto-line)
+(define-key boon-goto-map "a" 'helm-apropos)
+(define-key boon-goto-map "g" 'helm-resume)
 (define-key boon-goto-map "i" 'helm-git-grep)
+(define-key boon-goto-map "k" 'helm-all-mark-rings)
+(define-key boon-goto-map "l" 'goto-line) ;; no helm version of this
+(define-key boon-goto-map "m" 'helm-multi-occur)
+(define-key boon-goto-map "r" 'helm-show-kill-ring)
+(define-key boon-goto-map "R" 'helm-registers)
 (define-key boon-goto-map "t" 'helm-etags-select)
 (define-key boon-goto-map "y" 'helm-flycheck)
-(define-key boon-goto-map "b" 'helm-buffers-list)
-(define-key boon-goto-map "m" 'helm-multi-occur)
 
 (provide 'boon-keys)
 ;;; boon-keys.el ends here
