@@ -402,8 +402,8 @@ line."
   (boon-take-region regs)
   (boon-set-insert-state))
 
-(defun boon-replace-character (replacement)
-  "Replace the character at point"
+(defun boon-replace-by-character (replacement)
+  "Replace the character at point, or region if it is active, by the REPLACEMENT character."
   (interactive "cType the character to use as a replacement")
   (if (use-region-p)
       (delete-and-extract-region (region-beginning) (region-end ))

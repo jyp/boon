@@ -42,6 +42,8 @@
 (define-key boon-moves-map "i"  'forward-char)
 (define-key boon-moves-map "<"  'boon-beginning-of-region)
 (define-key boon-moves-map ">"  'boon-end-of-region)
+(define-key boon-moves-map (kbd "C-,")      'beginning-of-buffer)
+(define-key boon-moves-map (kbd "C-.")      'end-of-buffer)
 
 (define-key boon-helm-command-map (kbd "q")    'helm-keyboard-quit)
 (define-key boon-helm-command-map (kbd "f")    'helm-follow-mode)
@@ -146,7 +148,7 @@
 (define-key boon-command-map "T" 'boon-treasure-region) ; "treasure"
 
 ;; d
-(define-key boon-command-map "d" 'boon-replace-character) ; "displace"
+(define-key boon-command-map "d" 'boon-replace-by-character) ; "displace"
 
 ;; Bottom row
 ;; z
