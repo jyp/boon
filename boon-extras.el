@@ -119,8 +119,6 @@
 (define-key boon-x-map "-" 'undo-tree-visualize)
 (define-key boon-x-map "," 'boon-mark-previous-like-this); cursors: Prev
 (define-key boon-x-map "." 'boon-mark-next-like-this); cursors: Next
-(define-key boon-x-map "m" 'mc/skip-to-previous-like-this)
-(define-key boon-x-map "/" 'mc/skip-to-next-like-this)
 (define-key boon-x-map "O" 'previous-window) ;; o is next window
 (define-key boon-x-map "S" 'save-some-buffers)
 (define-key boon-x-map "\\" 'align-regexp)
