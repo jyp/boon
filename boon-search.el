@@ -76,12 +76,6 @@ Moreover, highlight the regexp."
   ;; (global-hi-lock-mode 1)
   (hi-lock-face-buffer boon-regexp 'hi-yellow))
 
-(defun boon-unhighlight ()
-  "Pop a highlight regexp."
-  (interactive)
-  (when (bound-and-true-p hi-lock-interactive-patterns)
-    (hi-lock-unface-buffer (car (car hi-lock-interactive-patterns)))))
-
 (defun boon-isearch-region (forward beg end)
  "Search the current selection in the direction specified (as FORWARD).
 The selection is between (as BEG END)."

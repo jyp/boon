@@ -45,21 +45,6 @@
     (backward-char 1))
   (boon-set-insert-state))
 
-(defun boon-split-line ()
-  "split the current line"
-  (interactive)
-  (let ((indent-col (min (boon-current-line-indentation) (current-column))))
-    ;; kill the extra spaces
-    (save-excursion
-      (delete-and-extract-region (progn
-                                   (skip-chars-forward "\n\t " (line-end-position))
-                                   (point))
-                                 (progn
-                                   (skip-chars-backward "\n\t " (line-beginning-position))
-                                   (point))))
-    (newline)
-    (insert (make-string indent-col ?\ ))))
-
 
 (defun boon-query-replace ()
   "Query replace; but if the region is active, replace its contents"

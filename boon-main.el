@@ -9,6 +9,7 @@
 (require 'er-basic-expansions)
 
 (defmacro boon-with-ordered-region (body)
+  "Run the BODY, ensuring that the point is before the mark."
   `(if (< (point) (mark)) 
        ,body
        (progn (exchange-point-and-mark) ,body (exchange-point-and-mark))))
@@ -85,14 +86,17 @@
       (forward-char (if forward 1 -1)))))
 
 (defun boon-end-of-expression ()
+  "Jump to the end of the current expression."
   (interactive)
   (boon-edge-of-expression 't))
 
 (defun boon-beginning-of-expression ()
+  "Jump to the beginning of the current expression."
   (interactive)
   (boon-edge-of-expression nil))
 
 (defun boon-extract-region ()
+  "Extract (delete) the region if it is active."
   (when (use-region-p)
     (delete-and-extract-region (region-beginning) (region-end))))
 
@@ -102,7 +106,7 @@
   (call-interactively 'insert-register))
 
 (defun boon-copy-to-register ()
-  "Copy to register and deactivate mark"
+  "Copy to register and deactivate mark."
   (interactive)
   (call-interactively 'copy-to-register)
   (deactivate-mark))
@@ -114,25 +118,23 @@
   (yank))
 
 (defun boon-line-prefix ()
-  "return the text between beginning of line and position"
+  "Return the text between beginning of line and position."
   (buffer-substring-no-properties
    (line-beginning-position) 
    (point)))
 
 (defun boon-at-indent-or-more-p ()
-  "return non-nil if the point is at the current line
-indentation; or to the right."
+  "Return non-nil if the point is at the current line indentation; or to the right."
   (or (eolp)
       (and (not (boon-at-indent-p))
            (boon-blank-string-p (boon-line-prefix)))))
 
 (defun boon-at-indent-p ()
-  "return non-nil if the point is at the current line
-indentation"
+  "Return non-nil if the point is at the current line indentation."
 (eq (save-excursion (back-to-indentation) (point)) (point)))
 
 (defun boon-smarter-upward ()
-  "move upward, to a line with the same level of indentation, or less"
+  "Move upward, to a line with the same level of indentation, or less."
   (interactive)
   (back-to-indentation)
   (previous-logical-line)
@@ -140,7 +142,7 @@ indentation"
   (back-to-indentation))
 
 (defun boon-smarter-downward ()
-  "move downward, to a line with the same level of indentation, or less"
+  "Move downward, to a line with the same level of indentation, or less."
   (interactive)
   (back-to-indentation)
   (next-logical-line)
@@ -148,7 +150,7 @@ indentation"
   (back-to-indentation))
 
 (defun boon-smarter-backward ()
-  "move backward, over a whole syntactic unit"
+  "Move backward, over a whole syntactic unit."
   (interactive)
     (boon-jump-over-blanks-backward)
     (cond
@@ -176,6 +178,7 @@ indentation"
     )
 
 (defun boon-smarter-forward ()
+  "Move forward, over a whole syntactic unit."
   (interactive)
     (boon-jump-over-blanks)
     (cond
@@ -211,7 +214,7 @@ indentation"
 
 
 (defun boon-toggle-character-case ()
-  "Toggle the case of the character at point"
+  "Toggle the case of the character at point."
   (interactive)
   (let ((case-fold-search nil))
     (if (looking-at "[[:upper:]]")
@@ -221,13 +224,14 @@ indentation"
         (upcase-region (point) (+ (point) 1))))))
 
 (defun boon-toggle-case ()
+  "Toggle the case of the character at point, or cycle the case of the region if it is active."
   (interactive)
   (if (use-region-p)
       (call-interactively 'boon-toggle-region-case)
       (boon-toggle-character-case)))
 
 (defun boon-toggle-region-case (pos1 pos2)
-  "Cycles the region between 3 capitalizations: UPPER CASE, lower case, Title Case"
+  "Cycles the region between 3 capitalizations: UPPER CASE, lower case, Title Case."
   (interactive "r")
   (let* ((deactivate-mark nil)
          (case-fold-search nil)
@@ -247,7 +251,7 @@ indentation"
     (put this-command 'state cur-state)))
 
 (defun boon-toggle-mark ()
-  "Toggle region activation"
+  "Toggle region activation."
   (interactive)
   (if mark-active
       (deactivate-mark)
@@ -266,16 +270,16 @@ line."
       (beginning-of-line))))
 
 (defun boon-looking-at-comment (how-many)
-  "Is the current point looking at 'how many' comments? (negative for backwards)"
+  "Is the current point looking at HOW-MANY comments? (negative for backwards)?"
   (save-excursion
     (forward-comment how-many)))
 
 (defun boon-in-string-p ()
-  "Determine if the point is inside a string"
+  "Determine if the point is inside a string."
   (nth 3 (syntax-ppss)))
 
 (defun boon-looking-at-line-comment-start-p ()
-  "Are we looking at a comment-start? (and not in a string)"
+  "Are we looking at a comment-start?"
   (interactive)
   (and (boundp 'comment-start)
        comment-start
@@ -283,7 +287,8 @@ line."
        (not (boon-in-string-p))))
 
 (defun boon-end-of-line ()
-  "Toggle between jumping to 1. the last character of code on the
+  "Intelligently jump to the end of line.
+This function toggles between jumping to 1. the last character of code on the
 line 2. the last non-blank char on the line 3. the true end of
 line."
   (interactive)
@@ -304,7 +309,7 @@ line."
         (end-of-line)))))
 
 (defun boon-blank-string-p (string)
-  "Is the argument composed only of spaces and other blank characters?"
+  "Is the STRING composed only of spaces and other blank characters?"
   (equal "" (replace-regexp-in-string "[[:space:]]" "" string)))
 
 (defun boon-open-line-and-insert ()
@@ -332,7 +337,7 @@ line."
           (insert line-prefix))))))
 
 (defun boon-switch-mark ()
-  "if mark active, switch point and mark. Otherwise pop mark from mark ring."
+  "If mark active, switch point and mark, otherwise pop mark from mark ring."
   (interactive)
     (if mark-active
       (exchange-point-and-mark)
@@ -341,20 +346,36 @@ line."
         (pop-mark))))
 
 (defun boon-switch-mark-quick ()
-  "Pop marks until we find ourselves on a different line"
+  "Pop marks until we find ourselves on a different line."
   (interactive)
   (let ((orig-line (line-number-at-pos)))
     (while (> 1 (abs (- orig-line (line-number-at-pos))))
       (goto-char (mark))
       (pop-mark))))
 
+(defun boon-split-line ()
+  "Split the current line."
+  (interactive)
+  (let ((indent-col (min (boon-current-line-indentation) (current-column))))
+    ;; kill the extra spaces
+    (save-excursion
+      (delete-and-extract-region (progn
+                                   (skip-chars-forward "\n\t " (line-end-position))
+                                   (point))
+                                 (progn
+                                   (skip-chars-backward "\n\t " (line-beginning-position))
+                                   (point))))
+    (newline)
+    (insert (make-string indent-col ?\ ))))
+
 (defun boon-newline-dwim ()
-  "insert a new line do-what-i-mean style"
+  "Insert a new line do-what-i-mean style."
   (interactive)
   (if (and (not (eolp)) (boon-blank-string-p (boon-line-prefix)))
       (call-interactively 'boon-open-line)
-    (boon-split-line)))      
+    (boon-split-line)))
 (defun boon-mark-region (regs)
+  "Mark the regions REGS." ;; FIXME: use multiple cursors if the region is multiple.
   (interactive (list (boon-spec-region "mark")))
   (dolist (reg regs)
     (set-mark (car reg))
@@ -381,7 +402,7 @@ line."
 
 
 (defun boon-swap-region (regs)
-  "Swap the region with the top of the kill ring"
+  "Swap the region with the top of the kill ring (BUGGED)."
   (interactive (list (boon-spec-region "swap")))
   (dolist (reg regs)
     (kill-region (car reg) (cdr reg)))
@@ -393,11 +414,13 @@ line."
   )
   
 (defun boon-treasure-region (regs)
+  "Copy (kill-ring-save) the regions REGS."
   (interactive (list (boon-spec-region "treasure")))
   (dolist (reg regs)
     (kill-ring-save (car reg) (cdr reg))))
 
 (defun boon-substitute-region (regs)
+  "Kill the regions REGS, and switch to insertion mode" ;; TODO: multiple cursors if the region is multiple.
   (interactive (list (boon-spec-region "replace")))
   (boon-take-region regs)
   (boon-set-insert-state))
@@ -420,6 +443,12 @@ line."
     (message (format "Executing the command bound to %c" char))
     (call-interactively cmd nil [char])))
 
+(defun boon-unhighlight ()
+  "Pop a highlight regexp."
+  (interactive)
+  (when (bound-and-true-p hi-lock-interactive-patterns)
+    (hi-lock-unface-buffer (car (car hi-lock-interactive-patterns)))))
+
 (defun boon-quit ()
   "Exit the current modes we're in until no special state is remaining."
   (interactive)
@@ -438,6 +467,7 @@ line."
     (keyboard-quit))))
 
 (defun boon-stuff-at-point ()
+  "Return a meaningful piece of around at point."
   (interactive)
   (if (use-region-p)
       (buffer-substring-no-properties (region-beginning) (region-end))
@@ -485,9 +515,9 @@ unless: 1. the previous character is a backslash, in which case a
 
 
 (defun boon-on-region (f)
- "apply the argument to the current region"
+ "Apply F to the current region."
    (funcall f (region-beginning) (region-end)))
 
-(provide 'boon-main)          
+(provide 'boon-main)
 ;;; boon-main ends here
 

@@ -32,6 +32,7 @@
 (define-key boon-command-map [(escape)] 'boon-quit)
 
 (defun boon-push-events (kbd-string)
+  "Push back some key events (as KBD-STRING) in the queue."
   (setq unread-command-events
         (append (kbd kbd-string) unread-command-events)))
   
