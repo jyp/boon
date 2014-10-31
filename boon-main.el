@@ -230,15 +230,15 @@
       (call-interactively 'boon-toggle-region-case)
       (boon-toggle-character-case)))
 
-(defun boon-toggle-region-case (pos1 pos2)
-  "Cycles the region between 3 capitalizations: UPPER CASE, lower case, Title Case."
+(defun boon-toggle-region-case (beg end)
+  "Cycle the region between BEG and END through 3 capitalizations: UPPER CASE, lower case, Title Case."
   (interactive "r")
   (let* ((deactivate-mark nil)
          (case-fold-search nil)
          (cur-state (if (eq last-command this-command)
                         (get this-command 'state)
                       (save-excursion
-                        (goto-char pos1)
+                        (goto-char beg)
                         (cond
                          ((looking-at "[[:upper:]][[:upper:]]") 'upcase-region)
                          ((looking-at "[[:upper:]][[:lower:]]") 'capitalize-region)
@@ -247,7 +247,7 @@
                                             (capitalize-region . upcase-region)
                                             (upcase-region . downcase-region)
                                             ))))
-    (funcall cur-state pos1 pos2)
+    (funcall cur-state beg end)
     (put this-command 'state cur-state)))
 
 (defun boon-toggle-mark ()
@@ -321,11 +321,13 @@ line."
       (insert (make-string indent-lvl 32))
       (boon-set-insert-state)))
 (defun boon-open-next-line-and-insert ()
+  "Open the line after the current one."
   (interactive)
   (next-logical-line)
   (boon-open-line-and-insert))
 
 (defun boon-open-line ()
+  "Open the line before the current one."
   (interactive)
   (save-excursion
     (let ((line-prefix (boon-line-prefix)))
@@ -346,7 +348,7 @@ line."
         (pop-mark))))
 
 (defun boon-switch-mark-quick ()
-  "Pop marks until we find ourselves on a different line."
+  "Pop the mark ring until we find ourselves on a different line."
   (interactive)
   (let ((orig-line (line-number-at-pos)))
     (while (> 1 (abs (- orig-line (line-number-at-pos))))
