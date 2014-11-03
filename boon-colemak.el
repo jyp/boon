@@ -17,7 +17,7 @@
 (define-key boon-select-map "q"  'boon-select-outside-quotes)
 (define-key boon-select-map "'"  'boon-select-blanks) ;; blanKs
 (define-key boon-select-map " "  'boon-select-line)
-(define-key boon-select-map "r"  'boon-select-justline) ;; Ribbon
+(define-key boon-select-map "r"  'boon-select-justline) ;; Row
 (define-key boon-select-map "a"  'boon-select-borders) ;; Around
 (define-key boon-select-map "z"  'boon-select-content) ;; inZide
 

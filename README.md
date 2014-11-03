@@ -63,7 +63,7 @@ and add the following to your configuration:
     (boon-mode)
 
 You can jump-start by reading the
-[cheat sheet](cheat-sheet.svg) directly, but reading
+[cheat sheet](https://pdf.yt/d/hSKUThNNSxrNFXkQ) directly, but reading
 through this modified (and shortened) version of the Emacs tutorial is
 recommended:
 
