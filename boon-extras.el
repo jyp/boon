@@ -45,21 +45,6 @@
     (backward-char 1))
   (boon-set-insert-state))
 
-(defun boon-split-line ()
-  "split the current line"
-  (interactive)
-  (let ((indent-col (min (boon-current-line-indentation) (current-column))))
-    ;; kill the extra spaces
-    (save-excursion
-      (delete-and-extract-region (progn
-                                   (skip-chars-forward "\n\t " (line-end-position))
-                                   (point))
-                                 (progn
-                                   (skip-chars-backward "\n\t " (line-beginning-position))
-                                   (point))))
-    (newline)
-    (insert (make-string indent-col ?\ ))))
-
 
 (defun boon-query-replace ()
   "Query replace; but if the region is active, replace its contents"
@@ -134,8 +119,6 @@
 (define-key boon-x-map "-" 'undo-tree-visualize)
 (define-key boon-x-map "," 'boon-mark-previous-like-this); cursors: Prev
 (define-key boon-x-map "." 'boon-mark-next-like-this); cursors: Next
-(define-key boon-x-map "m" 'mc/skip-to-previous-like-this)
-(define-key boon-x-map "/" 'mc/skip-to-next-like-this)
 (define-key boon-x-map "O" 'previous-window) ;; o is next window
 (define-key boon-x-map "S" 'save-some-buffers)
 (define-key boon-x-map "\\" 'align-regexp)

@@ -1,9 +1,9 @@
 *~
+*.aux
+*.boxes
+*.log
+
 /cheat-sheet
 /cheat-sheet.hi
 /cheat-sheet.o
-/cheat.aux
-/cheat.boxes
-/cheat.log
-/cheat.pdf
-/cheat.tex
+/cheat-sheet.tex

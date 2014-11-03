@@ -15,18 +15,15 @@
 (define-key boon-helm-command-map [(escape)]       'helm-keyboard-quit)
 (define-key boon-helm-command-map (kbd "M-SPC")    'helm-toggle-visible-mark)
 (define-key boon-helm-command-map (kbd "SPC")      'boon-helm-set-insert-state)
-(define-key boon-helm-command-map (kbd "<RET>")    'helm-exit-minibuffer)
+(define-key boon-helm-command-map (kbd "<RET>")    nil) ;; so we simply use the underlying helm keymap binding for return
 (define-key boon-helm-command-map (kbd "<tab>")    'helm-select-action)
 (define-key boon-helm-command-map (kbd "C-<RET>")  'helm-execute-persistent-action)
 
 (define-key boon-command-map [(return)] 'undefined)
-(define-key boon-command-map (kbd "RET") 'undefined)
+(define-key boon-command-map (kbd "<RET>") 'undefined)
 (define-key boon-command-map [(backspace)] 'undefined)
-(define-key boon-command-map (kbd "DEL") 'undefined)
+(define-key boon-command-map (kbd "<DEL>") 'undefined)
 (define-key boon-command-map "`" 'boon-toggle-case)
-;; (dolist (d '("M-0" "M-1" "M-2" "M-3" "M-4" "M-5" "M-6" "M-7" "M-8" "M-9"
-;;              "C-0" "C-1" "C-2" "C-3" "C-4" "C-5" "C-6" "C-7" "C-8" "C-9"))
-;;   (define-key boon-command-map (read-kbd-macro d) 'digit-argument))
 
 (define-key boon-command-map "_" 'redo)
 (define-key boon-command-map "-" 'undo)
@@ -35,6 +32,7 @@
 (define-key boon-command-map [(escape)] 'boon-quit)
 
 (defun boon-push-events (kbd-string)
+  "Push back some key events (as KBD-STRING) in the queue."
   (setq unread-command-events
         (append (kbd kbd-string) unread-command-events)))
   

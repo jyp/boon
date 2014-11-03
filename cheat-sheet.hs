@@ -210,13 +210,13 @@ regDiag = do
 x +++ y = zipWith (++) x y
 
 
-main = renderTex "cheat" docu
+main = renderTex "cheat-sheet" docu
 
 docu :: TeX
 docu = preamble «
-BOON cheat sheet. It is recommended to read the TUTORIAL to make sense of this.
+BOON cheat sheet. It is recommended to read the TUTORIAL to make sense of this. The color of a key indicates the type of argument it expects.
 
-Command mode bindings:
+Command mode bindings.
 @keyBDiag
 
 @vspace"1em"
