@@ -55,12 +55,12 @@ REQUIREMENTS
 - Colemak layout
 
 Install Boon (perhaps using
-[![MELPA](http://melpa.org/packages/boon-badge.svg)](http://melpa.org/#/boon)),
+[![MELPA](http://stable.melpa.org/packages/boon-badge.svg)](http://stable.melpa.org/#/boon)),
 and add the following to your configuration:
 
     (require 'boon-colemak) ;; qwerty mode not implemented (contributions welcome)
     (require 'boon-extras) ;; optional
-    (boon-mode)
+    (boon-mode) ;; enable boon everywhere (use turn-on-boon-mode) to try locally
 
 You can jump-start by reading the
 [cheat sheet](https://pdf.yt/d/hSKUThNNSxrNFXkQ) directly, but reading
