@@ -190,10 +190,15 @@ In the above "e" is the argument to the "t" command.
 
 >> Type "tn" to delete backwards, up to the beginning of a word
 
-You can also use a left-hand region specifier to delete
+You can also use a left-hand region specifier to delete:
 
 >> Type "ts" to delete the symbol where the cursor is (even if in the
    middle of the symbol)
+
+One of the most useful region specifier is <spc>, which refers to the
+current line.
+
+>> Type "t<spc>" to delete the current line.
 
 
 The region specifiers are defined in the boon-select-map keymap. (Type
@@ -228,9 +233,16 @@ the text between the two positions.
 
 Selecting text with <SPC> actually takes an argument.
 
->> Type <SPC> p to select a paragraph
+>> Type "<SPC>p" to select a paragraph
 
 >> Type <SPC> again to undo the selection
+
+The region specifier "current line" (<SPC>) can be given to the
+marking command (<SPC>).
+
+>> Type <SPC><SPC> to select the current line
+>> Type "y" a few times to select some lines
+>> Type "t" to delete all these lines
 
 The command for yanking is "s". (mnemonic: splice)  
 
