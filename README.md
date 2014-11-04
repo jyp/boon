@@ -1,11 +1,13 @@
 Boon: An Ergonomic Command Mode for Emacs
 ==========================================
 
-Boon brings modal editing capabilities to Emacs and...
+Boon is another package for modal editing.
 
-- It tries to be as ergonomic as possible. (See below)
-- It remains lightweight (~300 loc for its core.)
-- It attempts to integrate with Emacs as smoothly as possible
+Selling points:
+- Ergonomic: common commands are easy to type. (See below)
+- Lightweight: ~300 loc for its core.
+- Good emacs integration: takes advantages and leverages existing
+  emacs infrastructure instead of re-inventing the wheel.
 
 
 Design
