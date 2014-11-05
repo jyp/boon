@@ -127,10 +127,10 @@ a list of regions, in the form ((beginning . end) ...)"
                 (km boon-select-map))
             (setq current-prefix-arg 0)
             (while (and km (keymapp km))
-              (let ((last-char (read-char (format "%s %s" msg current-prefix-arg))))
+              (let ((last-char (read-key (format "%s %s" msg current-prefix-arg))))
                (if (and (>= last-char ?0) (<= last-char ?9))
                    (setq current-prefix-arg (+ (- last-char ?0) (* 10 current-prefix-arg )))
-                 (setq km (lookup-key km (make-string 1 last-char))))))
+                 (setq km (lookup-key km (vector last-char))))))
             (when (eq current-prefix-arg 0)
               (setq current-prefix-arg nil))
             (if km

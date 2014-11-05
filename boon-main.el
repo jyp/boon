@@ -439,8 +439,8 @@ line."
   "Execute the command bound to the character CHAR if boon was not enabled."
   (interactive "cThe character to insert or command to execute")
   (let ((cmd
-         (or (and (current-local-map) (lookup-key (current-local-map) (make-string 1 char)))
-             (lookup-key (current-global-map) (make-string 1 char)))))
+         (or (and (current-local-map) (lookup-key (current-local-map) (vector char)))
+             (lookup-key (current-global-map) (vector char)))))
     (setq last-command-event char)
     (message (format "Executing the command bound to %c" char))
     (call-interactively cmd nil [char])))
