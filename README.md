@@ -6,7 +6,7 @@ Boon is another package for modal editing.
 Selling points:
 - Ergonomic: common commands are easy to type. (See below)
 - Lightweight: ~300 loc for its core.
-- Good emacs integration: takes advantages and leverages existing
+- Good emacs integration: takes advantage of, and leverages existing
   emacs infrastructure instead of re-inventing the wheel.
 
 
