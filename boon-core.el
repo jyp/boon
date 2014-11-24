@@ -114,6 +114,10 @@
     magit-log-mode
     magit-status-mode
     package-menu-mode
+    mu4e-headers-mode
+    mu4e-view-mode
+    mu4e-main-mode
+    Info-mode
     )
     "List of modes which start in boon-off-state, and go back to off state instead of inserting."
 )
