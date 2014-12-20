@@ -15,11 +15,14 @@
 (define-key boon-select-map "c"  'boon-select-inside-pairs) ;; Contents
 (define-key boon-select-map "s"  'boon-select-wim) ;; symbol
 (define-key boon-select-map "q"  'boon-select-outside-quotes)
-(define-key boon-select-map "'"  'boon-select-blanks) ;; blanKs
 (define-key boon-select-map " "  'boon-select-line)
 (define-key boon-select-map "r"  'boon-select-justline) ;; Row
 (define-key boon-select-map "a"  'boon-select-borders) ;; Around
 (define-key boon-select-map "z"  'boon-select-content) ;; inZide
+
+(define-key boon-select-map "'"  'boon-switch-mark)
+(define-key boon-select-map "k"  'boon-select-blanks) ;; blanKs
+
 
 (define-key boon-moves-map "k" 'boon-switch-mark) ; bacK to marK
 (define-key boon-moves-map "K" 'boon-switch-mark-quick) ; quicK bacK to marK
