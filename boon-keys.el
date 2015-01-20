@@ -95,12 +95,6 @@
 ;; Helm keys
 (eval-after-load 'helm
   '(progn
-     (define-key helm-map (kbd "C-l")        'previous-history-element)
-     (define-key helm-map (kbd "C-;")        'next-history-element)
-     (define-key helm-map (kbd "C-u")        'helm-previous-line)
-     (define-key helm-map (kbd "C-y")        'helm-next-line)
-     (define-key helm-map (kbd "C-,")        'helm-previous-page)
-     (define-key helm-map (kbd "C-.")        'helm-next-page)
      (define-key helm-map [(tab)]            'helm-select-action)
      (define-key helm-map (kbd "C-z")        'undefined)
      (define-key helm-map [(control return)] 'helm-execute-persistent-action)

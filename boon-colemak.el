@@ -177,6 +177,14 @@
 (define-key boon-command-map "H" 'ace-jump-char-mode) ; Hop
 (define-key boon-command-map "'" 'boon-toggle-mark)
 
-
+(eval-after-load 'helm
+  '(progn
+     (define-key helm-map (kbd "C-l")        'previous-history-element)
+     (define-key helm-map (kbd "C-;")        'next-history-element)
+     (define-key helm-map (kbd "C-u")        'helm-previous-line)
+     (define-key helm-map (kbd "C-y")        'helm-next-line)
+     (define-key helm-map (kbd "C-,")        'helm-previous-page)
+     (define-key helm-map (kbd "C-.")        'helm-next-page)
+     ))
 (provide 'boon-colemak)
 ;;; boon-colemak.el ends here
