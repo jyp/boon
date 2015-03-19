@@ -9,7 +9,7 @@
 
 (require 'boon-core)
 
-(defvar boon-enclosures
+(defcustom boon-enclosures
       '(
         (?$ . ("$" "$")) 
         (?| . ("|" "|")) 
@@ -20,7 +20,8 @@
         (?a . ("<" ">"))
         (?b . ("[" "]"))
         (?c . ("{-" "-}"))
-        (?d . ("\"" "\""))
+        (?d . ("\"" "\"")) ;; double quotes
+        (?D . ("``" "''")) ;; double quotes
         (?f . ("«" "»")) ;; french quotes
         (?h . ("#" "#")) ;; hash
         (?m . ("`" "'"))
@@ -29,7 +30,11 @@
         (?r . ("{" "}"))
         (?o . ("⟦" "⟧")) ;; oxford brackets
         (?t . ("~" "~")) ;; tilda
-        ))
+        )
+        "Enclosures to use with the around command."
+        :type '(alist :key-type character :value-type (list string))
+        :group 'boon
+        )
 
 (defun boon-spec-enclosure ()
   "Specify an enclosure style."
