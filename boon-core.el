@@ -100,7 +100,7 @@
   (setq boon-helm-command-state t)
   (setq cursor-type 'box))
 
-(defvar boon-special-mode-list
+(defcustom boon-special-mode-list
   '(
     Buffer-menu-mode
     Custom-mode
@@ -120,6 +120,7 @@
     Info-mode
     )
     "List of modes which start in boon-off-state, and go back to off state instead of inserting."
+    :group 'boon
 )
 
 (defun boon-special-mode-p ()
