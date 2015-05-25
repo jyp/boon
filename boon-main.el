@@ -478,7 +478,6 @@ line."
   (require 'skeleton)
   (setq skeleton-pair t)
   (electric-pair-mode)
-;; (define-key boon-insert-map "\'" 'self-insert-quote)
 
 (defun boon-empty-pair-p ()
   "Is the point at the middle of an empty pair of matched parens?"
@@ -500,6 +499,7 @@ line."
     (delete-char 1))
   (backward-delete-char-untabify 1))
 
+;; TODO: deprecate and delete
 (defun boon-self-insert-quote ()
   "Insert doubled quote.
 unless: 1. the previous character is a backslash, in which case a
