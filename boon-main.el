@@ -475,13 +475,15 @@ line."
       (buffer-substring-no-properties (region-beginning) (region-end))
       (or (thing-at-point 'symbol)
           (error "Nothing relevant at point; move to a symbol or select a region"))))
-  (require 'skeleton)
-  (setq skeleton-pair t)
-  (electric-pair-mode)
+
+;; TODO: remove
+(require 'skeleton)
+(setq skeleton-pair t)
 
 (defun boon-empty-pair-p ()
   "Is the point at the middle of an empty pair of matched parens?"
   (interactive)
+  (declare (obsolete "emacs 24.5 electric pair mode is good enough" "20150527"))
   (eq (caddr
             (assq (preceding-char)
              (or skeleton-pair-alist skeleton-pair-default-alist)))
@@ -490,22 +492,24 @@ line."
 (defun boon-empty-quotes-p ()
   "Is the point in the middle of an empty pair of quotes?"
   (interactive)
+  (declare (obsolete "emacs 24.5 electric pair mode is good enough" "20150527"))
   (and (eq (preceding-char) (following-char))
        (member (following-char) '(?\" ?\'))))
 
 (defun boon-smart-insert-backspace2 ()
   (interactive)
+  (declare (obsolete "emacs 24.5 electric pair mode is good enough" "20150527"))
   (when (or (boon-empty-pair-p) (boon-empty-quotes-p))
     (delete-char 1))
   (backward-delete-char-untabify 1))
 
-;; TODO: deprecate and delete
 (defun boon-self-insert-quote ()
   "Insert doubled quote.
 unless: 1. the previous character is a backslash, in which case a
   single quote is inserted or 2. the next character is a quote in
   which case the cursor simply jumps over it."
   (interactive)
+  (declare (obsolete "emacs 24.5 electric pair mode is good enough" "20150527"))
   (cond
    ((equal (this-command-keys) (make-string 1 (following-char)))
     (forward-char 1))

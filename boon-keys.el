@@ -81,7 +81,7 @@
 (define-key boon-insert-map [remap newline] 'boon-newline-dwim)
 
 (define-key boon-insert-map [(escape)] 'boon-set-command-state)
-(define-key boon-insert-map [backspace] 'boon-smart-insert-backspace2)
+;; (define-key boon-insert-map [backspace] 'boon-smart-insert-backspace2)
 ;; (define-key boon-insert-map "\"" 'boon-self-insert-quote) ;; not a good idea in emacs 24.5
 
 ;; Global rebinds
