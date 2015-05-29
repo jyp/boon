@@ -188,3 +188,7 @@
      ))
 (provide 'boon-colemak)
 ;;; boon-colemak.el ends here
+
+
+(define-key indent-rigidly-map "i" 'indent-rigidly-right)
+(define-key indent-rigidly-map "e" 'indent-rigidly-left)

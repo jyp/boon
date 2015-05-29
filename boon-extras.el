@@ -9,34 +9,17 @@
 
 (require 'boon-core)
 (require 'boon-main)
-(defvar boon-indent-map (make-sparse-keymap))
 
 (defun boon-adjust-indent ()
- "Switch temporarily to adjust indentation mode."
+ "Adjust indentation of the region or current line."
  (interactive)
  (unless (use-region-p)
    (set-mark (line-beginning-position))
-   (end-of-line)
-   (deactivate-mark))
- (set-temporary-overlay-map boon-indent-map t))
-
-(defun boon-unindent-rigidly (beg end count)
-  "The opposite of `indent-rigidly'."
-  (interactive "r\np")
-  (indent-rigidly beg end (- count)))
-
-(progn
-    (setq boon-indent-map (make-sparse-keymap))
-    (define-key boon-indent-map "e" 'boon-unindent-rigidly)
-    (define-key boon-indent-map "i" 'indent-rigidly))
-
-
-(defun boon-split-word ()
-  "insert a space"
-  (interactive)
-  (insert " "))
+   (end-of-line))
+ (call-interactively 'indent-rigidly))
 
 (defun boon-open-word ()
+  "Insert a new word."
   (interactive)
   (unless (eq (preceding-char) 32)
     (insert (make-string 1 32)))
