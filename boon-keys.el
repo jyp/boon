@@ -99,18 +99,6 @@
      (define-key helm-map (kbd "C-z")        'undefined)
      (define-key helm-map [(control return)] 'helm-execute-persistent-action)
      (define-key helm-map [(escape)] 'boon-helm-set-command-state)
-
-     ;; This won't be needed with emacs 24.4 (helm uses set-transient-map)
-     (defun helm-maybe-update-keymap ()
-       "Handle differents keymaps in multiples sources.
-This function is meant to be run in `helm-move-selection-after-hook'.
-It will override `helm-map' with the keymap attribute of current source
-if some when multiples sources are present."
-       (with-helm-window
-         (let* ((source (helm-get-current-source))
-                (kmap (and (listp source) ; Check if source is empty.
-                           (assoc-default 'keymap source))))
-           (when kmap (set-temporary-overlay-map kmap)))))
      ))
 
 (defvar boon-goto-map (make-sparse-keymap))
