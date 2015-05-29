@@ -27,7 +27,7 @@
 
 (define-key boon-command-map "_" 'redo)
 (define-key boon-command-map "-" 'undo)
-(define-key boon-command-map "\\" 'universal-argument)
+(define-key boon-command-map "=" 'universal-argument)
 (define-key boon-command-map " " 'boon-drop-mark)
 (define-key boon-command-map [(escape)] 'boon-quit)
 
