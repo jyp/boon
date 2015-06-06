@@ -171,8 +171,8 @@
 
 ;; RIGHT HAND: movement and marking commands.
 ;; Most of these are actually in the boon-moves-map; however some don't quite work there; so they end up here.
-(define-key boon-command-map (kbd "C-u") 'scroll-up-line)
-(define-key boon-command-map (kbd "C-y") 'scroll-down-line)
+(define-key boon-command-map (kbd "C-u") 'scroll-down-line)
+(define-key boon-command-map (kbd "C-y") 'scroll-up-line)
 (define-key boon-command-map "h" 'ace-jump-word-mode) ; hop
 (define-key boon-command-map "H" 'ace-jump-char-mode) ; Hop
 (define-key boon-command-map "'" 'boon-toggle-mark)
