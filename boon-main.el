@@ -127,7 +127,7 @@
   "Return non-nil if the point is at the current line indentation; or to the right."
   (or (eolp)
       (and (not (boon-at-indent-p))
-           (boon-blank-string-p (boon-line-prefix)))))
+           (string-blank-p (boon-line-prefix)))))
 
 (defun boon-at-indent-p ()
   "Return non-nil if the point is at the current line indentation."
@@ -308,10 +308,6 @@ line."
       (unless (funcall progress)
         (end-of-line)))))
 
-(defun boon-blank-string-p (string)
-  "Is the STRING composed only of spaces and other blank characters?"
-  (equal "" (replace-regexp-in-string "[[:space:]]" "" string)))
-
 (defun boon-open-line-and-insert ()
   "Open a new line, indented as much as the current one, and switch to insert mode."
   (interactive)
@@ -333,7 +329,7 @@ line."
     (let ((line-prefix (boon-line-prefix)))
       ;; (message "next-line-prefix is %S" next-line-prefix)
       (open-line 1)
-      (when (boon-blank-string-p line-prefix)
+      (when (string-blank-p line-prefix)
         (progn
           (forward-char 1)
           (insert line-prefix))))))
@@ -373,7 +369,7 @@ line."
 (defun boon-newline-dwim ()
   "Insert a new line do-what-i-mean style."
   (interactive)
-  (if (and (not (eolp)) (boon-blank-string-p (boon-line-prefix)))
+  (if (and (not (eolp)) (string-blank-p (boon-line-prefix)))
       (call-interactively 'boon-open-line)
     (boon-split-line)))
 (defun boon-mark-region (regs)
