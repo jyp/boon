@@ -45,6 +45,8 @@
 (define-key boon-moves-map "i"  'forward-char)
 (define-key boon-moves-map "<"  'boon-beginning-of-region)
 (define-key boon-moves-map ">"  'boon-end-of-region)
+(define-key boon-moves-map "h"  'avy-goto-word-1)
+(define-key boon-moves-map "H"  'avy-goto-word-1)
 (define-key boon-moves-map (kbd "C-,")      'beginning-of-buffer)
 (define-key boon-moves-map (kbd "C-.")      'end-of-buffer)
 
@@ -173,8 +175,8 @@
 ;; Most of these are actually in the boon-moves-map; however some don't quite work there; so they end up here.
 (define-key boon-command-map (kbd "C-u") 'scroll-down-line)
 (define-key boon-command-map (kbd "C-y") 'scroll-up-line)
-(define-key boon-command-map "h" 'ace-jump-word-mode) ; hop
-(define-key boon-command-map "H" 'ace-jump-char-mode) ; Hop
+(define-key boon-command-map "h" 'avy-goto-word-1) ; hop
+(define-key boon-command-map "H" 'avy-goto-char) ; Hop
 (define-key boon-command-map "'" 'boon-toggle-mark)
 
 (eval-after-load 'helm
