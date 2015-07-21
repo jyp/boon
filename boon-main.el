@@ -418,7 +418,7 @@ line."
     (kill-ring-save (car reg) (cdr reg))))
 
 (defun boon-substitute-region (regs)
-  "Kill the regions REGS, and switch to insertion mode" ;; TODO: multiple cursors if the region is multiple.
+  "Kill the regions REGS, and switch to insertion mode." ;; TODO: multiple cursors if the region is multiple.
   (interactive (list (boon-spec-region "replace")))
   (boon-take-region regs)
   (boon-set-insert-state))
