@@ -81,6 +81,7 @@
 (defun boon-select-list () (interactive) (boon-select-thing-at-point 'list))
 (defun boon-select-sexp () (interactive) (boon-select-thing-at-point 'sexp))
 (defun boon-select-outside-pairs () (interactive) (boon-select-from-region 'er/mark-outside-pairs))
+(defun boon-select-comment () (interactive) (boon-select-from-region 'er/mark-comment))
 (defun boon-select-inside-pairs () (interactive) (boon-select-from-region 'er/mark-inside-pairs))
 (defun boon-select-outside-quotes () (interactive) (boon-select-from-region 'er/mark-outside-quotes))
 (defun boon-select-whitespace () (interactive) (boon-select-thing-at-point 'whitespace))
