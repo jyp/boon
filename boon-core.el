@@ -200,17 +200,6 @@
    (boon-off-state     "OFF")
    (t "???")))
 
-(defface boon-modeline-cmd '((t (:background "red"))) "face for modeline indicator of boon command state")
-(defface boon-modeline-ins '((t (:background "green")))"face for modeline indicator of boon insert state")
-(defface boon-modeline-off '((t (:background "blue")))"face for modeline indicator of boon off state")
-
-(defun boon-state-face ()
-  "Return a face appropriate for a powerline-style entry in the modeline."
-  (cond
-   (boon-command-state 'boon-modeline-cmd)
-   (boon-insert-state 'boon-modeline-ins)
-   (boon-off-state 'boon-modeline-off)))
-
 (provide 'boon-core)
 ;;; boon-core ends here
 
