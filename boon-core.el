@@ -7,7 +7,6 @@
 
 ;;; Code:
 
-(require 'face-remap)
 (require 'cl-macs)
 ;; Maps
 
@@ -39,7 +38,6 @@
   "non-nil if the helm command mode is active. Makes sense only
   in a helm minibuffer.")
 
-(defvar-local boon-modeline-face-cookie nil)
 (defun boon-set-state (state)
   "Set the boon state (as STATE) for this buffer."
   (setq boon-command-state nil)
@@ -54,15 +52,11 @@
         (let ((orig (point)))
           (skip-chars-forward " " (line-end-position))
           (when (eolp) (delete-and-extract-region orig (point))))))
-    (setq boon-modeline-face-cookie
-          (face-remap-add-relative
-           'mode-line '((:foreground "darkred") mode-line)))
     (setq cursor-type 'bar))
   (cond (boon-command-state
          ;; (do-auto-save)
          (setq cursor-type 'box)
-         (when (bound-and-true-p boon-modeline-face-cookie)
-           (face-remap-remove-relative boon-modeline-face-cookie)))
+           )
         (boon-off-state)
         (boon-insert-state
          ;; remember where the last edition was by pushing a mark
@@ -195,12 +189,27 @@
   (boon-local-mode -1))
 
 (defun boon-modeline-string ()
+  "Return the modeline string appropriate for the current state."
+  (concat " Boon:" (boon-state-string)))
+
+(defun boon-state-string ()
   "Return a string describing the current state."
-  (concat " Boon:" (cond
+  (cond
    (boon-command-state "CMD")
    (boon-insert-state  "INS")
    (boon-off-state     "OFF")
-   (t "???"))))
+   (t "???")))
+
+(defface boon-modeline-cmd '((t (:background "red"))) "face for modeline indicator of boon command state")
+(defface boon-modeline-ins '((t (:background "green")))"face for modeline indicator of boon insert state")
+(defface boon-modeline-off '((t (:background "blue")))"face for modeline indicator of boon off state")
+
+(defun boon-state-face ()
+  "Return a face appropriate for a powerline-style entry in the modeline."
+  (cond
+   (boon-command-state 'boon-modeline-cmd)
+   (boon-insert-state 'boon-modeline-ins)
+   (boon-off-state 'boon-modeline-off)))
 
 (provide 'boon-core)
 ;;; boon-core ends here
