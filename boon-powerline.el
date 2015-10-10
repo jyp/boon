@@ -26,7 +26,7 @@
   (setq-default mode-line-format
                 '("%e"
                   (:eval
-                   (let* ((active (eq powerline-selected-window (selected-window)))
+                   (let* ((active (powerline-selected-window-active))
                           (mode-line (if active 'mode-line 'mode-line-inactive))
                           (face0 (if active (boon-state-face) nil))
                           (face1 (if active 'powerline-active1 'powerline-inactive1))
