@@ -154,7 +154,10 @@
 
 (defun boon-minibuf-hook ()
   "Detect if the minibuffer is a helm minibuffer, and activate boon helm command mode if so."
-  (if (and (bound-and-true-p helm--minor-mode) (not (equal (minibuffer-prompt) "M-x ")))
+  (if (and (bound-and-true-p helm--minor-mode)
+           (not (equal (minibuffer-prompt) "M-x ")
+           ;; another variables to check for special conditions could be helm-map
+           ))
       (boon-helm-set-command-state)
     (setq cursor-type 'bar)))
 
