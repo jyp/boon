@@ -154,13 +154,9 @@
 
 (defun boon-minibuf-hook ()
   "Detect if the minibuffer is a helm minibuffer, and activate boon helm command mode if so."
-  (cl-flet ((eq-if-bound (sym val) (and (boundp sym) (eq (eval sym) val))))
-    (cond
-     ((eq-if-bound 'helm-map (current-local-map))
-      (boon-helm-set-command-state))
-     ((eq-if-bound 'helm-git-grep-map (current-local-map))
-      (boon-helm-set-command-state))
-     (t (setq cursor-type 'bar)))))
+  (if (and (bound-and-true-p helm--minor-mode) (not (equal (minibuffer-prompt) "M-x ")))
+      (boon-helm-set-command-state)
+    (setq cursor-type 'bar)))
 
 
 ;; The function `boon-initialize' should only be used to initialize
