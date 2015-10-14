@@ -37,7 +37,7 @@
         )
 
 (defun boon-spec-enclosure ()
-  "Specify an enclosure style."
+  "Specify an enclosure style.  To be used as an argument to interactive."
   (let ((c (read-char "Specify the enclosure")))
     (cdr (assoc c boon-enclosures))))
 
@@ -98,6 +98,10 @@
 (defun boon-normalize-reg (reg)
   "Normalize the region REG by making sure beginning < end."
   (cons (min (cdr reg) (car reg)) (max (cdr reg) (car reg))))
+
+(defun boon-collapse-reg (reg)
+  "Collapse the region REG by moving the end to the beginning."
+  (cons (car reg) (cdr reg)))
 
 (defun boon-borders (reg how-much)
   "Given a normalized region REG, return its borders, whose size is HOW-MUCH."
