@@ -110,11 +110,12 @@
 (define-key boon-goto-map "i" 'helm-git-grep)
 (define-key boon-goto-map "k" 'helm-all-mark-rings)
 (define-key boon-goto-map "l" 'goto-line) ;; no helm version of this
-(define-key boon-goto-map "m" 'helm-multi-occur)
+(define-key boon-goto-map "o" 'helm-multi-occur)
 (define-key boon-goto-map "r" 'helm-show-kill-ring)
 (define-key boon-goto-map "R" 'helm-registers)
 (define-key boon-goto-map "t" 'helm-etags-select)
 (define-key boon-goto-map "y" 'helm-flycheck)
+(define-key boon-goto-map "m" 'helm-mark-ring)
 
 (provide 'boon-keys)
 ;;; boon-keys.el ends here
