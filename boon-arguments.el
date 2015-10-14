@@ -99,15 +99,11 @@
   "Normalize the region REG by making sure beginning < end."
   (cons (min (cdr reg) (car reg)) (max (cdr reg) (car reg))))
 
-(defun boon-collapse-reg (reg)
-  "Collapse the region REG by moving the end to the beginning."
-  (cons (car reg) (cdr reg)))
-
 (defun boon-borders (reg how-much)
   "Given a normalized region REG, return its borders, whose size is HOW-MUCH."
   (list (cons (cdr reg) (- (cdr reg) how-much))
         (cons (car reg) (+ (car reg) how-much))))
-        
+
 (defun boon-content (reg)
   "Given a normalized region REG, return its contents (crop the region by 1)."
   (cons (+ (car reg) 1) (- (cdr reg) 1)))
@@ -129,6 +125,7 @@ This function is meant to be called interactively."
 The prompt (as MSG) is displayed.  This function actually returns
 a list of regions, in the form ((beginning . end) ...)"
   (if (use-region-p) (list (cons (region-beginning) (region-end)))
+  ;; TODO: detect multiple cursors and take all regions; for those commands that do set the multiple cursors.
           (let (current-prefix-arg
                 ;; this code fiddles with the prefix arg; but if we do
                 ;; not hide our fiddling, the next command will use

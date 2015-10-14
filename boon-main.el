@@ -7,6 +7,7 @@
 (require 'boon-arguments)
 
 (require 'er-basic-expansions)
+(require 'multiple-cursors)
 
 (defmacro boon-with-ordered-region (body)
   "Run the BODY, ensuring that the point is before the mark."
@@ -372,12 +373,29 @@ line."
   (if (and (not (eolp)) (string-blank-p (boon-line-prefix)))
       (call-interactively 'boon-open-line)
     (boon-split-line)))
+
+(defun boon-lay-multiple-cursors (place-cursor regs)
+  "Create multiple cursor regions, using REGS.
+If there is more than one, use mc/create-fake-cursor-at-point."
+  ;; (mc/remove-fake-cursors)
+  ;; (message "RUNNING LAY")
+  (mc/remove-fake-cursors)
+  (dolist (reg (cdr regs))
+    (funcall place-cursor reg)
+    (message "FK")
+    (mc/create-fake-cursor-at-point))
+  (funcall place-cursor (car regs))
+  ;; (message "MC? %d" (mc/num))
+  (mc/maybe-multiple-cursors-mode)
+  ;; (message "LAY: %s %d %d" (mc/all-fake-cursors) (point) (mark))
+  )
+
 (defun boon-mark-region (regs)
-  "Mark the regions REGS." ;; FIXME: use multiple cursors if the region is multiple.
+  "Mark the regions REGS."
   (interactive (list (boon-spec-region "mark")))
-  (dolist (reg regs)
-    (set-mark (car reg))
-    (goto-char (cdr reg)))
+  (boon-lay-multiple-cursors (lambda (reg)
+                               (set-mark (car reg))
+                               (goto-char (cdr reg))) regs)
   (activate-mark))
 
 (defun boon-end-of-region (regs)
@@ -388,7 +406,7 @@ line."
 
 (defun boon-beginning-of-region (regs)
   "Move the point to the beginning region REGS."
-  (interactive (list (boon-spec-region "go to beginnig")))
+  (interactive (list (boon-spec-region "go to beginning")))
   (dolist (reg regs)
     (goto-char (car reg))))
 
@@ -405,12 +423,11 @@ line."
   (dolist (reg regs)
     (kill-region (car reg) (cdr reg)))
   (insert-for-yank (current-kill 1))
-  
   (save-excursion
     (goto-char (car mark-ring))
     (insert-for-yank (current-kill -1)))
   )
-  
+
 (defun boon-treasure-region (regs)
   "Copy (kill-ring-save) the regions REGS."
   (interactive (list (boon-spec-region "treasure")))
@@ -418,8 +435,10 @@ line."
     (kill-ring-save (car reg) (cdr reg))))
 
 (defun boon-substitute-region (regs)
-  "Kill the regions REGS, and switch to insertion mode." ;; TODO: multiple cursors if the region is multiple.
+  "Kill the regions REGS, and switch to insertion mode."
   (interactive (list (boon-spec-region "replace")))
+  ;; (dolist (reg (cdr regs)) (goto-char (cdr reg)))
+  (boon-lay-multiple-cursors (lambda (reg) (goto-char (cdr reg))) regs)
   (boon-take-region regs)
   (boon-set-insert-state))
 
@@ -427,7 +446,7 @@ line."
   "Replace the character at point, or region if it is active, by the REPLACEMENT character."
   (interactive "cType the character to use as a replacement")
   (if (use-region-p)
-      (delete-and-extract-region (region-beginning) (region-end ))
+      (delete-and-extract-region (region-beginning) (region-end))
     (delete-char 1))
   (insert replacement))
 
