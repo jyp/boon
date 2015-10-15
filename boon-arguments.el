@@ -99,6 +99,9 @@
   "Normalize the region REG by making sure beginning < end."
   (cons (min (cdr reg) (car reg)) (max (cdr reg) (car reg))))
 
+(defun boon-reg-to-markers (reg)
+  (cons (copy-marker (car reg)) (copy-marker (cdr reg))))
+
 (defun boon-borders (reg how-much)
   "Given a normalized region REG, return its borders, whose size is HOW-MUCH."
   (list (cons (cdr reg) (- (cdr reg) how-much))
@@ -120,38 +123,50 @@ This function is meant to be called interactively."
   (interactive (list (boon-spec-region "select borders")))
   (cons 'region (mapcar 'boon-content (mapcar 'boon-normalize-reg regs))))
 
+(defun boon-multiple-cursor-regs ()
+  "all regions defined by multiple-cursors-mode, and outside."
+  (cons (cons (mark) (point))
+        (if (and (bound-and-true-p multiple-cursors-mode)
+                 (memq this-command mc/cmds-to-run-once))
+            (mapcar (lambda (o) (cons (marker-position (overlay-get o 'mark)) (marker-position (overlay-get o 'point))))
+                    (mc/all-fake-cursors))
+          nil)))
+
 (defun boon-spec-region (msg)
   "Specify a region concisely using the keyboard.
 The prompt (as MSG) is displayed.  This function actually returns
 a list of regions, in the form ((beginning . end) ...)"
-  (if (use-region-p) (list (cons (region-beginning) (region-end)))
-  ;; TODO: detect multiple cursors and take all regions; for those commands that do set the multiple cursors.
-          (let (current-prefix-arg
-                ;; this code fiddles with the prefix arg; but if we do
-                ;; not hide our fiddling, the next command will use
-                ;; the prefix arg that we have set.
-                (orig (point))
-                (km boon-select-map))
-            (setq current-prefix-arg 0)
-            (while (and km (keymapp km))
-              (let ((last-char (read-char (format "%s %s" msg current-prefix-arg))))
-               (if (and (>= last-char ?0) (<= last-char ?9))
-                   (setq current-prefix-arg (+ (- last-char ?0) (* 10 current-prefix-arg )))
-                 (setq km (lookup-key km (vector last-char))))))
-            (when (eq current-prefix-arg 0)
-              (setq current-prefix-arg nil))
-            (if km
-                (let (regs final)
-                  (save-excursion
-                    (setq regs (call-interactively km))
-                    (setq final (point)))
-                  ;; (message (format "Reg = %s" regs))
-                  (if (and regs
-                           (listp regs)
-                           (eq (car regs) 'region))
-                      (cdr regs)
-                    (list (cons orig final))))
-              (error "Unknown region specifier")))))
+    (if (use-region-p)
+        (boon-multiple-cursor-regs)
+    (let (current-prefix-arg
+          ;; this code fiddles with the prefix arg; but if we do not
+          ;; hide our fiddling, the next command will use the prefix
+          ;; arg that we have set. So we dynamically bind another
+          ;; current-prefix-arg here.
+          (km boon-select-map))
+      (setq current-prefix-arg 0)
+      (while (and km (keymapp km))
+        (let ((last-char (read-char (format "%s %s" msg current-prefix-arg))))
+          (if (and (>= last-char ?0) (<= last-char ?9))
+              (setq current-prefix-arg (+ (- last-char ?0) (* 10 current-prefix-arg )))
+            (setq km (lookup-key km (vector last-char))))))
+      (when (eq current-prefix-arg 0)
+        (setq current-prefix-arg nil))
+      (if km (apply 'append (mapcar (lambda (in-reg)
+                                     (let (regs final (orig (cdr in-reg)))
+                                       (save-excursion
+                                         ;; (set-marker (mark-marker) (car in-reg))
+                                         (goto-char orig)
+                                         (setq regs (call-interactively km))
+                                         (setq final (point)))
+                                       (message "in-reg=%s regs=%s orig=%s final=%s" in-reg regs orig final)
+                                       (if (and regs
+                                                (listp regs)
+                                                (eq (car regs) 'region))
+                                           (cdr regs)
+                                         (list (cons orig final)))))
+                                   (boon-multiple-cursor-regs)))
+        (error "Unknown region specifier")))))
 
 (provide 'boon-arguments)
 ;;; boon-arguments.el ends here

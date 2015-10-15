@@ -377,18 +377,12 @@ line."
 (defun boon-lay-multiple-cursors (place-cursor regs)
   "Create multiple cursor regions, using REGS.
 If there is more than one, use mc/create-fake-cursor-at-point."
-  ;; (mc/remove-fake-cursors)
-  ;; (message "RUNNING LAY")
   (mc/remove-fake-cursors)
   (dolist (reg (cdr regs))
     (funcall place-cursor reg)
-    (message "FK")
     (mc/create-fake-cursor-at-point))
   (funcall place-cursor (car regs))
-  ;; (message "MC? %d" (mc/num))
-  (mc/maybe-multiple-cursors-mode)
-  ;; (message "LAY: %s %d %d" (mc/all-fake-cursors) (point) (mark))
-  )
+  (mc/maybe-multiple-cursors-mode))
 
 (defun boon-mark-region (regs)
   "Mark the regions REGS."
@@ -413,7 +407,9 @@ If there is more than one, use mc/create-fake-cursor-at-point."
 (defun boon-take-region (regs)
   "Kill the region given as REGS."
   (interactive (list (boon-spec-region "take")))
-  (dolist (reg regs)
+  (message "boon-take-region: REGS=%s" regs)
+  (dolist (reg (mapcar 'boon-reg-to-markers regs))
+    (message "boon-take-region: killing: %s" reg)
     (kill-region (car reg) (cdr reg))))
 
 
@@ -437,10 +433,14 @@ If there is more than one, use mc/create-fake-cursor-at-point."
 (defun boon-substitute-region (regs)
   "Kill the regions REGS, and switch to insertion mode."
   (interactive (list (boon-spec-region "replace")))
-  ;; (dolist (reg (cdr regs)) (goto-char (cdr reg)))
-  (boon-lay-multiple-cursors (lambda (reg) (goto-char (cdr reg))) regs)
-  (boon-take-region regs)
-  (boon-set-insert-state))
+  (let ((markers (mapcar 'boon-reg-to-markers regs)))
+    ;; use markers so that deleting things does not mess the positions
+    (boon-take-region regs)
+    (deactivate-mark t)
+    (boon-lay-multiple-cursors (lambda (reg)
+                                 (goto-char (cdr reg)))
+                               markers)
+    (boon-set-insert-state)))
 
 (defun boon-replace-by-character (replacement)
   "Replace the character at point, or region if it is active, by the REPLACEMENT character."
