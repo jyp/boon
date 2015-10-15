@@ -26,7 +26,7 @@
         (?o . ("⟦" "⟧")) ;; oxford brackets
         (?t . ("~" "~")) ;; tilda
         )
-        "Enclosures to use with the around command."
+        "Enclosures to use with the boon-enclose command."
         :type '(alist :key-type character :value-type (list string))
         :group 'boon
         )
@@ -120,11 +120,14 @@ This function is meant to be called interactively."
   (interactive (list (boon-spec-region "select borders")))
   (cons 'region (mapcar 'boon-content (mapcar 'boon-normalize-reg regs))))
 
+(defun boon-bypass-mc ()
+  (and (bound-and-true-p multiple-cursors-mode)
+       (memq this-command mc/cmds-to-run-once)))
+  
 (defun boon-multiple-cursor-regs ()
   "all regions defined by multiple-cursors-mode, and outside."
   (cons (cons (mark) (point))
-        (if (and (bound-and-true-p multiple-cursors-mode)
-                 (memq this-command mc/cmds-to-run-once))
+        (if (boon-bypass-mc)
             (mapcar (lambda (o) (cons (marker-position (overlay-get o 'mark)) (marker-position (overlay-get o 'point))))
                     (mc/all-fake-cursors))
           nil)))
@@ -133,8 +136,10 @@ This function is meant to be called interactively."
   "Specify a region concisely using the keyboard.
 The prompt (as MSG) is displayed.  This function actually returns
 a list of regions, in the form ((beginning . end) ...)"
+  (let ((orig-regs (boon-multiple-cursor-regs)))
+  ;; do this so that mc's read-char defadvice does not kick in; so we can actually read characters here.
     (if (use-region-p)
-        (boon-multiple-cursor-regs)
+        orig-regs
     (let (current-prefix-arg
           ;; this code fiddles with the prefix arg; but if we do not
           ;; hide our fiddling, the next command will use the prefix
@@ -143,7 +148,7 @@ a list of regions, in the form ((beginning . end) ...)"
           (km boon-select-map))
       (setq current-prefix-arg 0)
       (while (and km (keymapp km))
-        (let ((last-char (read-char (format "%s %s" msg current-prefix-arg))))
+        (let ((last-char (read-event (format "%s %s" msg current-prefix-arg))))
           (if (and (>= last-char ?0) (<= last-char ?9))
               (setq current-prefix-arg (+ (- last-char ?0) (* 10 current-prefix-arg )))
             (setq km (lookup-key km (vector last-char))))))
@@ -152,18 +157,17 @@ a list of regions, in the form ((beginning . end) ...)"
       (if km (apply 'append (mapcar (lambda (in-reg)
                                      (let (regs final (orig (cdr in-reg)))
                                        (save-excursion
-                                         ;; (set-marker (mark-marker) (car in-reg))
                                          (goto-char orig)
                                          (setq regs (call-interactively km))
                                          (setq final (point)))
-                                       (message "in-reg=%s regs=%s orig=%s final=%s" in-reg regs orig final)
+                                       ;; (message "in-reg=%s regs=%s orig=%s final=%s" in-reg regs orig final)
                                        (if (and regs
                                                 (listp regs)
                                                 (eq (car regs) 'region))
                                            (cdr regs)
                                          (list (cons orig final)))))
-                                   (boon-multiple-cursor-regs)))
-        (error "Unknown region specifier")))))
+                                   orig-regs))
+        (error "Unknown region specifier"))))))
 
 (provide 'boon-arguments)
 ;;; boon-arguments.el ends here

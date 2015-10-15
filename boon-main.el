@@ -47,17 +47,13 @@
 (defun boon-enclose (enclosure regs)
   "Wrap, with the ENCLOSURE the regions given as REGS."
   (interactive (list (boon-spec-enclosure) (boon-spec-region "enclose")))
-  (dolist (reg regs)
-    (let ((beg (min (cdr reg) (car reg)))
-          (end (max (cdr reg) (car reg))))
-      (cond
-       (enclosure
-        (save-excursion
-          (goto-char end)
-          (insert (cadr enclosure))
-          (goto-char beg)
-          (insert (car enclosure))))
-       (t (message "unknown enclosure"))))))
+  ;; (message "boon-enclose regs=%s" regs)
+  (dolist (reg (mapcar 'boon-reg-to-markers (mapcar 'boon-normalize-reg regs)))
+    (save-excursion
+      (goto-char (cdr reg))
+      (insert (cadr enclosure))
+      (goto-char (car reg))
+      (insert (car enclosure)))))
 
 (defun boon-find-char-backward (char)
   "Move the cursor backwards, until finding an occurence of the character CHAR."
