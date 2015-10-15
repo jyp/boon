@@ -11,11 +11,6 @@
 
 (defcustom boon-enclosures
       '(
-        (?$ . ("$" "$")) 
-        (?| . ("|" "|")) 
-        (?@ . ("@" "@")) 
-        (?/ . ("/" "/")) 
-        (?` . ("`" "`"))
         (?A . ("⟨" "⟩"))
         (?a . ("<" ">"))
         (?b . ("[" "]"))
@@ -38,8 +33,10 @@
 
 (defun boon-spec-enclosure ()
   "Specify an enclosure style.  To be used as an argument to interactive."
-  (let ((c (read-char "Specify the enclosure")))
-    (cdr (assoc c boon-enclosures))))
+  (let* ((c (read-char "Specify the enclosure"))
+         (s (make-string 1 c))
+         (choice (assoc c boon-enclosures)))
+    (if choice (cdr choice) (list s s))))
 
 (defun boon-select-thing-at-point (thing)
   "Return a region list with a single item pointing to the THING at point."
