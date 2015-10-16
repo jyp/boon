@@ -16,7 +16,7 @@
         (?b . ("[" "]"))
         (?c . ("{-" "-}"))
         (?d . ("\"" "\"")) ;; double quotes
-        (?D . ("``" "''")) ;; double quotes
+        (?D . ("``" "''")) ;; Double quotes
         (?f . ("«" "»")) ;; french quotes
         (?h . ("#" "#")) ;; hash
         (?m . ("`" "'"))
@@ -55,7 +55,7 @@
   (let ((bounds (or (bounds-of-thing-at-point 'symbol)
                     (bounds-of-thing-at-point 'sexp))))
     (list 'region bounds)))
-    
+
 (defun boon-jump-over-blanks ()
   "Jump over blanks, forward."
   (interactive)
@@ -132,12 +132,21 @@ This function is meant to be called interactively."
                     (mc/all-fake-cursors))
           nil)))
 
+(defun boon-read-char (&optional prompt inherit-input-method seconds)
+  "Read a character, bypassing multiple cursors defadvice if applicable."
+  ;; do this so that mc's read-char defadvice does not kick in; so we can actually read characters here.
+  ;; a hack for now: as read-event doesn't do the same thing as read char.
+  (if (boon-bypass-mc)
+      (read-event prompt inherit-input-method seconds)
+    (read-char prompt inherit-input-method seconds)))
+
 (defun boon-spec-region (msg)
   "Specify a region concisely using the keyboard.
 The prompt (as MSG) is displayed.  This function actually returns
-a list of regions, in the form ((beginning . end) ...)"
+a list of regions, in the form ((beginning . end) ...).  If
+multiple-cursors are enabled BUT the command is executed just
+once (not once per cursor), you get a region for each cursor."
   (let ((orig-regs (boon-multiple-cursor-regs)))
-  ;; do this so that mc's read-char defadvice does not kick in; so we can actually read characters here.
     (if (use-region-p)
         orig-regs
     (let (current-prefix-arg
@@ -146,14 +155,16 @@ a list of regions, in the form ((beginning . end) ...)"
           ;; arg that we have set. So we dynamically bind another
           ;; current-prefix-arg here.
           (km boon-select-map))
+      ;; We read an entry in the appropriate keymap. This is done "by hand."
       (setq current-prefix-arg 0)
       (while (and km (keymapp km))
-        (let ((last-char (read-event (format "%s %s" msg current-prefix-arg))))
+        (let ((last-char (boon-read-char (format "%s %s" msg current-prefix-arg))))
           (if (and (>= last-char ?0) (<= last-char ?9))
               (setq current-prefix-arg (+ (- last-char ?0) (* 10 current-prefix-arg )))
             (setq km (lookup-key km (vector last-char))))))
       (when (eq current-prefix-arg 0)
         (setq current-prefix-arg nil))
+      ;; The command is ready; we now execute it (once per cursor if applicable).
       (if km (apply 'append (mapcar (lambda (in-reg)
                                      (let (regs final (orig (cdr in-reg)))
                                        (save-excursion
