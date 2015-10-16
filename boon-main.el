@@ -8,6 +8,7 @@
 
 (require 'er-basic-expansions)
 (require 'multiple-cursors)
+(require 'subr-x)
 
 (defmacro boon-with-ordered-region (body)
   "Run the BODY, ensuring that the point is before the mark."
