@@ -34,7 +34,7 @@
 
 (defun boon-spec-enclosure ()
   "Specify an enclosure style.  To be used as an argument to interactive."
-  (let* ((c (read-char "Specify the enclosure"))
+  (let* ((c (boon-read-char "Specify the enclosure"))
          (s (make-string 1 c))
          (choice (assoc c boon-enclosures)))
     (if choice (cdr choice) (list s s))))
