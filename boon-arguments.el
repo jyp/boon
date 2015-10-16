@@ -8,6 +8,7 @@
 ;;; Code:
 
 (require 'boon-core)
+(require 'boon-regs)
 
 (defcustom boon-enclosures
       '(
@@ -92,21 +93,6 @@
                    (boon-jump-over-blanks)
                    (point)))))
 
-(defun boon-normalize-reg (reg)
-  "Normalize the region REG by making sure beginning < end."
-  (cons (min (cdr reg) (car reg)) (max (cdr reg) (car reg))))
-
-(defun boon-reg-to-markers (reg)
-  (cons (copy-marker (car reg)) (copy-marker (cdr reg))))
-
-(defun boon-borders (reg how-much)
-  "Given a normalized region REG, return its borders, whose size is HOW-MUCH."
-  (list (cons (cdr reg) (- (cdr reg) how-much))
-        (cons (car reg) (+ (car reg) how-much))))
-
-(defun boon-content (reg)
-  "Given a normalized region REG, return its contents (crop the region by 1)."
-  (cons (+ (car reg) 1) (- (cdr reg) 1)))
 
 (defun boon-select-borders (how-much regs)
   "Return the bordering (of size HOW-MUCH) of a region list REGS.
@@ -128,6 +114,7 @@ This function is meant to be called interactively."
   "all regions defined by multiple-cursors-mode, and outside."
   (cons (cons (mark) (point))
         (if (boon-bypass-mc)
+            ;; TODO: is marker-position really necessary here?
             (mapcar (lambda (o) (cons (marker-position (overlay-get o 'mark)) (marker-position (overlay-get o 'point))))
                     (mc/all-fake-cursors))
           nil)))
