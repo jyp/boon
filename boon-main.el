@@ -16,6 +16,12 @@
        ,body
        (progn (exchange-point-and-mark) ,body (exchange-point-and-mark))))
 
+(defun boon-drop-cursor (regs)
+  (interactive (list (boon-spec-region "cursor")))
+  (mc/create-fake-cursor-at-point)
+  (goto-char (cdr (car regs)))
+  (mc/maybe-multiple-cursors-mode))
+
 (defun boon-drop-mark ()
   "Drop a mark; or extend the region to the next full line; or revert to original state."
   (interactive)

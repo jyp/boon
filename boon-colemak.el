@@ -159,7 +159,7 @@
 ;; Bottom row
 ;; z
 ;; reserved (repeat?)
-(define-key boon-command-map "z" 'undefined)
+(define-key boon-command-map "z" 'boon-drop-cursor)
 ;; x
 (define-key boon-command-map "x" boon-x-map)
 ;; c
