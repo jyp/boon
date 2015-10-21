@@ -6,11 +6,18 @@
 
 (require 'boon-main)
 
-(defvar-local boon-regexp nil)
+(defvar-local boon-regexp nil "Use boon-set-search-regexp to set this variable.")
 
-(defun boon-search-regexp (forward)
-  "Re-serach the current regexp, in the direction specified (as FORWARD).
-Point is set at the beginning of the match."
+(defun boon-set-search-regexp (regexp)
+  "Set boon-regexp to REGEXP and manage highlighting."
+  (when boon-regexp (hi-lock-unface-buffer boon-regexp))
+  (setq boon-regexp regexp)
+  (boon-highlight-regexp))
+
+(defun boon-qsearch (forward)
+  "Re-search the current regexp, in the direction specified (as FORWARD).
+Point is set at the beginning of the match. Moreover, highlight the regexp."
+  (boon-highlight-regexp)
   (when (not boon-regexp)
     (error "Search string not set"))
   (when (not isearch-success)
@@ -19,20 +26,13 @@ Point is set at the beginning of the match."
   (setq isearch-success nil)
   (if forward
       (progn
-        (goto-char (+ 1 (point))) ;; so that we find another occurence
-        (re-search-forward boon-regexp)
-        (goto-char (match-beginning 0))
-        )
+        (save-excursion ;; so that we don't move the point if an exception is thrown
+          (goto-char (+ 1 (point))) ;; so that we find another occurence
+          (re-search-forward boon-regexp))
+        (goto-char (match-beginning 0)))
     (re-search-backward boon-regexp))
   (setq isearch-success t) ;; If search fails an exception is thrown and this won't be set.
   )
-
-(defun boon-qsearch (forward)
-  "Re-search the current regexp, in the direction specified (as FORWARD).
-Moreover, highlight the regexp."
-  (boon-highlight-regexp)
-  (boon-search-regexp forward)
-  (deactivate-mark))
 
 (defun boon-qsearch-next ()
   "Search the next occurence of the current search regexp."
@@ -45,58 +45,61 @@ Moreover, highlight the regexp."
   (boon-qsearch nil))
 
 (defun boon-qsearch-next-at-point ()
-  "Search the next occurence of the current string at point."
+  "Search the next occurence of the current string at point and select the match."
   (interactive)
   (boon-set-search-string (boon-stuff-at-point))
-  (boon-qsearch t))
+  (boon-qsearch t)
+  (activate-mark)
+  (set-marker (mark-marker) (match-beginning 0))
+  (goto-char (match-end 0))
+  )
 
 (defun boon-qsearch-previous-at-point ()
-  "Search the previous occurence of the current string at point."
+  "Search the previous occurence of the current string at point and select the match."
   (interactive)
   (boon-set-search-string (boon-stuff-at-point))
-  (when (use-region-p)
-    ;; make sure that we don't find the stuff that we've just
-    ;; selected, by moving the point at the beginning of the match.
-    (goto-char (region-beginning)))
-  (boon-qsearch nil))
+  (save-excursion
+    (when (use-region-p)
+      ;; make sure that we don't find the stuff that we've just
+      ;; selected, by moving the point at the beginning of the match.
+      (goto-char (region-beginning)))
+    (boon-qsearch nil))
+  (activate-mark)
+  (set-marker (mark-marker) (match-beginning 0))
+  (goto-char (match-end 0))
+  )
 
 (defun boon-set-search-string (string)
   "Set the search regexp by providing a string so match (as STRING)."
   (interactive "M")
-  (setq boon-regexp (cond ((if (and (eq isearch-case-fold-search t)
-                                     search-upper-case)
-                                (isearch-no-upper-case-p
-                                 string isearch-regexp)
-                              isearch-case-fold-search)
-                            ;; Turn isearch-string into a case-insensitive
-                            ;; regexp.
-                            (mapconcat
-                             (lambda (c)
-                               (let ((s (string c)))
-                                 (if (string-match "[[:alpha:]]" s)
-                                     (format "[%s%s]" (upcase s) (downcase s))
-                                   (regexp-quote s))))
-                             string ""))
-                           (t (regexp-quote string)))))
+  (boon-set-search-regexp (cond ((if (and (eq isearch-case-fold-search t)
+                                   search-upper-case)
+                              (isearch-no-upper-case-p
+                               string isearch-regexp)
+                            isearch-case-fold-search)
+                          ;; Turn isearch-string into a case-insensitive
+                          ;; regexp.
+                          (mapconcat
+                           (lambda (c)
+                             (let ((s (string c)))
+                               (if (string-match "[[:alpha:]]" s)
+                                   (format "[%s%s]" (upcase s) (downcase s))
+                                 (regexp-quote s))))
+                           string ""))
+                         (t (regexp-quote string)))))
+
+
 
 (defun boon-highlight-regexp ()
   "Make sure the current regexp is highlighted."
   (interactive)
   ;; (global-hi-lock-mode 1)
+  
   (hi-lock-face-buffer boon-regexp 'hi-yellow))
 
-(defun boon-isearch-region (forward beg end)
- "Search the current selection in the direction specified (as FORWARD).
-The selection is between (as BEG END)."
- (let ((selection (buffer-substring-no-properties beg end)))
-   (deactivate-mark)
-   (if forward (goto-char end) (goto-char (- beg 1))) ; ensuring that we find the next match
-   (isearch-mode forward nil nil nil)
-   (isearch-yank-string selection)))
-
 (defadvice isearch-exit (after ysph-hl-search activate compile)
-  "After isearch, highlight the search term."
-  (setq boon-regexp isearch-string)
+  "After isearch, highlight the search term and set it as boon current regexp."
+  (boon-set-search-regexp isearch-string)
   (boon-highlight-regexp))
 
 (provide 'boon-search)

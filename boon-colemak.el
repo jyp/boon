@@ -46,6 +46,8 @@
 (define-key boon-moves-map "i"  'forward-char)
 (define-key boon-moves-map "<"  'boon-beginning-of-region)
 (define-key boon-moves-map ">"  'boon-end-of-region)
+(define-key boon-moves-map "m"  'boon-qsearch-previous-at-point)
+(define-key boon-moves-map "/"  'boon-qsearch-next-at-point)
 (define-key boon-moves-map "h"  'avy-goto-word-1)
 (define-key boon-moves-map "H"  'avy-goto-word-1)
 (define-key boon-moves-map (kbd "C-,")      'beginning-of-buffer)
