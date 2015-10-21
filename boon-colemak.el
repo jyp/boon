@@ -162,6 +162,7 @@
 ;; z
 ;; reserved (repeat?)
 (define-key boon-command-map "z" 'boon-drop-cursor)
+(define-key boon-command-map "Z" 'boon-move-cursor)
 ;; x
 (define-key boon-command-map "x" boon-x-map)
 ;; c

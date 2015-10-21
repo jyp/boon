@@ -50,8 +50,8 @@ Point is set at the beginning of the match. Moreover, highlight the regexp."
   (boon-set-search-string (boon-stuff-at-point))
   (boon-qsearch t)
   (activate-mark)
-  (set-marker (mark-marker) (match-beginning 0))
-  (goto-char (match-end 0))
+  (set-marker (mark-marker) (match-end 0))
+  (goto-char (match-beginning 0))
   )
 
 (defun boon-qsearch-previous-at-point ()
@@ -65,8 +65,8 @@ Point is set at the beginning of the match. Moreover, highlight the regexp."
       (goto-char (region-beginning)))
     (boon-qsearch nil))
   (activate-mark)
-  (set-marker (mark-marker) (match-beginning 0))
-  (goto-char (match-end 0))
+  (set-marker (mark-marker) (match-end 0))
+  (goto-char (match-beginning 0))
   )
 
 (defun boon-set-search-string (string)

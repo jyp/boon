@@ -20,7 +20,12 @@
   (interactive (list (boon-spec-region "cursor")))
   (mc/create-fake-cursor-at-point)
   (goto-char (cdr (car regs)))
+  (set-marker (mark-marker) (car (car regs)))
   (mc/maybe-multiple-cursors-mode))
+
+(defun boon-move-cursor (regs)
+  (interactive (list (boon-spec-region "cursor")))
+  (goto-char (cdr (car regs))))
 
 (defun boon-drop-mark ()
   "Drop a mark; or extend the region to the next full line; or revert to original state."
