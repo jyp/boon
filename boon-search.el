@@ -9,7 +9,8 @@
 (defvar-local boon-regexp nil)
 
 (defun boon-search-regexp (forward)
-  "Re-seraach the current regexp, in the direction specified (as FORWARD)."
+  "Re-serach the current regexp, in the direction specified (as FORWARD).
+Point is set at the beginning of the match."
   (when (not boon-regexp)
     (error "Search string not set"))
   (when (not isearch-success)
@@ -17,7 +18,11 @@
     (goto-char (if forward (point-min) (point-max))))
   (setq isearch-success nil)
   (if forward
-      (re-search-forward boon-regexp)
+      (progn
+        (goto-char (+ 1 (point))) ;; so that we find another occurence
+        (re-search-forward boon-regexp)
+        (goto-char (match-beginning 0))
+        )
     (re-search-backward boon-regexp))
   (setq isearch-success t) ;; If search fails an exception is thrown and this won't be set.
   )
@@ -40,15 +45,19 @@ Moreover, highlight the regexp."
   (boon-qsearch nil))
 
 (defun boon-qsearch-next-at-point ()
-  "Search the next occurence of the current search regexp at point."
+  "Search the next occurence of the current string at point."
   (interactive)
   (boon-set-search-string (boon-stuff-at-point))
   (boon-qsearch t))
 
 (defun boon-qsearch-previous-at-point ()
-  "Search the previous occurence of the current search regexp at point."
+  "Search the previous occurence of the current string at point."
   (interactive)
   (boon-set-search-string (boon-stuff-at-point))
+  (when (use-region-p)
+    ;; make sure that we don't find the stuff that we've just
+    ;; selected, by moving the point at the beginning of the match.
+    (goto-char (region-beginning)))
   (boon-qsearch nil))
 
 (defun boon-set-search-string (string)
