@@ -126,6 +126,8 @@
 (define-key boon-moves-map "fk"  'flycheck-next-error)
 (define-key boon-moves-map "wb"  'previous-buffer)
 (define-key boon-moves-map "fb"  'next-buffer)
+(define-key boon-moves-map "fu"  'mc/cycle-forward)
+(define-key boon-moves-map "wu"  'mc/cycle-backward)
 
 ;; p
 ;; Pinpoint Place

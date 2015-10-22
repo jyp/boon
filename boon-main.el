@@ -17,6 +17,8 @@
        (progn (exchange-point-and-mark) ,body (exchange-point-and-mark))))
 
 (defun boon-drop-cursor (regs)
+  "Drop a new cursor at the position given by REGS.
+NOTE: Do not run for every cursor."
   (interactive (list (boon-spec-region "cursor")))
   (mc/create-fake-cursor-at-point)
   (goto-char (cdr (car regs)))
@@ -24,10 +26,12 @@
   (mc/maybe-multiple-cursors-mode))
 
 (defun boon-move-cursor (regs)
+  "Move the cursor at the position given by REGS.
+NOTE: Do not run for every cursor."
   (interactive (list (boon-spec-region "cursor")))
   (goto-char (cdr (car regs))))
 
-(defun boon-drop-mark ()
+(defun boon-drop-or-extend-mark ()
   "Drop a mark; or extend the region to the next full line; or revert to original state."
   (interactive)
   (if mark-active
@@ -48,6 +52,18 @@
     (progn
       (set-mark (point))
       (push-mark) ;; Save the starting position, so we can go back to it.
+      (call-interactively 'boon-mark-region))))
+
+(make-obsolete 'boon-drop-or-extend-mark 'boon-drop-mark "Oct 2015")
+
+(defun boon-drop-mark ()
+  "Drop or deactivate the mark."
+  (interactive)
+  (if mark-active
+      (progn
+        (mc/execute-command-for-all-fake-cursors (lambda () (interactive) (deactivate-mark)))
+        (deactivate-mark t))
+    (progn
       (call-interactively 'boon-mark-region))))
 
 (defun boon-current-line-indentation ()
