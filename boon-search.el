@@ -6,33 +6,35 @@
 
 (require 'boon-main)
 
-(defvar-local boon-regexp nil "Use boon-set-search-regexp to set this variable.")
+(defvar-local boon-regexp nil "Current regexp search. Use boon-set-search-regexp to set this variable.")
+(defvar-local boon-search-success t "Last search was successful or non-existent.")
 
 (defun boon-set-search-regexp (regexp)
   "Set boon-regexp to REGEXP and manage highlighting."
   (when boon-regexp (hi-lock-unface-buffer boon-regexp))
+  (setq boon-search-success t)
   (setq boon-regexp regexp)
   (boon-highlight-regexp))
 
+
 (defun boon-qsearch (forward)
-  "Re-search the current regexp, in the direction specified (as FORWARD).
-Point is set at the beginning of the match. Moreover, highlight the regexp."
-  (boon-highlight-regexp)
+  "Search the current boon-regexp, in the direction specified (as FORWARD).
+Point is set at the beginning of the match.  Moreover, highlight
+the regexp."
   (when (not boon-regexp)
     (error "Search string not set"))
-  (when (not isearch-success)
-    (message "Wrapping around")
-    (goto-char (if forward (point-min) (point-max))))
-  (setq isearch-success nil)
-  (if forward
-      (progn
-        (save-excursion ;; so that we don't move the point if an exception is thrown
-          (goto-char (+ 1 (point))) ;; so that we find another occurence
-          (re-search-forward boon-regexp))
-        (goto-char (match-beginning 0)))
-    (re-search-backward boon-regexp))
-  (setq isearch-success t) ;; If search fails an exception is thrown and this won't be set.
-  )
+  (boon-highlight-regexp)
+  (save-excursion ;; so that we don't move the point if an exception is thrown
+    (goto-char (if boon-search-success
+                   (if forward (+ 1 (point)) (- (point) 1))
+                 (progn
+                   (message "Wrapping around")
+                   (if forward (point-min) (point-max)))))
+    (setq boon-search-success nil)
+    (if forward (re-search-forward boon-regexp) (re-search-backward boon-regexp))
+    ;; If search fails an exception is thrown and this won't be set.
+    (setq boon-search-success t))
+  (goto-char (match-beginning 0)))
 
 (defun boon-qsearch-next ()
   "Search the next occurence of the current search regexp."
@@ -91,16 +93,13 @@ Point is set at the beginning of the match. Moreover, highlight the regexp."
 
 
 (defun boon-highlight-regexp ()
-  "Make sure the current regexp is highlighted."
+  "Make sure boon-regexp is highlighted."
   (interactive)
-  ;; (global-hi-lock-mode 1)
-  
   (hi-lock-face-buffer boon-regexp 'hi-yellow))
 
 (defadvice isearch-exit (after ysph-hl-search activate compile)
   "After isearch, highlight the search term and set it as boon current regexp."
-  (boon-set-search-regexp isearch-string)
-  (boon-highlight-regexp))
+  (boon-set-search-regexp isearch-string))
 
 (provide 'boon-search)
 ;;; boon-search.el ends here
