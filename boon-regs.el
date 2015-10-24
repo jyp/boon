@@ -3,17 +3,23 @@
 ;;; Commentary:
 
 
-;; A region list has the following form: ((begining . end) (end . begining) ...)
+;; A region list has the following form: ((mark . point) (mark . point) ...)
 
 ;;; Code:
 
+(defun boon-reg-point (reg)
+  (cdr reg))
+
+(defun boon-reg-mark (reg)
+  (car reg))
+
 (defun boon-normalize-reg (reg)
-  "Normalize the region REG by making sure car < cdr."
+  "Normalize the region REG by making sure that mark < point."
   (cons (boon-reg-begin reg) (boon-reg-end reg)))
 
 (defun boon-reg-to-markers (reg)
   "Put copy the markers defining REG borders, and return that."
-  (cons (copy-marker (car reg)) (copy-marker (cdr reg))))
+  (cons (copy-marker (boon-reg-mark reg)) (copy-marker (boon-reg-point reg))))
 
 (defun boon-borders (reg how-much)
   "Given a normalized region REG, return its borders (as a region list).
@@ -24,11 +30,11 @@ The size of the borders is HOW-MUCH."
 
 (defun boon-reg-begin (reg)
   "The begining of region REG."
-  (min (cdr reg) (car reg)))
+  (min (boon-reg-point reg) (boon-reg-mark reg)))
 
 (defun boon-reg-end (reg)
   "The end of region REG."
-  (max (cdr reg) (car reg)))
+  (max (boon-reg-point reg) (boon-reg-mark reg)))
 
 (defun boon-content (reg)
   "Given a region REG, return its contents (crop the region by 1)."
