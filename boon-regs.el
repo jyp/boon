@@ -9,7 +9,7 @@
 
 (defun boon-normalize-reg (reg)
   "Normalize the region REG by making sure beginning < end."
-  (cons (min (cdr reg) (car reg)) (max (cdr reg) (car reg))))
+  (cons (boon-reg-begin reg) (boon-reg-end reg)))
 
 (defun boon-reg-to-markers (reg)
   "Put copy the markers defining REG borders, and return that."
@@ -20,6 +20,12 @@
   (list (cons (cdr reg) (- (cdr reg) how-much))
         (cons (car reg) (+ (car reg) how-much))))
 
+(defun boon-reg-begin (reg)
+  (min (cdr reg) (car reg)))
+  
+(defun boon-reg-end (reg)
+  (max (cdr reg) (car reg)))
+  
 (defun boon-content (reg)
   "Given a normalized region REG, return its contents (crop the region by 1)."
   (cons (+ (car reg) 1) (- (cdr reg) 1)))

@@ -255,15 +255,17 @@ NOTE: Do not run for every cursor."
       (call-interactively 'boon-toggle-region-case)
       (boon-toggle-character-case)))
 
-(defun boon-toggle-region-case (beg end)
-  "Cycle the region between BEG and END through 3 capitalizations: UPPER CASE, lower case, Title Case."
-  (interactive "r")
+(defun boon-toggle-region-case (regs)
+  "Cycle regions through 3 capitalizations: UPPER CASE, lower case, Title Case.
+Regions are given by  REGS.
+NOTE: Do not run for every cursor."
+  (interactive (list (boon-spec-region "toggle-case")))
   (let* ((deactivate-mark nil)
          (case-fold-search nil)
          (cur-state (if (eq last-command this-command)
                         (get this-command 'state)
                       (save-excursion
-                        (goto-char beg)
+                        (goto-char (boon-reg-begin (car regs)))
                         (cond
                          ((looking-at "[[:upper:]][[:upper:]]") 'upcase-region)
                          ((looking-at "[[:upper:]][[:lower:]]") 'capitalize-region)
@@ -272,7 +274,8 @@ NOTE: Do not run for every cursor."
                                             (capitalize-region . upcase-region)
                                             (upcase-region . downcase-region)
                                             ))))
-    (funcall cur-state beg end)
+    (dolist (reg regs)
+      (funcall cur-state (boon-reg-begin reg) (boon-reg-end reg)))
     (put this-command 'state cur-state)))
 
 (defun boon-toggle-mark ()
