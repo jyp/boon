@@ -9,6 +9,7 @@
 
 (require 'boon-core)
 (require 'boon-regs)
+(require 'multiple-cursors)
 
 (defcustom boon-enclosures
       '(
@@ -107,11 +108,12 @@ This function is meant to be called interactively."
   (cons 'region (mapcar 'boon-content (mapcar 'boon-normalize-reg regs))))
 
 (defun boon-bypass-mc ()
+  "Should we bypass multiple cursors when gathering regions?"
   (and (bound-and-true-p multiple-cursors-mode)
        (memq this-command mc/cmds-to-run-once)))
   
 (defun boon-multiple-cursor-regs ()
-  "all regions defined by multiple-cursors-mode, and outside."
+  "Return all regions defined by multiple-cursors-mode, and outside."
   (cons (cons (mark) (point))
         (if (boon-bypass-mc)
             ;; TODO: is marker-position really necessary here?

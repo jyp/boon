@@ -17,7 +17,7 @@
        (progn (exchange-point-and-mark) ,body (exchange-point-and-mark))))
 
 (defun boon-drop-cursor (regs)
-  "Drop a new cursor at the position given by REGS.
+  "Drop a new cursor at the first position given by REGS.
 NOTE: Do not run for every cursor."
   (interactive (list (boon-spec-region "cursor")))
   (mc/create-fake-cursor-at-point)
@@ -26,7 +26,7 @@ NOTE: Do not run for every cursor."
   (mc/maybe-multiple-cursors-mode))
 
 (defun boon-move-cursor (regs)
-  "Move the cursor at the position given by REGS.
+  "Move the cursor at the first position given by REGS.
 NOTE: Do not run for every cursor."
   (interactive (list (boon-spec-region "cursor")))
   (goto-char (cdr (car regs))))
@@ -54,11 +54,11 @@ NOTE: Do not run for every cursor."
       (push-mark) ;; Save the starting position, so we can go back to it.
       (call-interactively 'boon-mark-region))))
 
-(make-obsolete 'boon-drop-or-extend-mark 'boon-drop-mark "Oct 2015")
 
 (defun boon-drop-mark ()
   "Drop or deactivate the mark."
   (interactive)
+  (declare (obsolete "Use boon-drop-mark instead" "20151020"))
   (if mark-active
       (progn
         (mc/execute-command-for-all-fake-cursors (lambda () (interactive) (deactivate-mark)))
@@ -192,7 +192,7 @@ NOTE: Do not run for every cursor."
       (backward-char))
      ((looking-back "\\s!")  ;; generic comment delimiter
       (skip-syntax-backward "!"))
-     ((looking-back "\\sw") 
+     ((looking-back "\\sw")
       (if (not (or (looking-at "\\s-") ;; FIXME: merge regexps with \\|
                    (looking-at "\\s(")
                    (looking-at "\\s)")))
@@ -306,8 +306,7 @@ line."
 (defun boon-looking-at-line-comment-start-p ()
   "Are we looking at a comment-start?"
   (interactive)
-  (and (boundp 'comment-start)
-       comment-start
+  (and (bound-and-true-p comment-start)
        (looking-at comment-start)
        (not (boon-in-string-p))))
 
@@ -399,7 +398,8 @@ line."
     (boon-split-line)))
 
 (defun boon-lay-multiple-cursors (place-cursor regs)
-  "Create multiple cursor regions, using REGS.
+  "Create multiple cursor regions.
+This is done by calling PLACE-CURSOR for each element of REGS.
 If there is more than one, use mc/create-fake-cursor-at-point."
   (mc/remove-fake-cursors)
   (dolist (reg (cdr regs))
@@ -431,9 +431,7 @@ If there is more than one, use mc/create-fake-cursor-at-point."
 (defun boon-take-region (regs)
   "Kill the region given as REGS."
   (interactive (list (boon-spec-region "take")))
-  (message "boon-take-region: REGS=%s" regs)
   (dolist (reg (mapcar 'boon-reg-to-markers regs))
-    (message "boon-take-region: killing: %s" reg)
     (kill-region (car reg) (cdr reg))))
 
 
@@ -508,7 +506,8 @@ If there is more than one, use mc/create-fake-cursor-at-point."
     (keyboard-quit))))
 
 (defun boon-stuff-at-point ()
-  "Return a meaningful piece of around at point."
+  "Return a meaningful piece of text around at point.
+If no such text exists, throw an error."
   (interactive)
   (if (use-region-p)
       (buffer-substring-no-properties (region-beginning) (region-end))
@@ -557,11 +556,6 @@ unless: 1. the previous character is a backslash, in which case a
    (t
     (self-insert-command 2)
     (backward-char 1))))
-
-
-(defun boon-on-region (f)
- "Apply F to the current region."
-   (funcall f (region-beginning) (region-end)))
 
 (provide 'boon-main)
 ;;; boon-main ends here

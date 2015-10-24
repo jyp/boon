@@ -33,8 +33,8 @@
   "Query replace; but if the region is active, replace its contents"
   (interactive)
   (if (and (use-region-p) (eq (- (line-number-at-pos (region-end)) (line-number-at-pos (region-beginning))) 0))
-      (let ((selection (boon-on-region #'buffer-substring-no-properties))) 
-      (perform-replace 
+      (let ((selection (buffer-substring-no-properties (region-beginning) (region-end))))
+      (perform-replace
        selection
        (read-string "Replace region with:")
        t ; query
@@ -100,8 +100,6 @@
 (define-key boon-x-map " " 'boon-split-word)
 
 (define-key boon-x-map "-" 'undo-tree-visualize)
-(define-key boon-x-map "," 'boon-mark-previous-like-this); cursors: Prev
-(define-key boon-x-map "." 'boon-mark-next-like-this); cursors: Next
 (define-key boon-x-map "O" 'previous-window) ;; o is next window
 (define-key boon-x-map "S" 'save-some-buffers)
 (define-key boon-x-map "\\" 'align-regexp)
@@ -113,7 +111,6 @@
 (define-key boon-x-map "l" 'fill-paragraph)
 (define-key boon-x-map "M" 'menu-bar-open)
 (define-key boon-x-map "s" 'save-buffer)
-(define-key boon-x-map "u" 'mc/edit-lines); cUrsors: multiple
 (define-key boon-x-map "vv" 'magit-status)
 (define-key boon-x-map "g" 'magit-status)
 (define-key boon-x-map "x" 'helm-M-x)
