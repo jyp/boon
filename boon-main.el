@@ -21,15 +21,15 @@
 NOTE: Do not run for every cursor."
   (interactive (list (boon-spec-region "cursor")))
   (mc/create-fake-cursor-at-point)
-  (goto-char (cdr (car regs)))
-  (set-marker (mark-marker) (car (car regs)))
+  (goto-char (boon-reg-point (car regs)))
+  (set-marker (mark-marker) (boon-reg-mark (car regs)))
   (mc/maybe-multiple-cursors-mode))
 
 (defun boon-move-cursor (regs)
   "Move the cursor at the first position given by REGS.
 NOTE: Do not run for every cursor."
   (interactive (list (boon-spec-region "cursor")))
-  (goto-char (cdr (car regs))))
+  (goto-char (boon-reg-point (car regs))))
 
 (defun boon-drop-or-extend-mark ()
   "Drop a mark; or extend the region to the next full line; or revert to original state."
@@ -76,11 +76,11 @@ NOTE: Do not run for every cursor."
   "Wrap, with the ENCLOSURE the regions given as REGS."
   (interactive (list (boon-spec-enclosure) (boon-spec-region "enclose")))
   ;; (message "boon-enclose regs=%s" regs)
-  (dolist (reg (mapcar 'boon-reg-to-markers (mapcar 'boon-normalize-reg regs)))
+  (dolist (reg (mapcar 'boon-reg-to-markers regs))
     (save-excursion
-      (goto-char (cdr reg))
+      (goto-char (boon-reg-end reg))
       (insert (cadr enclosure))
-      (goto-char (car reg))
+      (goto-char (boon-reg-begin reg))
       (insert (car enclosure)))))
 
 (defun boon-find-char-backward (char)
@@ -415,34 +415,34 @@ If there is more than one, use mc/create-fake-cursor-at-point."
   "Mark the regions REGS."
   (interactive (list (boon-spec-region "mark")))
   (boon-lay-multiple-cursors (lambda (reg)
-                               (set-mark (car reg))
-                               (goto-char (cdr reg))) regs)
+                               (set-mark (boon-reg-mark reg))
+                               (goto-char (boon-reg-point reg))) regs)
   (activate-mark))
 
 (defun boon-end-of-region (regs)
   "Move the point the end region REGS."
   (interactive (list (boon-spec-region "go to end")))
   (dolist (reg regs)
-    (goto-char (cdr reg))))
+    (goto-char (boon-reg-end reg))))
 
 (defun boon-beginning-of-region (regs)
   "Move the point to the beginning region REGS."
   (interactive (list (boon-spec-region "go to beginning")))
   (dolist (reg regs)
-    (goto-char (car reg))))
+    (goto-char (boon-reg-begin reg))))
 
 (defun boon-take-region (regs)
   "Kill the region given as REGS."
   (interactive (list (boon-spec-region "take")))
   (dolist (reg (mapcar 'boon-reg-to-markers regs))
-    (kill-region (car reg) (cdr reg))))
+    (kill-region (boon-reg-begin reg) (boon-reg-end reg))))
 
 
 (defun boon-swap-region (regs)
   "Swap the region with the top of the kill ring (BUGGED)."
   (interactive (list (boon-spec-region "swap")))
   (dolist (reg regs)
-    (kill-region (car reg) (cdr reg)))
+    (kill-region (boon-reg-begin reg) (boon-reg-end reg)))
   (insert-for-yank (current-kill 1))
   (save-excursion
     (goto-char (car mark-ring))
@@ -453,7 +453,7 @@ If there is more than one, use mc/create-fake-cursor-at-point."
   "Copy (kill-ring-save) the regions REGS."
   (interactive (list (boon-spec-region "treasure")))
   (dolist (reg regs)
-    (kill-ring-save (car reg) (cdr reg))))
+    (kill-ring-save (boon-reg-begin reg) (boon-reg-end reg))))
 
 (defun boon-substitute-region (regs)
   "Kill the regions REGS, and switch to insertion mode."
@@ -463,7 +463,7 @@ If there is more than one, use mc/create-fake-cursor-at-point."
     (boon-take-region regs)
     (deactivate-mark t)
     (boon-lay-multiple-cursors (lambda (reg)
-                                 (goto-char (cdr reg)))
+                                 (goto-char (boon-reg-point reg)))
                                markers)
     (boon-set-insert-state)))
 
