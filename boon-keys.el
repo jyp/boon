@@ -40,6 +40,8 @@
 (define-key boon-c-map " " (lambda () (interactive) (boon-push-events "C-c C-SPC")))
 (define-key boon-c-map "," (lambda () (interactive) (boon-push-events "C-c C-,")))
 (define-key boon-c-map "." (lambda () (interactive) (boon-push-events "C-c C-.")))
+(define-key boon-c-map ">" (lambda () (interactive) (boon-push-events "C-c C->")))
+(define-key boon-c-map "" (lambda () (interactive) (boon-push-events "C-c C-")))
 (define-key boon-c-map "=" (lambda () (interactive) (boon-push-events "C-c C-=")))
 (define-key boon-c-map "[" (lambda () (interactive) (boon-push-events "C-c [")))
 (define-key boon-c-map "]" (lambda () (interactive) (boon-push-events "C-c ]")))
