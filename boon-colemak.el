@@ -28,8 +28,8 @@
 (define-key boon-moves-map "k" 'boon-switch-mark) ; bacK to marK
 (define-key boon-moves-map "K" 'boon-switch-mark-quick) ; quicK bacK to marK
 
-(define-key boon-moves-map "j"  'boon-find-char-backward)
-(define-key boon-moves-map "J"  'boon-find-char-forward)
+(define-key boon-moves-map "j"  'find-function-at-point)
+(define-key boon-moves-map "J"  'find-function)
 (define-key boon-moves-map "u"  'previous-line)
 (define-key boon-moves-map "y"  'next-line)
 (define-key boon-moves-map "U"  'backward-paragraph)
