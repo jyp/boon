@@ -66,7 +66,7 @@
 ;; bottom row: actions
 (define-key boon-helm-command-map (kbd "z")        'helm-select-3rd-action)
 (define-key boon-helm-command-map (kbd "x")        'helm-select-2nd-action)
-(define-key boon-helm-command-map (kbd "c")        'boon-c-map)
+(define-key boon-helm-command-map (kbd "c")        boon-c-map)
 (define-key boon-helm-command-map (kbd "v")        'boon-helm-set-insert-state) ;; for consistency
 (define-key boon-helm-command-map (kbd "b")        'helm-execute-persistent-action)
 
