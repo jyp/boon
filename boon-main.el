@@ -162,21 +162,24 @@ NOTE: Do not run for every cursor."
   "Move upward, to a line with the same level of indentation, or less."
   (interactive)
   (back-to-indentation)
-  (previous-logical-line)
-  (while (boon-at-indent-or-more-p) (previous-logical-line))
+  (dotimes (number count)
+    (previous-logical-line)
+    (while (boon-at-indent-or-more-p) (previous-logical-line)))
   (back-to-indentation))
 
-(defun boon-smarter-downward ()
+(defun boon-smarter-downward (count)
   "Move downward, to a line with the same level of indentation, or less."
-  (interactive)
+  (interactive "p")
   (back-to-indentation)
-  (next-logical-line)
-  (while (boon-at-indent-or-more-p) (next-logical-line))
+  (dotimes (number count)
+    (next-logical-line)
+    (while (boon-at-indent-or-more-p) (next-logical-line)))
   (back-to-indentation))
 
-(defun boon-smarter-backward ()
+(defun boon-smarter-backward (count)
   "Move backward, over a whole syntactic unit."
-  (interactive)
+  (interactive "p")
+  (dotimes (number count)
     (boon-jump-over-blanks-backward)
     (cond
      ((boon-looking-at-comment -1)
@@ -199,12 +202,12 @@ NOTE: Do not run for every cursor."
           (skip-syntax-backward "w")
         (skip-syntax-backward "w_")))
      (t
-      (backward-char)))
-    )
+      (backward-char)))))
 
-(defun boon-smarter-forward ()
+(defun boon-smarter-forward (count)
   "Move forward, over a whole syntactic unit."
-  (interactive)
+  (interactive "p")
+  (dotimes (number count)
     (boon-jump-over-blanks)
     (cond
      ((boon-looking-at-line-comment-start-p)
@@ -235,7 +238,7 @@ NOTE: Do not run for every cursor."
       (forward-char)))
     ;; (when (and no-spaces-skipped (not in-middle)) 
     ;;   (skip-chars-forward "\t\n "))
-    )
+    ))
 
 
 (defun boon-toggle-character-case ()
