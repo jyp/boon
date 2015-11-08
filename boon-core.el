@@ -106,6 +106,8 @@
     magit-branch-manager-mode
     magit-key-mode
     magit-log-mode
+    magit-popup-mode
+    magit-refs-mode
     magit-status-mode
     package-menu-mode
     mu4e-headers-mode
@@ -114,8 +116,7 @@
     Info-mode
     )
     "List of modes which start in boon-off-state, and go back to off state instead of inserting."
-    :group 'boon
-)
+    :group 'boon)
 
 (defun boon-special-mode-p ()
   "Is the major mode in boon-special-mode-list?"
