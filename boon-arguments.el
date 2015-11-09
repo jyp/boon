@@ -101,6 +101,12 @@ This function is meant to be called interactively."
   (interactive (list (prefix-numeric-value current-prefix-arg) (boon-spec-region "select contents")))
   (cons 'region (apply 'append (mapcar (lambda (reg) (boon-borders reg how-much)) (mapcar 'boon-normalize-reg regs)))))
 
+(defun boon-select-with-spaces (regs)
+  "Return the regions REGS, including some surrounding spaces.
+This function is meant to be called interactively."
+  (interactive (list (boon-spec-region "select contents")))
+  (cons 'region (mapcar (lambda (reg) (boon-include-surround-spaces reg)) (mapcar 'boon-normalize-reg regs))))
+
 (defun boon-select-content (regs)
   "Return the contents (of size HOW-MUCH) of a region list REGS.
 This function is meant to be called interactively."
