@@ -142,6 +142,20 @@ NOTE: Do not run for every cursor."
   (boon-extract-region)
   (yank))
 
+(defun boon-need-space ()
+    (and (looking-at "\\sw\\|\\s(") (looking-back "\\sw\\|\\s)")))
+
+(defun boon-splice-with-spaces ()
+  "Yank, replacing the region if it is active, and fix the
+surroundings so that they become nicely spaced."
+  (interactive)
+  (boon-extract-region)
+  (yank)
+  (when (boon-need-space) (insert " "))
+  (save-excursion
+    (goto-char (mark))
+    (when (boon-need-space))))
+
 (defun boon-line-prefix ()
   "Return the text between beginning of line and position."
   (buffer-substring-no-properties
@@ -158,7 +172,7 @@ NOTE: Do not run for every cursor."
   "Return non-nil if the point is at the current line indentation; or to the right."
   (or (eolp)
       (and (not (boon-at-indent-p))
-           (string-blank-p (boon-line-prefix)))))
+           (string-blank-p (boon-line-prefix))))))
 
 (defun boon-at-indent-p ()
   "Return non-nil if the point is at the current line indentation."
