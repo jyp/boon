@@ -158,9 +158,9 @@ NOTE: Do not run for every cursor."
   "Return non-nil if the point is at the current line indentation."
 (eq (save-excursion (back-to-indentation) (point)) (point)))
 
-(defun boon-smarter-upward ()
+(defun boon-smarter-upward (count)
   "Move upward, to a line with the same level of indentation, or less."
-  (interactive)
+  (interactive "p")
   (back-to-indentation)
   (dotimes (number count)
     (previous-logical-line)
