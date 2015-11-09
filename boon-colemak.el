@@ -1,4 +1,4 @@
-;;; boon --- An Ergonomic Command Mode  -*- lexical-binding: t -*-
+;;; boon-colemak.el --- An Ergonomic Command Mode  -*- lexical-binding: t -*-
 
 ;;; Commentary:
 ;;; Code:
