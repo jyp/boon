@@ -58,7 +58,7 @@
                     (bounds-of-thing-at-point 'sexp))))
     (list 'region bounds)))
 
-(defun boon-jump-over-blanks ()
+(defun boon-jump-over-blanks-forward ()
   "Jump over blanks, forward."
   (interactive)
   (skip-chars-forward "\n\t "))
@@ -91,7 +91,7 @@
                    (boon-jump-over-blanks-backward)
                    (point))
                  (save-excursion
-                   (boon-jump-over-blanks)
+                   (boon-jump-over-blanks-forward)
                    (point)))))
 
 

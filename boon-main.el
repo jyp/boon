@@ -148,6 +148,12 @@ NOTE: Do not run for every cursor."
    (line-beginning-position) 
    (point)))
 
+(defun boon-line-suffix ()
+  "Return the text between end of line and position."
+  (buffer-substring-no-properties
+   (line-end-position) 
+   (point)))
+
 (defun boon-at-indent-or-more-p ()
   "Return non-nil if the point is at the current line indentation; or to the right."
   (or (eolp)
@@ -196,9 +202,7 @@ NOTE: Do not run for every cursor."
      ((looking-back "\\s!")  ;; generic comment delimiter
       (skip-syntax-backward "!"))
      ((looking-back "\\sw")
-      (if (not (or (looking-at "\\s-") ;; FIXME: merge regexps with \\|
-                   (looking-at "\\s(")
-                   (looking-at "\\s)")))
+      (if (not (looking-at "\\(\\s-\\|\\s(\\|\\s)\\)"))
           (skip-syntax-backward "w")
         (skip-syntax-backward "w_")))
      (t
@@ -208,38 +212,133 @@ NOTE: Do not run for every cursor."
   "Move forward, over a whole syntactic unit."
   (interactive "p")
   (dotimes (number count)
-    (boon-jump-over-blanks)
+    (boon-jump-over-blanks-forward)
     (cond
      ((boon-looking-at-line-comment-start-p)
       (end-of-line)
-      (boon-jump-over-blanks))
+      (boon-jump-over-blanks-forward))
      ((boon-looking-at-comment 1);;
       (forward-comment 1))
      ((looking-at "\\s\"")
       (forward-char)
       (er--move-point-forward-out-of-string))
      ((looking-at "\\s(")
-      ;; (message "open paren")
       (forward-list))
      ((looking-at "\\s_") ;; symbol 
       (skip-syntax-forward "_"))
-     ((looking-at "\\s)") 
+     ((looking-at "\\s)")
       (forward-char))
      ((looking-at "\\s!")  ;; generic comment delimiter
-      ;; (message "generic")
       (skip-syntax-forward "!"))
-     ((looking-at "\\sw") 
-      (if (not (or (looking-back "\\s-")
-                   (looking-back "\\s(")
-                   (looking-back "\\s)")))
+     ((looking-at "\\sw")
+      (if (not (looking-at "\\(\\s-\\|\\s(\\|\\s)\\)"))
           (skip-syntax-forward "w")
         (skip-syntax-forward "w_")))
-     (t 
-      (forward-char)))
-    ;; (when (and no-spaces-skipped (not in-middle)) 
-    ;;   (skip-chars-forward "\t\n "))
-    ))
+     (t
+      (forward-char)))))
 
+(defun boon-smarter-forward-spaces (count)
+  "Move forward, over a whole syntactic unit. Handle spaces cleverly."
+  (interactive "p")
+  (dotimes (number count)
+    (let ((spaces-skipped (not (equal (boon-jump-over-blanks) 0)))
+          (in-middle nil)
+          (at-bol (string-blank-p (boon-line-prefix))))
+      (cond
+       ((boon-looking-at-line-comment-start-p)
+        (end-of-line)
+        (forward-char))
+       ((boon-looking-at-comment 1);;
+        (forward-comment 1))
+       ((looking-at "\\s\"")
+        (forward-char)
+        (er--move-point-forward-out-of-string))
+       ((looking-at "\\s(")
+        (forward-list))
+       ((looking-at "\\s_") ;; symbol
+        (skip-syntax-forward "_"))
+       ((looking-at "\\s)")
+        (forward-char)
+        (setq in-middle 't))
+       ((looking-at "\\s!")  ;; generic comment delimiter
+        (skip-syntax-forward "!"))
+       ((looking-at "\\sw")
+        (setq in-middle 't)
+        (if (not (looking-back "\\(\\s-\\|\\s(\\|\\s)\\)"))
+            (skip-syntax-forward "w")
+          (skip-syntax-forward "w_")))
+       (t
+        (forward-char)
+        (setq in-middle 't)))
+      (unless (or spaces-skipped in-middle)
+        (if at-bol
+            (skip-chars-forward "\t\n ")
+          (skip-chars-forward "\t "))))))
+
+(defun boon-smarter-backward-spaces (count)
+  "Move backward, over a whole syntactic unit. Handles spaces smartly."
+  (interactive "p")
+  (dotimes (number count)
+    (let ((spaces-skipped (not (equal (boon-jump-over-blanks-backward) 0)))
+          (in-middle nil)
+          (at-eol (string-blank-p (boon-line-suffix))))
+      (cond
+       ((boon-looking-at-comment -1)
+        (forward-comment -1))
+       ((looking-back "\\s\"")
+        (backward-char)
+        (er--move-point-backward-out-of-string))
+       ((looking-back "\\s)")
+        (backward-list))
+       ((looking-back "\\s_")  ;; symbol
+        (skip-syntax-backward "_"))
+       ((looking-back "\\s(")
+        (backward-char)
+        (setq in-middle 't))
+       ((looking-back "\\s!")  ;; generic comment delimiter
+        (skip-syntax-backward "!"))
+       ((looking-back "\\sw")
+        (setq in-middle 't)
+        (if (not (looking-at "\\(\\s-\\|\\s(\\|\\s)\\)"))
+            (skip-syntax-backward "w")
+          (skip-syntax-backward "w_")))
+       (t
+        (backward-char)
+        (setq in-middle 't)))
+      (unless (or spaces-skipped in-middle)
+        (if at-eol
+            (skip-chars-backward "\t\n ")
+          (skip-chars-backward "\t "))))))
+
+(defun boon-other-side ()
+  "Move backward, over a whole syntactic unit. Handles spaces smartly."
+  (cond
+   ((boon-looking-at-comment -1)
+    (forward-comment -1))
+   ((boon-looking-at-comment 1)
+    (forward-comment 1))
+   ((looking-back "\\s\"")
+    (backward-char)
+    (er--move-point-backward-out-of-string))
+   ((looking-at "\\s\"")
+    (forward-char)
+    (er--move-point-forward-out-of-string))
+   ((looking-back "\\s)")
+    (backward-list))
+   ((looking-at "\\s(")
+    (forward-list))
+   ((looking-back "\\s_")  ;; symbol
+    (skip-syntax-backward "_"))
+   ((looking-back "\\sw")
+    (if (not (looking-at "\\(\\s-\\|\\s(\\|\\s)\\)"))
+        (skip-syntax-backward "w")
+      (skip-syntax-backward "w_")))))
+
+(defun boon-jump-over-spaces ()
+  (interactive)
+  (if (looking-at "\\s-\\|\n")
+      (boon-jump-over-blanks-forward)
+      (boon-jump-over-blanks-backward)))
 
 (defun boon-toggle-character-case ()
   "Toggle the case of the character at point."
