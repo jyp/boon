@@ -1,4 +1,4 @@
-;;; boon --- An Ergonomic Command Mode  -*- lexical-binding: t -*-
+;;; boon-main.el --- An Ergonomic Command Mode  -*- lexical-binding: t -*-
 
 ;;; Commentary:
 ;;; Code:
@@ -564,5 +564,5 @@ unless: 1. the previous character is a backslash, in which case a
     (backward-char 1))))
 
 (provide 'boon-main)
-;;; boon-main ends here
+;;; boon-main.el ends here
 

@@ -1,4 +1,4 @@
-;;; boon --- An Ergonomic Command Mode  -*- lexical-binding: t -*-
+;;; boon-powerline.el --- An Ergonomic Command Mode  -*- lexical-binding: t -*-
 
 ;;; Commentary:
 
@@ -80,4 +80,4 @@
   )
 
 (provide 'boon-powerline)
-;;; boon-powerline ends here
+;;; boon-powerline.el ends here
