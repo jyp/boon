@@ -22,8 +22,7 @@
 (define-key boon-command-map [(return)] 'undefined)
 (define-key boon-command-map (kbd "<RET>") 'undefined)
 (define-key boon-command-map [(backspace)] 'undefined)
-(define-key boon-command-map (kbd "<DEL>") 'boon-splice-with-spaces)
-(define-key boon-select-map (kbd "<DEL>") 'boon-select-with-spaces)
+(define-key boon-select-map "t" 'boon-select-with-spaces)
 (define-key boon-command-map "`" 'boon-toggle-case)
 
 (define-key boon-command-map "_" 'redo)

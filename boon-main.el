@@ -137,23 +137,39 @@ NOTE: Do not run for every cursor."
   (deactivate-mark))
 
 (defun boon-splice ()
-  "Yank, replacing the region if it is active."
+  "Yank, replacing the region if it is active.
+When repeated, fix the spacing."
   (interactive)
-  (boon-extract-region)
-  (yank))
+  (if (eq last-command 'yank)
+      (boon-splice-fix-spaces)
+    (progn (boon-extract-region)
+           (yank))))
 
 (defun boon-need-space ()
-  "Is it necessary to insert a space here to separate words?"
-    (and (looking-at "\\sw\\|\\s(") (looking-back "\\sw\\|\\s)")))
+  "Is it necessary to insert a space here to separate words or expressions?"
+    (or
+     (and (looking-back "\\sw") (looking-at "\\sw"))
+     (and (looking-back "\\s)") (not (looking-at "\\s)")))
+     (and (not (looking-back "\\s(")) (looking-at "\\s("))))
 
 (defun boon-splice-with-spaces ()
   "Yank, replacing the region if it is active.
 Fix the surroundings so that they become nicely spaced."
   (interactive)
+  (debug)
   (boon-extract-region)
   (yank)
   (when (boon-need-space) (insert " "))
   (save-excursion
+    (goto-char (mark))
+    (when (boon-need-space) (insert " "))))
+
+(defun boon-splice-fix-spaces ()
+  "Yank, replacing the region if it is active.
+Fix the surroundings so that they become nicely spaced."
+  (interactive)
+  (save-excursion
+    (when (boon-need-space) (insert " "))
     (goto-char (mark))
     (when (boon-need-space) (insert " "))))
 
