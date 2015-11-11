@@ -20,6 +20,8 @@
   "Drop a new cursor at the first position given by REGS.
 NOTE: Do not run for every cursor."
   (interactive (list (boon-spec-region "cursor")))
+  (when (and mark-active (> (point) (mark)))
+    (exchange-point-and-mark))
   (mc/create-fake-cursor-at-point)
   (goto-char (boon-reg-point (car regs)))
   (set-marker (mark-marker) (boon-reg-mark (car regs)))
