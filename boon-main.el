@@ -10,9 +10,16 @@
 (require 'multiple-cursors)
 (require 'subr-x)
 
+(defcustom boon-hints-enabled 't "Display hints." :group 'boon)
+
+(defun boon-hint (msg)
+  "Provide MSG as a hint."
+  (when boon-hints-enabled
+    (message msg)))
+
 (defmacro boon-with-ordered-region (body)
   "Run the BODY, ensuring that the point is before the mark."
-  `(if (< (point) (mark)) 
+  `(if (< (point) (mark))
        ,body
        (progn (exchange-point-and-mark) ,body (exchange-point-and-mark))))
 
@@ -145,7 +152,8 @@ When repeated, fix the spacing."
   (if (eq last-command 'yank)
       (boon-splice-fix-spaces)
     (progn (boon-extract-region)
-           (yank))))
+           (yank)
+           (boon-hint "If spaces are wrong, run boon-splice again."))))
 
 (defun boon-need-space ()
   "Is it necessary to insert a space here to separate words or expressions?"
@@ -166,25 +174,30 @@ Fix the surroundings so that they become nicely spaced."
     (goto-char (mark))
     (when (boon-need-space) (insert " "))))
 
+(defun boon-fix-a-space ()
+  "Fix the text to have exactly one space at the point."
+  (cond ((boon-need-space) (insert " "))
+        ((and (looking-at " ") (looking-back " ") (delete-char 1)))))
+
 (defun boon-splice-fix-spaces ()
   "Yank, replacing the region if it is active.
 Fix the surroundings so that they become nicely spaced."
   (interactive)
   (save-excursion
-    (when (boon-need-space) (insert " "))
+    (boon-fix-a-space)
     (goto-char (mark))
-    (when (boon-need-space) (insert " "))))
+    (boon-fix-a-space)))
 
 (defun boon-line-prefix ()
-  "Return the text between beginning of line and position."
+  "Return the text between beginning of line and point."
   (buffer-substring-no-properties
-   (line-beginning-position) 
+   (line-beginning-position)
    (point)))
 
 (defun boon-line-suffix ()
-  "Return the text between end of line and position."
+  "Return the text between end of line and point."
   (buffer-substring-no-properties
-   (line-end-position) 
+   (line-end-position)
    (point)))
 
 (defun boon-at-indent-or-more-p ()
@@ -198,7 +211,7 @@ Fix the surroundings so that they become nicely spaced."
 (eq (save-excursion (back-to-indentation) (point)) (point)))
 
 (defun boon-smarter-upward (count)
-  "Move upward, to a line with the same level of indentation, or less."
+  "Move upward, to a line with the same level of indentation, or less, COUNT times."
   (interactive "p")
   (back-to-indentation)
   (dotimes (number count)
@@ -207,7 +220,7 @@ Fix the surroundings so that they become nicely spaced."
   (back-to-indentation))
 
 (defun boon-smarter-downward (count)
-  "Move downward, to a line with the same level of indentation, or less."
+  "Move downward, to a line with the same level of indentation, or less COUNT times."
   (interactive "p")
   (back-to-indentation)
   (dotimes (number count)
@@ -216,7 +229,7 @@ Fix the surroundings so that they become nicely spaced."
   (back-to-indentation))
 
 (defun boon-smarter-backward (count)
-  "Move backward, over a whole syntactic unit."
+  "Move backward, over COUNT whole syntactic units."
   (interactive "p")
   (dotimes (number count)
     (boon-jump-over-blanks-backward)
@@ -242,7 +255,7 @@ Fix the surroundings so that they become nicely spaced."
       (backward-char)))))
 
 (defun boon-smarter-forward (count)
-  "Move forward, over a whole syntactic unit."
+  "Move forward, over COUNT whole syntactic unit."
   (interactive "p")
   (dotimes (number count)
     (boon-jump-over-blanks-forward)
@@ -366,12 +379,6 @@ Fix the surroundings so that they become nicely spaced."
     (if (not (looking-at "\\(\\s-\\|\\s(\\|\\s)\\)"))
         (skip-syntax-backward "w")
       (skip-syntax-backward "w_")))))
-
-(defun boon-jump-over-spaces ()
-  (interactive)
-  (if (looking-at "\\s-\\|\n")
-      (boon-jump-over-blanks-forward)
-      (boon-jump-over-blanks-backward)))
 
 (defun boon-toggle-character-case ()
   "Toggle the case of the character at point."
@@ -572,18 +579,6 @@ If there is more than one, use mc/create-fake-cursor-at-point."
   (dolist (reg (mapcar 'boon-reg-to-markers regs))
     (kill-region (boon-reg-begin reg) (boon-reg-end reg))))
 
-
-(defun boon-swap-region (regs)
-  "Swap the region with the top of the kill ring (BUGGED)."
-  (interactive (list (boon-spec-region "swap")))
-  (dolist (reg regs)
-    (kill-region (boon-reg-begin reg) (boon-reg-end reg)))
-  (insert-for-yank (current-kill 1))
-  (save-excursion
-    (goto-char (car mark-ring))
-    (insert-for-yank (current-kill -1)))
-  )
-
 (defun boon-treasure-region (regs)
   "Copy (kill-ring-save) the regions REGS."
   (interactive (list (boon-spec-region "treasure")))
@@ -640,7 +635,6 @@ If there is more than one, use mc/create-fake-cursor-at-point."
     (message "Removed highlighting")
     (boon-unhighlight))
    (t
-    ;; (message "Already in command mode; doing keyboard quit")
     (keyboard-quit))))
 
 (defun boon-stuff-at-point ()

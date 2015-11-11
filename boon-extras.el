@@ -18,17 +18,6 @@
    (end-of-line))
  (call-interactively 'indent-rigidly))
 
-(defun boon-open-word ()
-  "Insert a new word."
-  (interactive)
-  (unless (eq (preceding-char) 32)
-    (insert (make-string 1 32)))
-  (unless (eq (following-char) 32)
-    (insert (make-string 1 32))
-    (backward-char 1))
-  (boon-set-insert-state))
-
-
 (defun boon-query-replace ()
   "Query replace; but if the region is active, replace its contents"
   (interactive)
@@ -46,26 +35,6 @@
        (point-max-marker) ; replace in the whole buffer
        ))
     (call-interactively 'query-replace)))
-
-(defun boon-prepare-mark ()
-  (unless (use-region-p) (call-interactively 'boon-mark-region))
-  (when (not (bound-and-true-p multiple-cursors-mode))
-    (when (> (mark) (point))
-      (exchange-point-and-mark)
-      ;; this is to work-around a bug in multiple cursors,
-      ;; where the currently marked things is unmarked if the point is after the mark.
-      )))
-
-(defun boon-mark-next-like-this ()
-  (interactive)
-  (boon-prepare-mark)
-  (call-interactively 'mc/mark-next-like-this))
-
-(defun boon-mark-previous-like-this ()
-  (interactive)
-  (boon-prepare-mark)
-  (call-interactively 'mc/mark-previous-like-this))    
-
 
 (defun boon-toggle-comment (regs)
   "Toggle comments in the regions REGS."
@@ -99,7 +68,7 @@
 (define-key boon-x-map [(return)] 'boon-split-line)
 (define-key boon-x-map " " 'boon-split-word)
 
-(define-key boon-x-map "-" 'undo-tree-visualize)
+(define-key boon-x-map "U" 'undo-tree-visualize)
 (define-key boon-x-map "O" 'previous-window) ;; o is next window
 (define-key boon-x-map "S" 'save-some-buffers)
 (define-key boon-x-map "\\" 'align-regexp)

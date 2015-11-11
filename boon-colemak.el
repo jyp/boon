@@ -143,7 +143,6 @@
 ;; home row
 ;; a
 (define-key boon-command-map "a" 'boon-enclose) ; around
-(define-key boon-command-map "A" 'boon-swap-region) ; swap
 
 ;; r
 (define-key boon-command-map "r" 'boon-substitute-region) ; replace
