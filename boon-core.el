@@ -108,6 +108,7 @@
     magit-log-mode
     magit-popup-mode
     magit-refs-mode
+    magit-revision-mode
     magit-status-mode
     package-menu-mode
     mu4e-headers-mode
