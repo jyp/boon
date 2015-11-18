@@ -157,22 +157,10 @@ When repeated, fix the spacing."
 
 (defun boon-need-space ()
   "Is it necessary to insert a space here to separate words or expressions?"
-    (or
-     (and (looking-back "\\sw") (looking-at "\\sw"))
-     (and (looking-back "\\s)") (not (looking-at "\\s)")))
-     (and (not (looking-back "\\s(")) (looking-at "\\s("))))
-
-(defun boon-splice-with-spaces ()
-  "Yank, replacing the region if it is active.
-Fix the surroundings so that they become nicely spaced."
-  (interactive)
-  (debug)
-  (boon-extract-region)
-  (yank)
-  (when (boon-need-space) (insert " "))
-  (save-excursion
-    (goto-char (mark))
-    (when (boon-need-space) (insert " "))))
+  (or
+   (and (looking-back "\\sw") (looking-at "\\sw"))
+   (and (looking-back "\\s)") (not (looking-at "\\s)")))
+   (and (not (looking-back "\\s(")) (looking-at "\\s("))))
 
 (defun boon-fix-a-space ()
   "Fix the text to have exactly one space at the point."
@@ -286,6 +274,7 @@ Fix the surroundings so that they become nicely spaced."
 (defun boon-smarter-forward-spaces (count)
   "Move forward, over a whole syntactic unit. Handle spaces cleverly."
   (interactive "p")
+  (declare (obsolete "does not seem very useful" "20151120"))
   (dotimes (number count)
     (let ((spaces-skipped (not (equal (boon-jump-over-blanks) 0)))
           (in-middle nil)
@@ -324,6 +313,7 @@ Fix the surroundings so that they become nicely spaced."
 (defun boon-smarter-backward-spaces (count)
   "Move backward, over a whole syntactic unit. Handles spaces smartly."
   (interactive "p")
+  (declare (obsolete "does not seem very useful" "20151120"))
   (dotimes (number count)
     (let ((spaces-skipped (not (equal (boon-jump-over-blanks-backward) 0)))
           (in-middle nil)
