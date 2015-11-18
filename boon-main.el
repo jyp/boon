@@ -429,6 +429,13 @@ NOTE: Do not run for every cursor."
           (message "mark placed at point"))
       (activate-mark)))
 
+(defun boon-visible-beginning-of-line ()
+  (interactive)
+  (beginning-of-line)
+  (while (and (bound-and-true-p visible-mode) (outline-invisible-p))
+    (backward-char 1)
+    (beginning-of-line 1)))
+
 (defun boon-beginning-of-line ()
   "Move point to the first non-whitespace character on this line.
 If point was already at that position, move point to beginning of
@@ -437,7 +444,7 @@ line."
   (let ((oldpos (point)))
     (back-to-indentation)
     (when (= oldpos (point))
-      (beginning-of-line))))
+      (boon-visible-beginning-of-line))))
 
 (defun boon-looking-at-comment (how-many)
   "Is the current point looking at HOW-MANY comments? (negative for backwards)?"
