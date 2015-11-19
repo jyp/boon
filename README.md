@@ -53,7 +53,7 @@ Installation/Configuration
 --------------------------
 
 REQUIREMENTS
-- Emacs version >= 24.3
+- Emacs version >= 24.5
 - Colemak layout
 
 Install Boon (perhaps using
