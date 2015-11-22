@@ -149,7 +149,7 @@ NOTE: Do not run for every cursor."
   "Yank, replacing the region if it is active.
 When repeated, fix the spacing."
   (interactive)
-  (if (eq last-command 'yank)
+  (if (and (eq last-command 'yank) (not (bolp)))
       (boon-splice-fix-spaces)
     (progn (boon-extract-region)
            (yank)
