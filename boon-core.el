@@ -51,7 +51,7 @@
       (when (not (bolp))
         (let ((orig (point)))
           (skip-chars-forward " " (line-end-position))
-          (when (eolp) (delete-and-extract-region orig (point))))))
+          (when (eolp) (delete-region orig (point))))))
     (setq cursor-type 'bar))
   (cond (boon-command-state
          ;; (do-auto-save)

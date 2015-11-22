@@ -129,14 +129,14 @@ NOTE: Do not run for every cursor."
   (interactive)
   (boon-edge-of-expression nil))
 
-(defun boon-extract-region ()
-  "Extract (delete) the region if it is active."
+(defun boon-delete-region ()
+  "Delete the region if it is active."
   (when (use-region-p)
-    (delete-and-extract-region (region-beginning) (region-end))))
+    (delete-region (region-beginning) (region-end))))
 
 (defun boon-insert-register ()
   "Insert register, replacing the region if it is active."
-  (boon-extract-region)
+  (boon-delete-region)
   (call-interactively 'insert-register))
 
 (defun boon-copy-to-register ()
@@ -151,7 +151,7 @@ When repeated, fix the spacing."
   (interactive)
   (if (and (eq last-command 'yank) (not (bolp)))
       (boon-splice-fix-spaces)
-    (progn (boon-extract-region)
+    (progn (boon-delete-region)
            (yank)
            (boon-hint "If spaces are wrong, run boon-splice again."))))
 
@@ -523,12 +523,12 @@ line."
   (let ((indent-col (min (boon-current-line-indentation) (current-column))))
     ;; kill the extra spaces
     (save-excursion
-      (delete-and-extract-region (progn
-                                   (skip-chars-forward "\n\t " (line-end-position))
-                                   (point))
-                                 (progn
-                                   (skip-chars-backward "\n\t " (line-beginning-position))
-                                   (point))))
+      (delete-region (progn
+                       (skip-chars-forward "\n\t " (line-end-position))
+                       (point))
+                     (progn
+                       (skip-chars-backward "\n\t " (line-beginning-position))
+                       (point))))
     (newline)
     (insert (make-string indent-col ?\ ))))
 
@@ -598,7 +598,7 @@ If there is more than one, use mc/create-fake-cursor-at-point."
   "Replace the character at point, or region if it is active, by the REPLACEMENT character."
   (interactive "cType the character to use as a replacement")
   (if (use-region-p)
-      (delete-and-extract-region (region-beginning) (region-end))
+      (delete-region (region-beginning) (region-end))
     (delete-char 1))
   (insert replacement))
 
