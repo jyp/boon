@@ -571,7 +571,7 @@ If there is more than one, use mc/create-fake-cursor-at-point."
     (goto-char (boon-reg-begin reg))))
 
 (defun boon-take-region (regs)
-  "Kill the region given as REGS.
+  "Kill the region given as REGS."
   (interactive (list (boon-spec-region "take")))
   (dolist (reg (sort regs 'boon-reg-after)
                ; Wrong: (mapcar 'boon-reg-to-markers regs)
