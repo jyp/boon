@@ -571,10 +571,20 @@ If there is more than one, use mc/create-fake-cursor-at-point."
     (goto-char (boon-reg-begin reg))))
 
 (defun boon-take-region (regs)
-  "Kill the region given as REGS."
+  "Kill the region given as REGS.
   (interactive (list (boon-spec-region "take")))
-  (dolist (reg (mapcar 'boon-reg-to-markers regs))
-    (kill-region (boon-reg-begin reg) (boon-reg-end reg))))
+  (dolist (reg (sort regs 'boon-reg-after)
+               ; Wrong: (mapcar 'boon-reg-to-markers regs)
+               ;; We can't run 'kill-region' on markers. Indeed, using
+               ;; markers messes the logic used in kill-region to
+               ;; determine whether to prepend or append the thing
+               ;; just killed to the top of the kill ring.  So, we
+               ;; sort the regions by latest first, so that killing
+               ;; does not affect the positions of the next regions in
+               ;; the list.
+               )
+    (message "Taking: %s %s" reg (< (boon-reg-point reg) (boon-reg-mark reg)))
+    (kill-region (boon-reg-mark reg) (boon-reg-point reg))))
 
 (defun boon-treasure-region (regs)
   "Copy (kill-ring-save) the regions REGS."

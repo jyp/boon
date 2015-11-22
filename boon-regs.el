@@ -59,5 +59,9 @@ The size of the borders is HOW-MUCH."
   "Given a region REG, return its contents (crop the region by 1)."
   (boon-mk-reg (+ (boon-reg-begin reg) 1) (- (boon-reg-end reg) 1)))
 
+(defun boon-reg-after (r1 r2)
+  "Return non-nil when R1 occurs after R2."
+  (> (boon-reg-begin r1) (boon-reg-end r2)))
+
 (provide 'boon-regs)
 ;;; boon-regs.el ends here
