@@ -99,8 +99,9 @@
   '(progn
      (define-key helm-map [(tab)]            'helm-select-action)
      (define-key helm-map (kbd "C-z")        'undefined)
-     (define-key helm-map [(control return)] 'helm-execute-persistent-action)
      (define-key helm-map [(escape)] 'boon-helm-set-command-state)
+     (define-key boon-helm-command-map " "      'helm-toggle-visible-mark)
+     (define-key boon-helm-command-map "="      'universal-argument)
      ))
 
 (defvar boon-goto-map (make-sparse-keymap))

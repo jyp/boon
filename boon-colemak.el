@@ -53,42 +53,54 @@
 (define-key boon-moves-map (kbd "C-,")      'beginning-of-buffer)
 (define-key boon-moves-map (kbd "C-.")      'end-of-buffer)
 
-(define-key boon-helm-command-map (kbd "q")    'helm-keyboard-quit)
-(define-key boon-helm-command-map (kbd "f")    'helm-follow-mode)
-(define-key boon-helm-command-map (kbd "p")    'previous-history-element)
+(eval-after-load 'helm
+  '(progn
+     (define-key helm-map (kbd "C-l")        'previous-history-element)
+     (define-key helm-map (kbd "C-;")        'next-history-element)
+     (define-key helm-map (kbd "C-u")        'helm-previous-line)
+     (define-key helm-map (kbd "C-y")        'helm-next-line)
+     (define-key helm-map (kbd "C-,")        'helm-previous-page)
+     (define-key helm-map (kbd "C-.")        'helm-next-page)
+     (define-key helm-map (kbd "C-.")        'helm-next-page)
+     ))
+
+;; actions
+(define-key boon-helm-command-map (kbd "k")   'helm-select-3rd-action)
+(define-key boon-helm-command-map (kbd "h")   'helm-select-2nd-action)
+(define-key boon-helm-command-map (kbd "j")   'helm-execute-persistent-action)
+
+;; top row
+(define-key boon-helm-command-map (kbd "q")   'helm-keyboard-quit)
+(define-key boon-helm-command-map (kbd "f")   'helm-follow-mode)
 
 ;; home row: yanking/killing
-(define-key boon-helm-command-map (kbd "r")    'helm-yank-selection)
-(define-key boon-helm-command-map (kbd "s")        'next-history-element) ;; has the effect of getting the whole symbol at point
-(define-key boon-helm-command-map (kbd "t")        'helm-yank-text-at-point)
-(define-key boon-helm-command-map (kbd "d")        'helm-delete-minibuffer-contents)
+(define-key boon-helm-command-map (kbd "r")   'helm-yank-selection)
+(define-key boon-helm-command-map (kbd "s")   'next-history-element) ;; has the effect of getting the whole symbol at point
+(define-key boon-helm-command-map (kbd "t")   'helm-yank-text-at-point)
+(define-key boon-helm-command-map (kbd "d")   'helm-delete-minibuffer-contents)
 
-;; bottom row: actions
-(define-key boon-helm-command-map (kbd "z")        'helm-select-3rd-action)
-(define-key boon-helm-command-map (kbd "x")        'helm-select-2nd-action)
-(define-key boon-helm-command-map (kbd "c")        boon-c-map)
-(define-key boon-helm-command-map (kbd "v")        'boon-helm-set-insert-state) ;; for consistency
-(define-key boon-helm-command-map (kbd "b")        'helm-execute-persistent-action)
+;; bottom row (as regular)
+(define-key boon-helm-command-map (kbd "c")   boon-c-map)
+(define-key boon-helm-command-map (kbd "x")   boon-x-map)
+(define-key boon-helm-command-map (kbd "v")   'boon-helm-set-insert-state) ;; for consistency
 
-(define-key boon-helm-command-map (kbd "'")        'helm-toggle-all-marks)
-(define-key boon-helm-command-map (kbd "K")        'helm-mark-all)
-(define-key boon-helm-command-map (kbd "C-k")        'helm-unmark-all) ;; use K ' for this
-(define-key boon-helm-command-map (kbd "k")      'helm-toggle-visible-mark)
+(define-key boon-helm-command-map [(shift space)] 'helm-toggle-all-marks)
+(define-key boon-helm-command-map [(shift backspace)] 'helm-unmark-all)
 
-(define-key boon-helm-command-map (kbd "l")        'previous-history-element)
-(define-key boon-helm-command-map (kbd ";")        'next-history-element)
-(define-key boon-helm-command-map (kbd "y")     'helm-next-line)
-(define-key boon-helm-command-map (kbd "u")       'helm-previous-line)
-(define-key boon-helm-command-map (kbd "U")        'helm-previous-source)
-(define-key boon-helm-command-map (kbd "Y")        'helm-next-source)
-(define-key boon-helm-command-map (kbd ",")        'helm-previous-page)
-(define-key boon-helm-command-map (kbd ".")        'helm-next-page)
-(define-key boon-helm-command-map (kbd "C-y")      'helm-scroll-other-window)
-(define-key boon-helm-command-map (kbd "C-u")      'helm-scroll-other-window-down)
-(define-key boon-helm-command-map (kbd ",")        'helm-prev-visible-mark)
-(define-key boon-helm-command-map (kbd ".")        'helm-next-visible-mark)
-(define-key boon-helm-command-map (kbd ">")        'helm-goto-next-file)
-(define-key boon-helm-command-map (kbd "<")        'helm-goto-precedent-file)
+(define-key boon-helm-command-map (kbd "l")   'previous-history-element)
+(define-key boon-helm-command-map (kbd ";")   'next-history-element)
+(define-key boon-helm-command-map (kbd "y")   'helm-next-line)
+(define-key boon-helm-command-map (kbd "u")   'helm-previous-line)
+(define-key boon-helm-command-map (kbd "U")   'helm-previous-source)
+(define-key boon-helm-command-map (kbd "Y")   'helm-next-source)
+(define-key boon-helm-command-map (kbd ",")   'helm-previous-page)
+(define-key boon-helm-command-map (kbd ".")   'helm-next-page)
+(define-key boon-helm-command-map (kbd "C-y") 'helm-scroll-other-window)
+(define-key boon-helm-command-map (kbd "C-u") 'helm-scroll-other-window-down)
+(define-key boon-helm-command-map (kbd "m")   'helm-prev-visible-mark)
+(define-key boon-helm-command-map (kbd "/")   'helm-next-visible-mark)
+(define-key boon-helm-command-map (kbd ">")   'helm-goto-next-file)
+(define-key boon-helm-command-map (kbd "<")   'helm-goto-precedent-file)
 
 
 (define-key isearch-mode-map [(control p)] 'helm-occur-from-isearch)
@@ -184,15 +196,7 @@
 (define-key boon-command-map "H" 'avy-goto-char) ; Hop
 (define-key boon-command-map "'" 'boon-toggle-mark)
 
-(eval-after-load 'helm
-  '(progn
-     (define-key helm-map (kbd "C-l")        'previous-history-element)
-     (define-key helm-map (kbd "C-;")        'next-history-element)
-     (define-key helm-map (kbd "C-u")        'helm-previous-line)
-     (define-key helm-map (kbd "C-y")        'helm-next-line)
-     (define-key helm-map (kbd "C-,")        'helm-previous-page)
-     (define-key helm-map (kbd "C-.")        'helm-next-page)
-     ))
+
 (provide 'boon-colemak)
 ;;; boon-colemak.el ends here
 
