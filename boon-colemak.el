@@ -7,7 +7,8 @@
 (require 'boon-search)
 (require 'boon-keys)
 
-(define-key boon-select-map "c"  'boon-select-comment)
+(define-key boon-select-map "h"  'boon-select-comment)
+(define-key boon-select-map "c"  'boon-select-org-table-cell)
 (define-key boon-select-map "d"  'boon-select-document)
 (define-key boon-select-map "p"  'boon-select-paragraph)
 (define-key boon-select-map "w"  'boon-select-word)

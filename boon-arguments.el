@@ -48,6 +48,7 @@
   "Return a region list with a single item: the region selected after calling SELECT-FUN (interactively)."
   (interactive)
   (save-excursion
+    ;; FIXME: deactivate mark
     (call-interactively select-fun)
     (list 'region (cons (region-beginning) (region-end)))))
 
@@ -68,8 +69,14 @@
   (interactive)
   (skip-chars-backward "\n\t "))
 
-
-(defun boon-select-justline () (interactive) (list 'region (line-beginning-position) (line-end-position)))
+(defun boon-select-org-table-cell ()
+  (interactive)
+  (list 'region
+        (cons (save-excursion
+                (skip-chars-backward "^|") (point))
+              (save-excursion
+                (skip-chars-forward "^|") (point)))))
+(defun boon-select-justline () (interactive) (list 'region (cons (line-beginning-position) (line-end-position))))
 (defun boon-select-line () (interactive) (boon-select-thing-at-point 'line))
 (defun boon-select-paragraph () (interactive) (boon-select-thing-at-point 'paragraph))
 (defun boon-select-document () (interactive)
