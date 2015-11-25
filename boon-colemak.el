@@ -7,11 +7,11 @@
 (require 'boon-search)
 (require 'boon-keys)
 
-(define-key boon-select-map "h"  'boon-select-comment)
-(define-key boon-select-map "c"  'boon-select-org-table-cell)
+(define-key boon-select-map "C"  'boon-select-comment)
+(define-key boon-select-map "g"  'boon-select-org-table-cell)
 (define-key boon-select-map "d"  'boon-select-document)
 (define-key boon-select-map "p"  'boon-select-paragraph)
-(define-key boon-select-map "w"  'boon-select-word)
+;; (define-key boon-select-map "w"  'boon-select-word)
 (define-key boon-select-map "f"  'boon-select-word) ;; 'rf' is easier to type than 'rw'
 (define-key boon-select-map "x"  'boon-select-outside-pairs) ;; eXpression
 (define-key boon-select-map "c"  'boon-select-inside-pairs) ;; Contents
@@ -45,12 +45,12 @@
 (define-key boon-moves-map "."  'boon-end-of-expression)
 (define-key boon-moves-map "e"  'backward-char)
 (define-key boon-moves-map "i"  'forward-char)
-(define-key boon-moves-map "<"  'boon-beginning-of-region)
-(define-key boon-moves-map ">"  'boon-end-of-region)
+(define-key boon-moves-map "<"  'beginning-of-buffer)
+(define-key boon-moves-map ">"  'end-of-buffer)
 (define-key boon-moves-map "m"  'boon-qsearch-previous-at-point)
 (define-key boon-moves-map "/"  'boon-qsearch-next-at-point)
 (define-key boon-moves-map "h"  'avy-goto-word-1)
-(define-key boon-moves-map "H"  'avy-goto-word-1)
+(define-key boon-moves-map "H"  'avy-goto-char)
 (define-key boon-moves-map (kbd "C-,")      'beginning-of-buffer)
 (define-key boon-moves-map (kbd "C-.")      'end-of-buffer)
 
@@ -190,8 +190,6 @@
 ;; Most of these are actually in the boon-moves-map; however some don't quite work there; so they end up here.
 (define-key boon-command-map (kbd "C-u") 'scroll-down-line)
 (define-key boon-command-map (kbd "C-y") 'scroll-up-line)
-(define-key boon-command-map "h" 'avy-goto-word-1) ; hop
-(define-key boon-command-map "H" 'avy-goto-char) ; Hop
 (define-key boon-command-map "'" 'boon-toggle-mark)
 
 
