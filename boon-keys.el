@@ -10,15 +10,6 @@
 (require 'boon-core)
 (require 'boon-main)
 
-(define-key boon-helm-command-map (kbd "C-<down>") 'helm-narrow-window)
-(define-key boon-helm-command-map (kbd "C-<up>")   'helm-enlarge-window)
-(define-key boon-helm-command-map [(escape)]       'helm-keyboard-quit)
-(define-key boon-helm-command-map (kbd "M-SPC")    'helm-toggle-visible-mark)
-(define-key boon-helm-command-map (kbd "SPC")      'boon-helm-set-insert-state)
-(define-key boon-helm-command-map (kbd "<RET>")    nil) ;; so we simply use the underlying helm keymap binding for return
-(define-key boon-helm-command-map (kbd "<tab>")    'helm-select-action)
-(define-key boon-helm-command-map (kbd "C-<RET>")  'helm-execute-persistent-action)
-
 (define-key boon-command-map [(return)] 'undefined)
 (define-key boon-command-map (kbd "<RET>") 'undefined)
 (define-key boon-command-map [(backspace)] 'undefined)
@@ -100,9 +91,19 @@
      (define-key helm-map [(tab)]            'helm-select-action)
      (define-key helm-map (kbd "C-z")        'undefined)
      (define-key helm-map [(escape)] 'boon-helm-set-command-state)
-     (define-key boon-helm-command-map " "      'helm-toggle-visible-mark)
-     (define-key boon-helm-command-map "="      'universal-argument)
+
      ))
+(define-key boon-helm-command-map "="      'universal-argument)
+(define-key boon-helm-command-map [(backspace)] 'helm-toggle-visible-mark)
+(define-key boon-helm-command-map [(shift backspace)] 'helm-unmark-all)
+(define-key boon-helm-command-map " "   'boon-helm-set-insert-state)
+(define-key boon-helm-command-map (kbd "C-<down>") 'helm-narrow-window)
+(define-key boon-helm-command-map (kbd "C-<up>")   'helm-enlarge-window)
+(define-key boon-helm-command-map [(escape)]       'helm-keyboard-quit)
+(define-key boon-helm-command-map (kbd "M-SPC")    'helm-toggle-visible-mark)
+(define-key boon-helm-command-map (kbd "<RET>")    nil) ;; so we simply use the underlying helm keymap binding for return
+(define-key boon-helm-command-map (kbd "<tab>")    'helm-select-action)
+(define-key boon-helm-command-map (kbd "C-<RET>")  'helm-execute-persistent-action)
 
 (defvar boon-goto-map (make-sparse-keymap))
 

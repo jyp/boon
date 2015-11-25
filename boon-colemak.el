@@ -66,9 +66,9 @@
      ))
 
 ;; actions
-(define-key boon-helm-command-map (kbd "k")   'helm-select-3rd-action)
-(define-key boon-helm-command-map (kbd "h")   'helm-select-2nd-action)
 (define-key boon-helm-command-map (kbd "j")   'helm-execute-persistent-action)
+(define-key boon-helm-command-map (kbd "h")   'helm-select-2nd-action)
+(define-key boon-helm-command-map (kbd "k")   'helm-select-3rd-action)
 
 ;; top row
 (define-key boon-helm-command-map (kbd "q")   'helm-keyboard-quit)
@@ -84,9 +84,6 @@
 (define-key boon-helm-command-map (kbd "c")   boon-c-map)
 (define-key boon-helm-command-map (kbd "x")   boon-x-map)
 (define-key boon-helm-command-map (kbd "v")   'boon-helm-set-insert-state) ;; for consistency
-
-(define-key boon-helm-command-map [(shift space)] 'helm-toggle-all-marks)
-(define-key boon-helm-command-map [(shift backspace)] 'helm-unmark-all)
 
 (define-key boon-helm-command-map (kbd "l")   'previous-history-element)
 (define-key boon-helm-command-map (kbd ";")   'next-history-element)
