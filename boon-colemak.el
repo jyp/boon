@@ -27,7 +27,7 @@
 
 
 (define-key boon-moves-map "k" 'boon-switch-mark) ; bacK to marK
-(define-key boon-moves-map "K" 'boon-switch-mark-quick) ; quicK bacK to marK
+(define-key boon-moves-map "K" 'pop-global-mark)
 
 (define-key boon-moves-map "j"  'find-function-at-point)
 (define-key boon-moves-map "J"  'find-function)
