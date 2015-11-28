@@ -23,17 +23,24 @@
        ,body
        (progn (exchange-point-and-mark) ,body (exchange-point-and-mark))))
 
-(defun boon-drop-cursor (regs)
+(defun boon-drop-cursor ()
   "Drop a new cursor at the first position given by REGS.
 NOTE: Do not run for every cursor."
-  (interactive (list (boon-spec-region "cursor")))
-  (when (and mark-active (> (point) (mark)))
-    (exchange-point-and-mark))
-  (mc/create-fake-cursor-at-point)
-  (goto-char (boon-reg-point (car regs)))
-  (set-marker (mark-marker) (boon-reg-mark (car regs)))
-  (mc/maybe-multiple-cursors-mode))
-
+  (interactive)
+  (if multiple-cursors-mode
+      ;; attempt to deactivate mc without deleting the cursors
+      (let ((cursors (mc/all-fake-cursors)))
+        ;; does not work because deactivating mc destroys the overlays
+        (multiple-cursors-mode 0)
+        (dolist (o (cdr cursors))
+          (goto-char (overlay-get o 'point))
+          (set-marker (mark-marker) (overlay-get o 'mark))
+          (mc/create-fake-cursor-at-point)))
+    (when (and mark-active (> (point) (mark)))
+      (exchange-point-and-mark))
+    ;; so that searching for the region gives a similar position
+    (mc/create-fake-cursor-at-point)))
+  
 (defun boon-move-cursor (regs)
   "Move the cursor at the first position given by REGS.
 NOTE: Do not run for every cursor."
@@ -43,6 +50,7 @@ NOTE: Do not run for every cursor."
 (defun boon-drop-or-extend-mark ()
   "Drop a mark; or extend the region to the next full line; or revert to original state."
   (interactive)
+  (declare (obsolete "Use boon-drop-mark instead" "20151020"))
   (if mark-active
       (if (and (bolp)
                (save-excursion (goto-char (mark)) (bolp))
@@ -63,17 +71,16 @@ NOTE: Do not run for every cursor."
       (push-mark) ;; Save the starting position, so we can go back to it.
       (call-interactively 'boon-mark-region))))
 
+(defun boon-deactivate-mark ()
+  "Drop deactivate the mark robustly."
+  (mc/execute-command-for-all-fake-cursors (lambda () (interactive) (deactivate-mark)))
+  (deactivate-mark t))
 
 (defun boon-drop-mark ()
   "Drop or deactivate the mark."
   (interactive)
-  (declare (obsolete "Use boon-drop-mark instead" "20151020"))
-  (if mark-active
-      (progn
-        (mc/execute-command-for-all-fake-cursors (lambda () (interactive) (deactivate-mark)))
-        (deactivate-mark t))
-    (progn
-      (call-interactively 'boon-mark-region))))
+  (if mark-active (boon-deactivate-mark)
+    (call-interactively 'boon-mark-region)))
 
 (defun boon-current-line-indentation ()
   "Return the indentation of the curent line."
@@ -629,12 +636,18 @@ If there is more than one, use mc/create-fake-cursor-at-point."
     (hi-lock-unface-buffer (car (car hi-lock-interactive-patterns)))))
 
 (defun boon-quit ()
-  "Exit the current modes we're in until no special state is remaining."
+  "Exit the current modes we're in until no special state is remaining.
+NOTE: do not run for every cursor."
   (interactive)
   (cond
+   ((and (boundp multiple-cursors-mode)
+         (not multiple-cursors-mode)
+         (> (mc/num-cursors) 1))
+    (multiple-cursors-mode 1)
+    (message "Activated multiple cursors. Repeat this command to deactivate."))
    ((use-region-p)
-    (message "Deactivated region (use ' to reactivate)")
-    (deactivate-mark))
+    (boon-deactivate-mark)
+    (message "Deactivated region (use ' to reactivate)"))
    ((bound-and-true-p multiple-cursors-mode)
     (message "Exitted from multiple cursors")
     (multiple-cursors-mode 0))
