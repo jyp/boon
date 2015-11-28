@@ -265,7 +265,7 @@ Fix the surroundings so that they become nicely spaced."
      ((looking-at "\\s!")  ;; generic comment delimiter
       (skip-syntax-forward "!"))
      ((looking-at "\\sw")
-      (if (not (looking-at "\\(\\s-\\|\\s(\\|\\s)\\)"))
+      (if (not (looking-back "\\(\\s-\\|\\s(\\|\\s)\\)"))
           (skip-syntax-forward "w")
         (skip-syntax-forward "w_")))
      (t
