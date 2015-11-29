@@ -154,34 +154,44 @@ NOTE: Do not run for every cursor."
 
 (defun boon-splice ()
   "Yank, replacing the region if it is active.
-When repeated, fix the spacing."
+When repeated, fix the spacing if necessary."
   (interactive)
-  (if (and (eq last-command 'yank) (not (bolp)))
-      (boon-splice-fix-spaces)
+  (when (not (and (eq last-command 'yank)
+                  (boon-splice-fix-spaces)))
     (progn (boon-delete-region)
            (yank)
            (boon-hint "If spaces are wrong, run boon-splice again."))))
 
 (defun boon-need-space ()
   "Is it necessary to insert a space here to separate words or expressions?"
-  (or
-   (and (looking-back "\\sw") (looking-at "\\sw"))
-   (and (looking-back "\\s)") (not (looking-at "\\s)")))
-   (and (not (looking-back "\\s(")) (looking-at "\\s("))))
+  (and (not (looking-at "\\s-|\n"))
+       (not (looking-back "\\s-|\n"))
+       (or (and (looking-back "\\sw") (looking-at "\\sw"))
+           (and (looking-back "\\s)") (not (looking-at "\\s)")))
+           (and (not (looking-back "\\s(")) (looking-at "\\s(")))))
 
 (defun boon-fix-a-space ()
-  "Fix the text to have exactly one space at the point."
-  (cond ((boon-need-space) (insert " "))
-        ((and (looking-at " ") (looking-back " ") (delete-char 1)))))
+  "Fix the text to have exactly one space at the point.
+Return nil if no changes are made."
+  (cond ((and (looking-at " ") (looking-back " "))
+         (delete-char 1)
+         t)
+        ((boon-need-space)
+         (insert " ")
+         t)
+        (t nil)))
 
 (defun boon-splice-fix-spaces ()
   "Yank, replacing the region if it is active.
-Fix the surroundings so that they become nicely spaced."
+Fix the surroundings so that they become nicely spaced.
+Return nil if no changes are made."
   (interactive)
-  (save-excursion
-    (boon-fix-a-space)
-    (goto-char (mark))
-    (boon-fix-a-space)))
+  (let ((fix-here (boon-fix-a-space))
+        (fix-there (save-excursion
+                     (goto-char (mark))
+                     (boon-fix-a-space))))
+    ;; done this way because 'or' is lazy
+    (or fix-here fix-there)))
 
 (defun boon-line-prefix ()
   "Return the text between beginning of line and point."
