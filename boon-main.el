@@ -164,9 +164,9 @@ When repeated, fix the spacing if necessary."
 
 (defun boon-need-space ()
   "Is it necessary to insert a space here to separate words or expressions?"
-  (and (not (looking-at "\\s-|\n"))
-       (not (looking-back "\\s-|\n"))
-       (or (and (looking-back "\\sw") (looking-at "\\sw"))
+  (and (not (or (eolp) (looking-at "\\s-")))
+       (not (or (bolp) (looking-back "\\s-")))
+       (or (and (looking-back "\\sw\\|\\s_") (looking-at "\\sw\\|\\s_"))
            (and (looking-back "\\s)") (not (looking-at "\\s)")))
            (and (not (looking-back "\\s(")) (looking-at "\\s(")))))
 
