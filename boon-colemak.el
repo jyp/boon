@@ -7,19 +7,23 @@
 (require 'boon-search)
 (require 'boon-keys)
 
-(define-key boon-select-map "C"  'boon-select-comment)
-(define-key boon-select-map "g"  'boon-select-org-table-cell)
-(define-key boon-select-map "d"  'boon-select-document)
-(define-key boon-select-map "p"  'boon-select-paragraph)
+(define-key boon-select-map "q"  'boon-select-outside-quotes)
 ;; (define-key boon-select-map "w"  'boon-select-word)
 (define-key boon-select-map "f"  'boon-select-word) ;; 'rf' is easier to type than 'rw'
+(define-key boon-select-map "p"  'boon-select-paragraph)
+(define-key boon-select-map "g"  'boon-select-org-table-cell)
+
+(define-key boon-select-map "a"  'boon-select-borders) ;; Around
+(define-key boon-select-map "r"  'boon-select-justline) ;; Row
+(define-key boon-select-map "s"  'boon-select-wim) ;; symbol
+(define-key boon-select-map "t"  'boon-select-with-spaces)
+(define-key boon-select-map "d"  'boon-select-document)
+
+(define-key boon-select-map "C"  'boon-select-comment)
 (define-key boon-select-map "x"  'boon-select-outside-pairs) ;; eXpression
 (define-key boon-select-map "c"  'boon-select-inside-pairs) ;; Contents
-(define-key boon-select-map "s"  'boon-select-wim) ;; symbol
-(define-key boon-select-map "q"  'boon-select-outside-quotes)
-(define-key boon-select-map " "  'boon-select-line)
-(define-key boon-select-map "r"  'boon-select-justline) ;; Row
-(define-key boon-select-map "a"  'boon-select-borders) ;; Around
+(define-key boon-select-map "v"  'boon-select-block)
+
 (define-key boon-select-map "z"  'boon-select-content) ;; inZide
 
 (define-key boon-select-map "'"  'boon-switch-mark)
