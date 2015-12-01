@@ -10,10 +10,11 @@
 (require 'boon-core)
 (require 'boon-main)
 
+(define-key boon-select-map " "  'boon-select-line)
+
 (define-key boon-command-map [(return)] 'undefined)
 (define-key boon-command-map (kbd "<RET>") 'undefined)
 (define-key boon-command-map [(backspace)] 'undefined)
-(define-key boon-select-map "t" 'boon-select-with-spaces)
 (define-key boon-command-map "`" 'boon-toggle-case)
 
 (define-key boon-command-map "_" 'redo)
