@@ -97,31 +97,22 @@
 (defcustom boon-special-mode-list
   '(
     Buffer-menu-mode
-    Custom-mode
-    completion-list-mode
     debugger-mode
-    dired-mode
     ediff-mode
     git-rebase-mode
-    magit-branch-manager-mode
-    magit-key-mode
-    magit-log-mode
-    magit-popup-mode
-    magit-refs-mode
-    magit-revision-mode
-    magit-status-mode
-    package-menu-mode
+    ;; magit-revision-mode
     mu4e-headers-mode
     mu4e-view-mode
     mu4e-main-mode
-    Info-mode
     )
-    "List of modes which start in boon-off-state, and go back to off state instead of inserting."
+    "A List of modes which should start in boon-off-state, and go back to off state instead of inserting."
     :group 'boon)
 
 (defun boon-special-mode-p ()
-  "Is the major mode in boon-special-mode-list?"
-  (memq major-mode boon-special-mode-list))
+  "Should the mode start in boon-off-state, and go back to off state instead of inserting?"
+  (or
+   (eq (get major-mode 'mode-class) 'special)
+   (memq major-mode boon-special-mode-list)))
 
 ;;; Initialisation and activation
 
