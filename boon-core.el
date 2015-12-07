@@ -23,9 +23,11 @@
 (set-keymap-parent boon-select-map boon-moves-map)
 (defvar boon-off-map (make-sparse-keymap))
 (defvar boon-insert-map (make-sparse-keymap))
+(defvar boon-special-map (make-sparse-keymap))
 
 (defvar boon-mode-map-alist (list (cons 'boon-command-state boon-command-map)
                                   (cons 'boon-off-state     boon-off-map)
+                                  (cons 'boon-special-state boon-special-map)
                                   (cons 'boon-insert-state  boon-insert-map)
                                   (cons 'boon-helm-command-state boon-helm-command-map)))
 (push 'boon-mode-map-alist emulation-mode-map-alists)
@@ -34,6 +36,7 @@
 (defvar-local boon-command-state nil)
 (defvar-local boon-insert-state nil)
 (defvar-local boon-off-state nil)
+(defvar-local boon-special-state nil)
 (defvar-local boon-helm-command-state nil
   "non-nil if the helm command mode is active. Makes sense only
   in a helm minibuffer.")
@@ -43,9 +46,10 @@
   (setq boon-command-state nil)
   (setq boon-insert-state nil)
   (setq boon-off-state nil)
+  (setq boon-special-state nil)
 
   (set state t)
-  (unless boon-command-state
+  (unless (or boon-command-state boon-special-state)
     (deactivate-mark)
     (save-excursion
       (when (not (bolp))
@@ -55,8 +59,8 @@
     (setq cursor-type 'bar))
   (cond (boon-command-state
          ;; (do-auto-save)
-         (setq cursor-type 'box)
-           )
+         (setq cursor-type 'box))
+        (boon-special-state (setq cursor-type 'box))
         (boon-off-state)
         (boon-insert-state
          ;; remember where the last edition was by pushing a mark
@@ -81,6 +85,10 @@
 (defun boon-set-off-state ()
   "Switch to off state."
   (interactive) (boon-set-state 'boon-off-state))
+
+(defun boon-set-special-state ()
+  "Switch to off state."
+  (interactive) (boon-set-state 'boon-special-state))
 
 (defun boon-helm-set-insert-state ()
   "Switch to insert state in an helm minibuffer."
@@ -132,11 +140,7 @@
     ;; called directly for the first time in a buffer.
     (cond
      ((boon-special-mode-p)
-      (boon-set-off-state))
-     ((memq major-mode '(magit-commit-mode
-                         git-commit-mode
-                         ))
-      (boon-set-insert-like-state))
+      (boon-set-state 'boon-special-state))
      (t (boon-set-command-state))))
    (t
     (boon-set-off-state)
@@ -206,6 +210,7 @@
    (boon-command-state "CMD")
    (boon-insert-state  "INS")
    (boon-off-state     "OFF")
+   (boon-special-state "SPC")
    (t "???")))
 
 (provide 'boon-core)

@@ -12,6 +12,12 @@
 
 (define-key boon-select-map " "  'boon-select-line)
 
+(define-key boon-special-map "x" boon-x-map)
+(define-key boon-special-map "`" 'boon-quote-character)
+(define-key boon-special-map "'" 'boon-quote-character)
+
+(define-key boon-command-map (kbd "<RET>") 'undefined)
+
 (define-key boon-command-map [(return)] 'undefined)
 (define-key boon-command-map (kbd "<RET>") 'undefined)
 (define-key boon-command-map [(backspace)] 'undefined)

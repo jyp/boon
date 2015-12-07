@@ -29,12 +29,12 @@ NOTE: Do not run for every cursor."
   (interactive)
   (if multiple-cursors-mode
       ;; attempt to deactivate mc without deleting the cursors
-      (let ((cursors (mc/all-fake-cursors)))
+      (let ((cursors (mapcar (lambda (o) (cons (ovelay-get o 'point) (ovelay-get o 'mark)))(mc/all-fake-cursors))))
         ;; does not work because deactivating mc destroys the overlays
         (multiple-cursors-mode 0)
-        (dolist (o (cdr cursors))
-          (goto-char (overlay-get o 'point))
-          (set-marker (mark-marker) (overlay-get o 'mark))
+        (dolist (p (cdr cursors))
+          (goto-char (car p))
+          (set-marker (mark-marker) (cdr p))
           (mc/create-fake-cursor-at-point)))
     (when (and mark-active (> (point) (mark)))
       (exchange-point-and-mark))
