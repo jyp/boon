@@ -437,6 +437,7 @@ NOTE: Do not run for every cursor."
       (activate-mark)))
 
 (defun boon-visible-beginning-of-line ()
+  ;; FIXME: this is broken.
   (interactive)
   (beginning-of-line)
   (while (and (bound-and-true-p visible-mode) (outline-invisible-p))
