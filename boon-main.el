@@ -167,6 +167,9 @@ When repeated, fix the spacing if necessary."
   (and (not (or (eolp) (looking-at "\\s-")))
        (not (or (bolp) (looking-back "\\s-")))
        (or (and (looking-back "\\sw\\|\\s_") (looking-at "\\sw\\|\\s_"))
+           ;; this isn't quite ideal for haskell mode, because special
+           ;; characters are defined as punctuations, but there should
+           ;; be spaces between operators and identifiers
            (and (looking-back "\\s)") (not (looking-at "\\s)")))
            (and (not (looking-back "\\s(")) (looking-at "\\s(")))))
 
