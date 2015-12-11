@@ -23,6 +23,8 @@
 (define-key boon-command-map [(backspace)] 'undefined)
 (define-key boon-command-map "`" 'boon-toggle-case)
 
+(define-key boon-command-map "!" 'shell-command)
+(define-key boon-command-map "|" 'shell-command-on-region)
 (define-key boon-command-map "_" 'redo)
 (define-key boon-command-map "-" 'undo)
 (define-key boon-command-map "=" 'universal-argument)
@@ -35,6 +37,7 @@
         (append (kbd kbd-string) unread-command-events)))
   
 (define-key boon-c-map "!" (lambda () (interactive) (boon-push-events "C-c !")))
+(define-key boon-c-map "'" (lambda () (interactive) (boon-push-events "C-c '")))
 (define-key boon-c-map " " (lambda () (interactive) (boon-push-events "C-c C-SPC")))
 (define-key boon-c-map "," (lambda () (interactive) (boon-push-events "C-c C-,")))
 (define-key boon-c-map "." (lambda () (interactive) (boon-push-events "C-c C-.")))
