@@ -119,7 +119,7 @@
 (defun boon-special-mode-p ()
   "Should the mode start in boon-off-state, and go back to off state instead of inserting?"
   (or
-   (eq (get major-mode 'mode-class) 'special)
+   (and (eq (get major-mode 'mode-class) 'special) (not (derived-mode-p 'comint-mode)))
    (memq major-mode boon-special-mode-list)))
 
 ;;; Initialisation and activation
