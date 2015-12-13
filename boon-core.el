@@ -111,15 +111,15 @@
     ;; magit-revision-mode
     mu4e-headers-mode
     mu4e-view-mode
-    mu4e-main-mode
     )
-    "A List of modes which should start in boon-off-state, and go back to off state instead of inserting."
+    "A List of modes which should use boon-special-mode."
     :group 'boon)
 
 (defun boon-special-mode-p ()
-  "Should the mode start in boon-off-state, and go back to off state instead of inserting?"
+  "Should the mode use boon-special-mode?"
   (or
-   (and (eq (get major-mode 'mode-class) 'special) (not (derived-mode-p 'comint-mode)))
+   (and (eq (get major-mode 'mode-class) 'special)
+        (not (derived-mode-p 'comint-mode 'eshell-mode)))
    (memq major-mode boon-special-mode-list)))
 
 ;;; Initialisation and activation
