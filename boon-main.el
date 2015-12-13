@@ -10,6 +10,20 @@
 (require 'multiple-cursors)
 (require 'subr-x)
 
+(defvar boon-find-definition-dispatch '())
+(setq boon-find-definition-dispatch
+      '((emacs-lisp-mode . find-function-at-point)
+        (haskell-mode . haskell-mode-jump-to-def-or-tag)))
+
+(defun boon-find-definition ()
+  "Find a definition, in a way which is adapted to the 'major-mode'.
+If possible, prompt the symbol at point."
+  (interactive)
+  (let ((mode-fap (assoc major-mode boon-find-definition-dispatch)))
+    (if mode-fap (call-interactively (cdr mode-fap))
+      (error "Finding definitions is not defined for %s. Update the variable 'boon-find-definition-dispatch'."
+             major-mode))))
+
 (defcustom boon-hints-enabled 't "Display hints." :group 'boon)
 
 (defun boon-hint (msg)
