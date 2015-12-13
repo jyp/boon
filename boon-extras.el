@@ -43,25 +43,6 @@
     (comment-or-uncomment-region (min (car reg) (cdr reg))
                                  (max (car reg) (cdr reg)))))
 
-(defvar boon-flycheck-map
-  (let ((pmap (make-sparse-keymap)))
-    (define-key pmap "m" 'flycheck-mode)
-    (define-key pmap "y" 'flycheck-buffer)
-    (define-key pmap "C" 'flycheck-clear)
-    (define-key pmap "r" 'flycheck-compile)
-    (define-key pmap "n" 'flycheck-next-error)
-    (define-key pmap "p" 'flycheck-previous-error)
-    (define-key pmap "l" 'flycheck-list-errors)
-    (define-key pmap "t" 'flycheck-copy-messages-as-kill)
-    (define-key pmap "/" 'flycheck-google-messages)
-    (define-key pmap "s" 'flycheck-select-checker)
-    (define-key pmap "e" 'flycheck-set-checker-executable)
-    (define-key pmap "d" 'flycheck-describe-checker)
-    (define-key pmap "i" 'flycheck-info)
-    (define-key pmap "V" 'flycheck-version)
-    pmap)
-  "Keymap to access stuff of `flycheck-mode'.")
-  
 (define-key boon-x-map "rr" 'boon-query-replace) ; replace the region if it is selected
 (define-key boon-x-map "t" 'boon-toggle-comment) ; commenT
 (define-key boon-x-map "i" 'boon-adjust-indent)
@@ -83,7 +64,10 @@
 (define-key boon-x-map "vv" 'magit-status)
 (define-key boon-x-map "g" 'magit-status)
 (define-key boon-x-map "x" 'helm-M-x)
-(define-key boon-x-map "y" boon-flycheck-map)
+
+(eval-after-load 'flycheck
+  '(define-key boon-x-map "y" flycheck-command-map)
+)
 
 
 (provide 'boon-extras)
