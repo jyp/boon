@@ -310,7 +310,7 @@ Return nil if no changes are made."
   (interactive "p")
   (declare (obsolete "does not seem very useful" "20151120"))
   (dotimes (number count)
-    (let ((spaces-skipped (not (equal (boon-jump-over-blanks) 0)))
+    (let ((spaces-skipped (not (equal (boon-jump-over-blanks-forward) 0)))
           (in-middle nil)
           (at-bol (string-blank-p (boon-line-prefix))))
       (cond
