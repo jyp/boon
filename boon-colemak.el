@@ -66,7 +66,6 @@
      (define-key helm-map (kbd "C-y")        'helm-next-line)
      (define-key helm-map (kbd "C-,")        'helm-previous-page)
      (define-key helm-map (kbd "C-.")        'helm-next-page)
-     (define-key helm-map (kbd "C-.")        'helm-next-page)
      ))
 
 ;; actions
