@@ -10,9 +10,17 @@
 (require 'multiple-cursors)
 (require 'subr-x)
 
+(defun boon-elisp-find-function-at-point ()
+  (interactive)
+  (let ((symb (function-called-at-point)))
+    (if symb
+      (find-function symb)
+      (call-interactively 'find-function))))
+
 (defvar boon-find-definition-dispatch '())
 (setq boon-find-definition-dispatch
-      '((emacs-lisp-mode . find-function-at-point)
+      '((emacs-lisp-mode . boon-elisp-find-function-at-point)
+        (lisp-interaction-mode . boon-elisp-find-function-at-point)
         (haskell-mode . haskell-mode-jump-to-def-or-tag)))
 
 (defun boon-find-definition ()
