@@ -95,21 +95,31 @@
 (define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
 (define-key isearch-mode-map [escape] 'isearch-abort)
 
+(defun boon-completer-space ()
+  (interactive)
+  (if (= (minibuffer-prompt-end) (point))
+      ;(string= "" (ivy--input))
+      (progn (next-history-element 1)
+             ;; alt: ivy-next-history-element
+             (move-end-of-line 1))
+    (self-insert-command 1)))
+
 ;; Helm keys
 (eval-after-load 'helm
   '(progn
      (define-key helm-map [(tab)]            'helm-select-action)
      (define-key helm-map (kbd "C-z")        'undefined)
      (define-key helm-map [(escape)] 'boon-helm-set-command-state)
-
+     (define-key helm-map (kbd "SPC")        'boon-completer-space)
      ))
+
 (define-key boon-helm-command-map "="      'universal-argument)
 (define-key boon-helm-command-map [(backspace)] 'helm-toggle-visible-mark)
 (define-key boon-helm-command-map [(shift backspace)] 'helm-unmark-all)
 (define-key boon-helm-command-map " "   'boon-helm-set-insert-state)
 (define-key boon-helm-command-map (kbd "C-<down>") 'helm-narrow-window)
 (define-key boon-helm-command-map (kbd "C-<up>")   'helm-enlarge-window)
-(define-key boon-helm-command-map [(escape)]       'helm-keyboard-quit)
+(define-key boon-helm-command-map (kbd "<escape>")       'helm-keyboard-quit)
 (define-key boon-helm-command-map (kbd "M-SPC")    'helm-toggle-visible-mark)
 (define-key boon-helm-command-map (kbd "<RET>")    nil) ;; so we simply use the underlying helm keymap binding for return
 (define-key boon-helm-command-map (kbd "<tab>")    'helm-select-action)
