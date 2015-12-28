@@ -657,7 +657,7 @@ If there is more than one, use mc/create-fake-cursor-at-point."
 
 (defun boon-quote-character (char)
   "Execute the command bound to the character CHAR if boon was not enabled."
-  (interactive "cThe character to insert or command to execute")
+  (interactive (list (read-char))) ;; use read-char so that multiple-cursors advice kicks in.
   (let ((cmd
          (or (and (current-local-map) (lookup-key (current-local-map) (vector char)))
              (lookup-key (current-global-map) (vector char)))))
