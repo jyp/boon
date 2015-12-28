@@ -13,8 +13,7 @@
 (defvar boon-c-map (make-sparse-keymap))
 (defvar boon-x-map (make-sparse-keymap))
 (set-keymap-parent boon-x-map ctl-x-map)
-(defvar boon-helm-command-map (make-sparse-keymap))
-(suppress-keymap boon-helm-command-map 't)
+
 (defvar boon-moves-map (make-sparse-keymap) "Keymap for moves.")
 (defvar boon-command-map (make-sparse-keymap) "Keymap used in Boon command mode.")
 (set-keymap-parent boon-command-map boon-moves-map)
@@ -28,8 +27,7 @@
 (defvar boon-mode-map-alist (list (cons 'boon-command-state boon-command-map)
                                   (cons 'boon-off-state     boon-off-map)
                                   (cons 'boon-special-state boon-special-map)
-                                  (cons 'boon-insert-state  boon-insert-map)
-                                  (cons 'boon-helm-command-state boon-helm-command-map)))
+                                  (cons 'boon-insert-state  boon-insert-map)))
 (push 'boon-mode-map-alist emulation-mode-map-alists)
 
 ;; States
@@ -37,9 +35,7 @@
 (defvar-local boon-insert-state nil)
 (defvar-local boon-off-state nil)
 (defvar-local boon-special-state nil)
-(defvar-local boon-helm-command-state nil
-  "non-nil if the helm command mode is active. Makes sense only
-  in a helm minibuffer.")
+
 
 (defun boon-set-state (state)
   "Set the boon state (as STATE) for this buffer."
@@ -89,18 +85,6 @@
 (defun boon-set-special-state ()
   "Switch to off state."
   (interactive) (boon-set-state 'boon-special-state))
-
-(defun boon-helm-set-insert-state ()
-  "Switch to insert state in an helm minibuffer."
-  (interactive)
-  (setq boon-helm-command-state nil)
-  (setq cursor-type 'bar))
-
-(defun boon-helm-set-command-state ()
-  "Switch to command state in an helm minibuffer."
-  (interactive)
-  (setq boon-helm-command-state t)
-  (setq cursor-type 'box))
 
 (defcustom boon-special-mode-list
   '(
@@ -166,7 +150,8 @@
 (add-hook 'minibuffer-setup-hook 'boon-minibuf-hook)
 
 (defun boon-minibuf-hook ()
-  "Detect if the minibuffer is a helm minibuffer, and activate boon helm command mode if so."
+  "Set the cursor type to 'bar'.
+This is because no command mode is activated in the minibuffer."
   (setq cursor-type 'bar))
 
 

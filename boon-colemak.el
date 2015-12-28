@@ -90,7 +90,7 @@
          (define-key ivy-minibuffer-map (kbd "C-q") 'ivy-toggle-regexp-quote)
          ;; (define-key ivy-minibuffer-map (kbd "M-j") 'ivy-yank-word)
          (define-key ivy-minibuffer-map (kbd "C-v") 'ivy-insert-current)
-         (define-key ivy-minibuffer-map (kbd "TAB") 'ivy-dispatching-done)
+         (define-key ivy-minibuffer-map (kbd "TAB") 'ivy-partial) ;; for counsel-find-file
          (define-key ivy-minibuffer-map (kbd "C-TAB") 'ivy-dispatching-call)
          (define-key ivy-minibuffer-map (kbd "C-k") 'ivy-kill-line)
          (define-key ivy-minibuffer-map (kbd "S-SPC") 'ivy-restrict-to-matches)
@@ -103,12 +103,10 @@
 
 (eval-after-load 'helm
   '(progn
-     (define-key helm-map (kbd "C-l")        'previous-history-element)
-     (define-key helm-map (kbd "C-;")        'next-history-element)
-     (define-key helm-map (kbd "C-u")        'helm-previous-line)
-     (define-key helm-map (kbd "C-y")        'helm-next-line)
-     (define-key helm-map (kbd "C-,")        'helm-previous-page)
-     (define-key helm-map (kbd "C-.")        'helm-next-page)
+     (define-key helm-map (kbd "C-u")        (lambda () (interactive) (boon-helm-browse 'helm-previous-line)))
+     (define-key helm-map (kbd "C-y")        (lambda () (interactive) (boon-helm-browse 'helm-next-line)))
+     (define-key helm-map (kbd "C-,")        (lambda () (interactive) (boon-helm-browse 'helm-previous-page))
+     (define-key helm-map (kbd "C-.")        (lambda () (interactive) (boon-helm-browse 'helm-next-page))
      ))
 
 ;; actions
@@ -121,28 +119,17 @@
 (define-key boon-helm-command-map (kbd "f")   'helm-follow-mode)
 
 ;; home row: yanking/killing
-(define-key boon-helm-command-map (kbd "r")   'helm-yank-selection)
-(define-key boon-helm-command-map (kbd "s")   'next-history-element) ;; has the effect of getting the whole symbol at point
-(define-key boon-helm-command-map (kbd "t")   'helm-yank-text-at-point)
+;; (define-key boon-helm-command-map (kbd "r")   'helm-yank-selection)
+;; (define-key boon-helm-command-map (kbd "s")   'next-history-element) ;; has the effect of getting the whole symbol at point
+(define-key boon-helm-command-map (kbd "s")   'helm-yank-text-at-point)
 (define-key boon-helm-command-map (kbd "d")   'helm-delete-minibuffer-contents)
 
-;; bottom row (as regular)
-(define-key boon-helm-command-map (kbd "c")   boon-c-map)
-(define-key boon-helm-command-map (kbd "x")   boon-x-map)
-(define-key boon-helm-command-map (kbd "v")   'boon-helm-set-insert-state) ;; for consistency
-
-(define-key boon-helm-command-map (kbd "l")   'previous-history-element)
-(define-key boon-helm-command-map (kbd ";")   'next-history-element)
 (define-key boon-helm-command-map (kbd "y")   'helm-next-line)
 (define-key boon-helm-command-map (kbd "u")   'helm-previous-line)
 (define-key boon-helm-command-map (kbd "U")   'helm-previous-source)
 (define-key boon-helm-command-map (kbd "Y")   'helm-next-source)
 (define-key boon-helm-command-map (kbd ",")   'helm-previous-page)
 (define-key boon-helm-command-map (kbd ".")   'helm-next-page)
-(define-key boon-helm-command-map (kbd "C-y") 'helm-scroll-other-window)
-(define-key boon-helm-command-map (kbd "C-u") 'helm-scroll-other-window-down)
-(define-key boon-helm-command-map (kbd "m")   'helm-prev-visible-mark)
-(define-key boon-helm-command-map (kbd "/")   'helm-next-visible-mark)
 (define-key boon-helm-command-map (kbd ">")   'helm-goto-next-file)
 (define-key boon-helm-command-map (kbd "<")   'helm-goto-precedent-file)
 

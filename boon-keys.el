@@ -35,7 +35,7 @@
   "Push back some key events (as KBD-STRING) in the queue."
   (setq unread-command-events
         (append (kbd kbd-string) unread-command-events)))
-  
+
 (define-key boon-c-map "!" (lambda () (interactive) (boon-push-events "C-c !")))
 (define-key boon-c-map "'" (lambda () (interactive) (boon-push-events "C-c '")))
 (define-key boon-c-map " " (lambda () (interactive) (boon-push-events "C-c C-SPC")))
@@ -109,21 +109,26 @@
   '(progn
      (define-key helm-map [(tab)]            'helm-select-action)
      (define-key helm-map (kbd "C-z")        'undefined)
-     (define-key helm-map [(escape)] 'boon-helm-set-command-state)
+     (define-key helm-map [(escape)] 'helm-keyboard-quit)
+     (define-key helm-map [(control f)] 'helm-follow-mode)
      (define-key helm-map (kbd "SPC")        'boon-completer-space)
+     (define-key helm-map (kbd "M-SPC")    'helm-toggle-visible-mark)
+     (define-key helm-map (kbd "C-<down>") 'helm-narrow-window)
+     (define-key helm-map (kbd "C-<up>")   'helm-enlarge-window)
+     (define-key helm-map (kbd "C-<RET>")  'helm-execute-persistent-action)
+     (define-key helm-map [(shift backspace)] 'helm-unmark-all)
      ))
 
-(define-key boon-helm-command-map "="      'universal-argument)
-(define-key boon-helm-command-map [(backspace)] 'helm-toggle-visible-mark)
-(define-key boon-helm-command-map [(shift backspace)] 'helm-unmark-all)
-(define-key boon-helm-command-map " "   'boon-helm-set-insert-state)
-(define-key boon-helm-command-map (kbd "C-<down>") 'helm-narrow-window)
-(define-key boon-helm-command-map (kbd "C-<up>")   'helm-enlarge-window)
-(define-key boon-helm-command-map (kbd "<escape>")       'helm-keyboard-quit)
-(define-key boon-helm-command-map (kbd "M-SPC")    'helm-toggle-visible-mark)
-(define-key boon-helm-command-map (kbd "<RET>")    nil) ;; so we simply use the underlying helm keymap binding for return
-(define-key boon-helm-command-map (kbd "<tab>")    'helm-select-action)
-(define-key boon-helm-command-map (kbd "C-<RET>")  'helm-execute-persistent-action)
+(defvar boon-helm-command-map (make-sparse-keymap))
+(suppress-keymap boon-helm-command-map 't)
+
+(defun boon-helm-browse (action)
+  "Run the ACTION and set 'boon-helm-command-map' as transient keymap."
+  (interactive)
+  (call-interactively action)
+  (setq cursor-type 'box)
+  (set-transient-map boon-helm-command-map t (lambda () (setq cursor-type 'bar))))
+
 
 (defvar boon-goto-map (make-sparse-keymap))
 
