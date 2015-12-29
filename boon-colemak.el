@@ -105,8 +105,8 @@
   '(progn
      (define-key helm-map (kbd "C-u")        (lambda () (interactive) (boon-helm-browse 'helm-previous-line)))
      (define-key helm-map (kbd "C-y")        (lambda () (interactive) (boon-helm-browse 'helm-next-line)))
-     (define-key helm-map (kbd "C-,")        (lambda () (interactive) (boon-helm-browse 'helm-previous-page))
-     (define-key helm-map (kbd "C-.")        (lambda () (interactive) (boon-helm-browse 'helm-next-page))
+     (define-key helm-map (kbd "C-,")        (lambda () (interactive) (boon-helm-browse 'helm-previous-page)))
+     (define-key helm-map (kbd "C-.")        (lambda () (interactive) (boon-helm-browse 'helm-next-page)))
      ))
 
 ;; actions
