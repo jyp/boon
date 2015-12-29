@@ -388,30 +388,6 @@ Return nil if no changes are made."
             (skip-chars-backward "\t\n ")
           (skip-chars-backward "\t "))))))
 
-(defun boon-other-side ()
-  "Move backward, over a whole syntactic unit. Handles spaces smartly."
-  (cond
-   ((boon-looking-at-comment -1)
-    (forward-comment -1))
-   ((boon-looking-at-comment 1)
-    (forward-comment 1))
-   ((looking-back "\\s\"")
-    (backward-char)
-    (er--move-point-backward-out-of-string))
-   ((looking-at "\\s\"")
-    (forward-char)
-    (er--move-point-forward-out-of-string))
-   ((looking-back "\\s)")
-    (backward-list))
-   ((looking-at "\\s(")
-    (forward-list))
-   ((looking-back "\\s_")  ;; symbol
-    (skip-syntax-backward "_"))
-   ((looking-back "\\sw")
-    (if (not (looking-at "\\(\\s-\\|\\s(\\|\\s)\\)"))
-        (skip-syntax-backward "w")
-      (skip-syntax-backward "w_")))))
-
 (defun boon-toggle-character-case ()
   "Toggle the case of the character at point."
   (interactive)
@@ -626,7 +602,7 @@ If there is more than one, use mc/create-fake-cursor-at-point."
                ;; does not affect the positions of the next regions in
                ;; the list.
                )
-    (message "Taking: %s %s" reg (< (boon-reg-point reg) (boon-reg-mark reg)))
+    ;; (message "Taking: %s %s" reg (< (boon-reg-point reg) (boon-reg-mark reg)))
     (kill-region (boon-reg-mark reg) (boon-reg-point reg))))
 
 (defun boon-treasure-region (regs)
@@ -648,8 +624,8 @@ If there is more than one, use mc/create-fake-cursor-at-point."
     (boon-set-insert-state)))
 
 (defun boon-replace-by-character (replacement)
-  "Replace the character at point, or region if it is active, by the REPLACEMENT character."
-  (interactive "cType the character to use as a replacement")
+  "Replace the character at point, or the region if it is active, by the REPLACEMENT character."
+  (interactive (list (read-char)))
   (if (use-region-p)
       (delete-region (region-beginning) (region-end))
     (delete-char 1))
