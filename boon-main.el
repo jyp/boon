@@ -10,17 +10,23 @@
 (require 'multiple-cursors)
 (require 'subr-x)
 
-(defun boon-elisp-find-function-at-point ()
+(defun boon-find-elisp-thing-at-point ()
+  "Find an elisp thing at point.
+Search preferentially for a function, then a variable."
   (interactive)
-  (let ((symb (function-called-at-point)))
-    (if symb
-      (find-function symb)
-      (call-interactively 'find-function))))
+  (let ((symb (symbol-at-point)))
+    (cond
+     ((fboundp symb) (find-function-do-it symb nil 'switch-to-buffer))
+     ((boundp  symb) (find-function-do-it symb 'defvar 'switch-to-buffer))
+     (t (call-interactively 'helm-apropos)))))
 
-(defvar boon-find-definition-dispatch '())
+(defcustom boon-find-definition-dispatch '()
+  "An alist mapping major modes to finding the symbol at point."
+  :group 'boon
+  :type '(alist :key-type symbol :value-type function))
 (setq boon-find-definition-dispatch
-      '((emacs-lisp-mode . boon-elisp-find-function-at-point)
-        (lisp-interaction-mode . boon-elisp-find-function-at-point)
+      '((emacs-lisp-mode . boon-find-elisp-thing-at-point)
+        (lisp-interaction-mode . boon-find-elisp-thing-at-point)
         (haskell-mode . haskell-mode-jump-to-def-or-tag)))
 
 (defun boon-find-definition ()
@@ -314,7 +320,8 @@ Return nil if no changes are made."
       (forward-char)))))
 
 (defun boon-smarter-forward-spaces (count)
-  "Move forward, over a whole syntactic unit. Handle spaces cleverly."
+  "Move forward, over COUNT whole syntactic unit.
+Handle spaces cleverly."
   (interactive "p")
   (declare (obsolete "does not seem very useful" "20151120"))
   (dotimes (number count)
