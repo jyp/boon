@@ -111,7 +111,7 @@ This function is meant to be called interactively."
 (defun boon-select-with-spaces (regs)
   "Return the regions REGS, including some surrounding spaces.
 This function is meant to be called interactively."
-  (interactive (list (boon-spec-region "select contents")))
+  (interactive (list (boon-spec-region "select with spaces")))
   (cons 'region (mapcar (lambda (reg) (boon-include-surround-spaces reg)) (mapcar 'boon-normalize-reg regs))))
 
 (defun boon-select-content (regs)

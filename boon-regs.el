@@ -31,21 +31,23 @@ The size of the borders is HOW-MUCH."
   (list (boon-mk-reg (boon-reg-end reg)   (- (boon-reg-end reg) how-much))
         (boon-mk-reg (boon-reg-begin reg) (+ (boon-reg-begin reg) how-much))))
 
+;; TODO: also include surrounding blank lines if the other boundary is at bol/eol.
 (defun boon-include-surround-spaces (reg)
+  "Extend REG to include spaces after its 'boon-reg-point' (or before, if the region is backwards)."
   (save-excursion
-    (let* ((beg (boon-reg-begin reg))
-           (end (boon-reg-end   reg))
-           (space-at-end (progn
-                           (goto-char end)
-                           (looking-at "\\s-"))))
-      (if space-at-end
-          (boon-mk-reg beg (progn
-                             (skip-syntax-forward "-")
-                             (point)))
-        (boon-mk-reg (progn (goto-char beg)
-                            (skip-syntax-backward "-")
-                            (point))
-                     end)))))
+    (let* ((mk (boon-reg-mark  reg))
+           (pt (boon-reg-point reg))
+           (fwd (> pt mk)))
+      (boon-mk-reg mk
+           (if fwd
+               (progn
+                 (goto-char pt)
+                 (skip-syntax-forward "-")
+                 (point))
+             (progn
+               (goto-char pt)
+               (skip-syntax-backward "-")
+               (point)))))))
 
 (defun boon-reg-begin (reg)
   "The begining of region REG."
