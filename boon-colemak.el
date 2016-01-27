@@ -7,6 +7,8 @@
 (require 'boon-search)
 (require 'boon-keys)
 
+(define-key boon-select-map "@"  'boon-select-occurences)
+
 (define-key boon-select-map "q"  'boon-select-outside-quotes)
 ;; (define-key boon-select-map "w"  'boon-select-word)
 (define-key boon-select-map "f"  'boon-select-word) ;; 'rf' is easier to type than 'rw'

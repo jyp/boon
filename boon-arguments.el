@@ -101,6 +101,26 @@
                    (boon-jump-over-blanks-forward)
                    (point)))))
 
+(defun boon-spec-string (prompt)
+  "Read a string using the region selection functionality.
+Intented to be used as an argument to interactive.
+Display PROMPT in the echo area."
+  (let* ((regs (boon-spec-region prompt))
+         (reg (car regs)))
+    (buffer-substring-no-properties (boon-reg-begin reg) (boon-reg-end reg))))
+
+(defun boon-select-occurences (what where)
+  "Return the occurences of WHAT as sub-regions of WHERE."
+  (interactive (list (boon-spec-string "occurences of what?") (boon-spec-region "where?")))
+  (let ((result nil))
+    (save-excursion
+      (dolist (reg where)
+        (goto-char (boon-reg-begin reg))
+        (while (search-forward what (boon-reg-end reg) t)
+          (setq result (cons (boon-mk-reg (match-beginning 0)
+                                          (match-end 0))
+                              result))))
+      (cons 'region result))))
 
 (defun boon-select-borders (how-much regs)
   "Return the bordering (of size HOW-MUCH) of a region list REGS.
