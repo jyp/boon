@@ -76,9 +76,22 @@
                 (skip-chars-backward "^|") (point))
               (save-excursion
                 (skip-chars-forward "^|") (point)))))
+
 (defun boon-select-justline () (interactive) (list 'region (cons (line-beginning-position) (line-end-position))))
-(defun boon-select-line () (interactive) (boon-select-thing-at-point 'line))
-(defun boon-select-paragraph () (interactive) (boon-select-thing-at-point 'paragraph))
+
+(defun boon-select-line (count)
+  "Return a region of COUNT visual lines."
+  (interactive "p")
+  (setq temporary-goal-column 0)
+  (boon-select-n count 'beginning-of-visual-line 'line-move-visual))
+
+(defun boon-select-n (count goto-beginning forward-n)
+  "Return a region of COUNT objects defined by GOTO-BEGINNING and FORWARD-N."
+  (save-excursion
+    (funcall goto-beginning)
+    (list 'region (cons (point) (progn (funcall forward-n count) (point))))))
+
+(defun boon-select-paragraph (count) (interactive "p") (boon-select-n count 'start-of-paragraph-text 'forward-paragraph))
 (defun boon-select-document () (interactive)
   (list 'region (cons (point-min) (point-max))))
 (defun boon-select-word () (interactive) (boon-select-thing-at-point 'word))
