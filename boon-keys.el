@@ -10,9 +10,13 @@
 (require 'boon-core)
 (require 'boon-main)
 
+(defvar boon-goto-map (make-sparse-keymap))
+
 (define-key boon-select-map " "  'boon-select-line)
 
 (define-key boon-special-map "x" boon-x-map)
+(define-key boon-special-map "g" boon-goto-map)
+(define-key boon-special-map "G" 'revert-buffer)
 (define-key boon-special-map "`" 'boon-quote-character)
 (define-key boon-special-map "'" 'boon-quote-character)
 
@@ -130,7 +134,6 @@
   (set-transient-map boon-helm-command-map t (lambda () (setq cursor-type 'bar))))
 
 
-(defvar boon-goto-map (make-sparse-keymap))
 
 ;; (define-key boon-goto-map "R" 'helm-registers)
 (define-key boon-goto-map "a" 'helm-apropos)
