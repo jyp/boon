@@ -20,12 +20,19 @@ Search preferentially for a function, then a variable."
      ((boundp  symb) (find-function-do-it symb 'defvar 'switch-to-buffer))
      (t (call-interactively 'helm-apropos)))))
 
+(defun boon-find-tag-at-point ()
+  (interactive)
+  (let ((symb (thing-at-point 'symbol)))
+    (cond (symb (find-tag symb))
+          (t (call-interactively 'find-tag)))))
+
 (defcustom boon-find-definition-dispatch '()
   "An alist mapping major modes to finding the symbol at point."
   :group 'boon
   :type '(alist :key-type symbol :value-type function))
 (setq boon-find-definition-dispatch
-      '((emacs-lisp-mode . boon-find-elisp-thing-at-point)
+      '((c-mode . (lambda () (interactive) (boon-find-tag-at-point)))
+        (emacs-lisp-mode . boon-find-elisp-thing-at-point)
         (lisp-interaction-mode . boon-find-elisp-thing-at-point)
         (haskell-mode . haskell-mode-jump-to-def-or-tag)))
 
