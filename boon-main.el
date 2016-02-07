@@ -1,6 +1,10 @@
 ;;; boon-main.el --- An Ergonomic Command Mode  -*- lexical-binding: t -*-
 
 ;;; Commentary:
+
+;; This file contains (most of) the boon commands. These commands are
+;; typically bound to a key in boon-keys or boon-colemak.
+
 ;;; Code:
 
 (require 'boon-core)
@@ -9,6 +13,9 @@
 (require 'er-basic-expansions)
 (require 'multiple-cursors)
 (require 'subr-x)
+
+
+;;; Jumping to definitions (at point):
 
 (defun boon-find-elisp-thing-at-point ()
   "Find an elisp thing at point.
@@ -21,6 +28,7 @@ Search preferentially for a function, then a variable."
      (t (call-interactively 'helm-apropos)))))
 
 (defun boon-find-tag-at-point ()
+  "Find the symbol at point in the current tags table."
   (interactive)
   (let ((symb (thing-at-point 'symbol)))
     (cond (symb (find-tag symb))
@@ -107,7 +115,7 @@ NOTE: Do not run for every cursor."
       (call-interactively 'boon-mark-region))))
 
 (defun boon-deactivate-mark ()
-  "Drop deactivate the mark robustly."
+  "Deactivate the mark robustly."
   (mc/execute-command-for-all-fake-cursors (lambda () (interactive) (deactivate-mark)))
   (deactivate-mark t))
 
@@ -124,7 +132,7 @@ NOTE: Do not run for every cursor."
     (current-column)))
 
 (defun boon-enclose (enclosure regs)
-  "Wrap, with the ENCLOSURE the regions given as REGS."
+  "Wrap with the given ENCLOSURE the regions given as REGS."
   (interactive (list (boon-spec-enclosure) (boon-spec-region "enclose")))
   ;; (message "boon-enclose regs=%s" regs)
   (dolist (reg (mapcar 'boon-reg-to-markers regs))
@@ -210,7 +218,7 @@ When repeated, fix the spacing if necessary."
 
 (defun boon-fix-a-space ()
   "Fix the text to have exactly one space at the point.
-Return nil if no changes are made."
+Return nil if no changes are made, t otherwise."
   (cond ((and (looking-at " ") (looking-back " "))
          (delete-char 1)
          t)
