@@ -83,7 +83,7 @@ NOTE: Do not run for every cursor."
       (exchange-point-and-mark))
     ;; so that searching for the region gives a similar position
     (mc/create-fake-cursor-at-point)))
-  
+
 (defun boon-move-cursor (regs)
   "Move the cursor at the first position given by REGS.
 NOTE: Do not run for every cursor."
@@ -265,7 +265,7 @@ Return nil if no changes are made."
   "Move upward, to a line with the same level of indentation, or less, COUNT times."
   (interactive "p")
   (back-to-indentation)
-  (dotimes (number count)
+  (dotimes (_number count)
     (previous-logical-line)
     (while (boon-at-indent-or-more-p) (previous-logical-line)))
   (back-to-indentation))
@@ -274,7 +274,7 @@ Return nil if no changes are made."
   "Move downward, to a line with the same level of indentation, or less COUNT times."
   (interactive "p")
   (back-to-indentation)
-  (dotimes (number count)
+  (dotimes (_number count)
     (next-logical-line)
     (while (boon-at-indent-or-more-p) (next-logical-line)))
   (back-to-indentation))
@@ -282,7 +282,7 @@ Return nil if no changes are made."
 (defun boon-smarter-backward (count)
   "Move backward, over COUNT whole syntactic units."
   (interactive "p")
-  (dotimes (number count)
+  (dotimes (_number count)
     (boon-jump-over-blanks-backward)
     (cond
      ((boon-looking-at-comment -1)
@@ -308,7 +308,7 @@ Return nil if no changes are made."
 (defun boon-smarter-forward (count)
   "Move forward, over COUNT whole syntactic unit."
   (interactive "p")
-  (dotimes (number count)
+  (dotimes (_number count)
     (boon-jump-over-blanks-forward)
     (cond
      ((boon-looking-at-line-comment-start-p)
@@ -339,7 +339,7 @@ Return nil if no changes are made."
 Handle spaces cleverly."
   (interactive "p")
   (declare (obsolete "does not seem very useful" "20151120"))
-  (dotimes (number count)
+  (dotimes (_number count)
     (let ((spaces-skipped (not (equal (boon-jump-over-blanks) 0)))
           (in-middle nil)
           (at-bol (string-blank-p (boon-line-prefix))))
@@ -375,10 +375,11 @@ Handle spaces cleverly."
           (skip-chars-forward "\t "))))))
 
 (defun boon-smarter-backward-spaces (count)
-  "Move backward, over a whole syntactic unit. Handles spaces smartly."
+  "Move backward, over COUNT whole syntactic unit.
+Handles spaces smartly."
   (interactive "p")
   (declare (obsolete "does not seem very useful" "20151120"))
-  (dotimes (number count)
+  (dotimes (_number count)
     (let ((spaces-skipped (not (equal (boon-jump-over-blanks-backward) 0)))
           (in-middle nil)
           (at-eol (string-blank-p (boon-line-suffix))))
@@ -460,10 +461,10 @@ NOTE: Do not run for every cursor."
       (activate-mark)))
 
 (defun boon-visible-beginning-of-line ()
-  ;; FIXME: this is broken.
+  "Move point leftwards to the first visible beginning of line."
   (interactive)
   (beginning-of-line)
-  (while (and (bound-and-true-p visible-mode) (outline-invisible-p))
+  (while (outline-invisible-p)
     (backward-char 1)
     (beginning-of-line 1)))
 
@@ -474,7 +475,7 @@ line."
   (interactive)
   (let ((oldpos (point)))
     (back-to-indentation)
-    (when (= oldpos (point))
+    (when (or (outline-invisible-p) (= oldpos (point)))
       (boon-visible-beginning-of-line))))
 
 (defun boon-looking-at-comment (how-many)
