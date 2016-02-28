@@ -33,7 +33,9 @@ The size of the borders is HOW-MUCH."
 
 ;; TODO: also include surrounding blank lines if the other boundary is at bol/eol.
 (defun boon-include-surround-spaces (reg)
-  "Extend REG to include spaces after its 'boon-reg-point' (or before, if the region is backwards)."
+  "Return REG, extended to include spaces around 'boon-reg-point'.
+The spaces are searched after 'boon-regpoint' if the region is
+directed forward, or or before, if the region is backwards."
   (save-excursion
     (let* ((mk (boon-reg-mark  reg))
            (pt (boon-reg-point reg))

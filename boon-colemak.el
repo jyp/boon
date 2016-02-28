@@ -57,9 +57,6 @@
 (define-key boon-moves-map "/"  'boon-qsearch-next-at-point)
 (define-key boon-moves-map "h"  'avy-goto-word-1)
 (define-key boon-moves-map "H"  'avy-goto-char)
-;; (define-key boon-moves-map (kbd "C-,")      'beginning-of-buffer)
-;; (define-key boon-moves-map (kbd "C-.")      'end-of-buffer)
-
 
 
 (eval-after-load 'ivy
@@ -105,6 +102,7 @@
 
 (eval-after-load 'helm
   '(progn
+     (define-key helm-map (kbd "C-f")        (lambda () (interactive) (boon-helm-browse 'helm-follow-mode)))
      (define-key helm-map (kbd "C-u")        (lambda () (interactive) (boon-helm-browse 'helm-previous-line)))
      (define-key helm-map (kbd "C-y")        (lambda () (interactive) (boon-helm-browse 'helm-next-line)))
      (define-key helm-map (kbd "C-,")        (lambda () (interactive) (boon-helm-browse 'helm-previous-page)))
