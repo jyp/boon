@@ -33,7 +33,7 @@
 
 
 (define-key boon-moves-map "k" 'boon-switch-mark) ; bacK to marK
-(define-key boon-moves-map "K" 'pop-global-mark)
+(define-key boon-moves-map "K" 'pop-tag-mark)
 
 (define-key boon-moves-map "j"  'boon-find-definition)
 (define-key boon-moves-map "J"  'find-function)

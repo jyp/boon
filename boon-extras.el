@@ -64,6 +64,7 @@
 (define-key boon-x-map "vv" 'magit-status)
 (define-key boon-x-map "g" 'magit-status)
 (define-key boon-x-map "x" 'helm-M-x)
+(define-key boon-x-map ":" 'eval-expression)
 
 (eval-after-load 'flycheck
   '(define-key boon-x-map "y" flycheck-command-map)

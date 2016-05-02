@@ -31,7 +31,11 @@ Search preferentially for a function, then a variable."
   "Find the symbol at point in the current tags table."
   (interactive)
   (let ((symb (thing-at-point 'symbol)))
-    (cond (symb (find-tag symb))
+    (cond (symb
+           (find-tag symb (when (and current-prefix-arg (bound-and-true-p last-tag))
+                            (if (< (prefix-numeric-value current-prefix-arg) 0)
+                                '-
+                              t))))
           (t (call-interactively 'find-tag)))))
 
 (defcustom boon-find-definition-dispatch '()
@@ -39,7 +43,7 @@ Search preferentially for a function, then a variable."
   :group 'boon
   :type '(alist :key-type symbol :value-type function))
 (setq boon-find-definition-dispatch
-      '((c-mode . (lambda () (interactive) (boon-find-tag-at-point)))
+      '((c-mode . boon-find-tag-at-point)
         (emacs-lisp-mode . boon-find-elisp-thing-at-point)
         (lisp-interaction-mode . boon-find-elisp-thing-at-point)
         (haskell-mode . haskell-mode-jump-to-def-or-tag)))
@@ -48,9 +52,10 @@ Search preferentially for a function, then a variable."
   "Find a definition, in a way which is adapted to the 'major-mode'.
 If possible, prompt the symbol at point."
   (interactive)
+  ;; TODO (ring-insert find-tag-marker-ring (point-marker))
   (let ((mode-fap (assoc major-mode boon-find-definition-dispatch)))
     (if mode-fap (call-interactively (cdr mode-fap))
-      (error "Finding definitions is not defined for %s. Update the variable 'boon-find-definition-dispatch'."
+      (error "Finding definitions is not dering-insert fined for %s. Update the variable 'boon-find-definition-dispatch'."
              major-mode))))
 
 (defcustom boon-hints-enabled 't "Display hints." :group 'boon)
