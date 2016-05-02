@@ -70,6 +70,7 @@
   (skip-chars-backward "\n\t "))
 
 (defun boon-select-org-table-cell ()
+  "Return the region between pipes (|)."
   (interactive)
   (list 'region
         (cons (save-excursion
@@ -77,7 +78,9 @@
               (save-excursion
                 (skip-chars-forward "^|") (point)))))
 
-(defun boon-select-justline () (interactive) (list 'region (cons (line-beginning-position) (line-end-position))))
+(defun boon-select-justline ()
+  "Return the region of the current line, without any newline."
+  (interactive) (list 'region (cons (line-beginning-position) (line-end-position))))
 
 (defun boon-select-line (count)
   "Return a region of COUNT visual lines."
@@ -118,9 +121,14 @@
   "Read a string using the region selection functionality.
 Intented to be used as an argument to interactive.
 Display PROMPT in the echo area."
-  (let* ((regs (boon-spec-region prompt))
-         (reg (car regs)))
-    (buffer-substring-no-properties (boon-reg-begin reg) (boon-reg-end reg))))
+  (let ((head (read-event)))
+    (if (equal head ? ) (read-string (concat prompt ": "))
+      ; if space, read a literal string, otherwise use the region specifier.
+      (setq unread-command-events
+            (cons head unread-command-events))
+      (let* ((regs (boon-spec-region prompt))
+             (reg (car regs)))
+        (buffer-substring-no-properties (boon-reg-begin reg) (boon-reg-end reg))))))
 
 (defun boon-select-occurences (what where)
   "Return the occurences of WHAT as sub-regions of WHERE."
