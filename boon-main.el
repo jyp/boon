@@ -200,15 +200,18 @@ NOTE: Do not run for every cursor."
   (call-interactively 'copy-to-register)
   (deactivate-mark))
 
-(defun boon-splice ()
-  "Yank, replacing the region if it is active.
+(defun boon-splice (number-of-copies)
+  "Yank NUMBER-OF-COPIES times, replacing the region if it is active.
 When repeated, fix the spacing if necessary."
-  (interactive)
-  (when (not (and (eq last-command 'yank)
-                  (boon-splice-fix-spaces)))
-    (progn (boon-delete-region)
-           (yank)
-           (boon-hint "If spaces are wrong, run boon-splice again."))))
+  (interactive "p")
+  (if (if (and
+           (eq number-of-copies 1)
+           (eq last-command 'yank))
+           (boon-splice-fix-spaces))
+    (boon-delete-region)
+    (dotimes (_ number-of-copies)
+      (yank))
+    (boon-hint "If spaces are wrong, run boon-splice again.")))
 
 (defun boon-need-space ()
   "Is it necessary to insert a space here to separate words or expressions?"
@@ -345,7 +348,7 @@ Handle spaces cleverly."
   (interactive "p")
   (declare (obsolete "does not seem very useful" "20151120"))
   (dotimes (_number count)
-    (let ((spaces-skipped (not (equal (boon-jump-over-blanks) 0)))
+    (let ((spaces-skipped (not (equal (boon-jump-over-blanks-forward) 0)))
           (in-middle nil)
           (at-bol (string-blank-p (boon-line-prefix))))
       (cond
