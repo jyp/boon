@@ -555,11 +555,12 @@ line."
 (defun boon-switch-mark ()
   "If mark active, switch point and mark, otherwise pop mark from mark ring."
   (interactive)
-    (if mark-active
+  (if mark-active
       (exchange-point-and-mark)
-      (progn
-        (goto-char (mark))
-        (pop-mark))))
+    (if (mark)
+        (progn
+          (goto-char (mark))
+          (pop-mark)))))
 
 (defun boon-switch-mark-quick ()
   "Pop the mark ring until we find ourselves on a different line."
