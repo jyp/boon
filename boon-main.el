@@ -483,7 +483,9 @@ line."
   (interactive)
   (let ((oldpos (point)))
     (back-to-indentation)
-    (when (or (outline-invisible-p) (= oldpos (point)))
+    (when (or (and (fboundp 'outline-invisible-p)
+                   (outline-invisible-p))
+              (= oldpos (point)))
       (boon-visible-beginning-of-line))))
 
 (defun boon-looking-at-comment (how-many)
