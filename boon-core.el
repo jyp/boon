@@ -8,17 +8,18 @@
 ;;; Code:
 
 (require 'cl-macs)
-;; Maps
 
-(defvar boon-c-map (make-sparse-keymap))
-(defvar boon-x-map (make-sparse-keymap))
+;; Maps
+(defvar boon-c-map (make-sparse-keymap) "Keymap bound to x.")
+(defvar boon-x-map (make-sparse-keymap) "Keymap bound to c.")
 (set-keymap-parent boon-x-map ctl-x-map)
 
-(defvar boon-moves-map (make-sparse-keymap) "Keymap for moves.")
 (defvar boon-command-map (make-sparse-keymap) "Keymap used in Boon command mode.")
-(set-keymap-parent boon-command-map boon-moves-map)
 (suppress-keymap boon-command-map 't)  ; so that typing is disabled altogether in command mode
-(defvar boon-select-map (make-sparse-keymap) "Keymap for non-moves text regions.")
+(defvar boon-moves-map (make-sparse-keymap) "Keymap for moves (subset of command mode).")
+(set-keymap-parent boon-command-map boon-moves-map)
+(defvar boon-select-map (make-sparse-keymap)
+  "Keymap for selection of text regions.  Any move is also a valid text region.")
 (set-keymap-parent boon-select-map boon-moves-map)
 (defvar boon-off-map (make-sparse-keymap))
 (defvar boon-insert-map (make-sparse-keymap))
@@ -31,10 +32,19 @@
 (push 'boon-mode-map-alist emulation-mode-map-alists)
 
 ;; States
-(defvar-local boon-command-state nil)
-(defvar-local boon-insert-state nil)
-(defvar-local boon-off-state nil)
-(defvar-local boon-special-state nil)
+(defvar-local boon-command-state nil "Non-nil when boon command mode is activated. (Boon commands can be entered in this mode.)")
+(defvar-local boon-insert-state nil "Non-nil when boon insert mode is activated.")
+(defvar-local boon-off-state nil "Non-nil when off state is
+activated. Off state is similar to insert mode, but
+insertion-specific commands are disabled then.")
+(defvar-local boon-special-state nil "Non-nil when off state is
+activated. Special is active when special-mode buffers are
+activated. This buffers have their own set of commands, so we use
+those. See 'boon-special-map' for exceptinons.")
+
+(make-obsolete-variable boon-off-state nil "20160713")
+;; indeed: the special mode is good enough that it's not necessary to
+;; switch to 'off' mode any longer.
 
 
 (defun boon-set-state (state)
@@ -67,7 +77,9 @@
 (defun boon-set-insert-like-state ()
   "Switch to off or insert state, depending on mode."
   (interactive)
-  (if (boon-special-mode-p) (boon-set-off-state) (boon-set-state 'boon-insert-state)))
+  (if (boon-special-mode-p)
+      (boon-set-off-state)
+    (boon-set-state 'boon-insert-state)))
 
 (defun boon-set-insert-state ()
   "Switch to insert state."
@@ -75,7 +87,7 @@
   (boon-set-state 'boon-insert-state))
 
 (defun boon-set-command-state ()
-  "Switch to command state and push a mark to remember the last edition point."
+  "Switch to command state."
   (interactive) (boon-set-state 'boon-command-state))
 
 (defun boon-set-off-state ()
@@ -83,7 +95,7 @@
   (interactive) (boon-set-state 'boon-off-state))
 
 (defun boon-set-special-state ()
-  "Switch to off state."
+  "Switch to special state."
   (interactive) (boon-set-state 'boon-special-state))
 
 (defcustom boon-special-mode-list

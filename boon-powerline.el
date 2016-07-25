@@ -78,8 +78,7 @@
                      (concat (powerline-render boon)
                              (powerline-render lhs)
                              (powerline-fill face2 (powerline-width rhs))
-                             (powerline-render rhs))))))
-  )
+                             (powerline-render rhs)))))))
 
 (provide 'boon-powerline)
 ;;; boon-powerline.el ends here
