@@ -204,13 +204,11 @@ NOTE: Do not run for every cursor."
   "Yank NUMBER-OF-COPIES times, replacing the region if it is active.
 When repeated, fix the spacing if necessary."
   (interactive "p")
-  (if (if (and
-           (eq number-of-copies 1)
-           (eq last-command 'yank))
-           (boon-splice-fix-spaces))
+  (unless (and (eq number-of-copies 1)
+               (eq last-command 'yank)
+               (boon-splice-fix-spaces))
     (boon-delete-region)
-    (dotimes (_ number-of-copies)
-      (yank))
+    (dotimes (_ number-of-copies) (yank))
     (boon-hint "If spaces are wrong, run boon-splice again.")))
 
 (defun boon-need-space ()
