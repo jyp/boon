@@ -46,7 +46,7 @@ Search preferentially for a function, then a variable."
       '((c-mode . boon-find-tag-at-point)
         (emacs-lisp-mode . boon-find-elisp-thing-at-point)
         (lisp-interaction-mode . boon-find-elisp-thing-at-point)
-        (haskell-mode . haskell-mode-jump-to-def-or-tag)))
+        (haskell-mode . (lambda () (interactive) (if intero-mode (intero-goto-definition) (haskell-mode-jump-to-def-or-tag))))))
 
 (defun boon-find-definition ()
   "Find a definition, in a way which is adapted to the 'major-mode'.
@@ -55,7 +55,7 @@ If possible, prompt the symbol at point."
   ;; TODO (ring-insert find-tag-marker-ring (point-marker))
   (let ((mode-fap (assoc major-mode boon-find-definition-dispatch)))
     (if mode-fap (call-interactively (cdr mode-fap))
-      (error "Finding definitions is not dering-insert fined for %s. Update the variable 'boon-find-definition-dispatch'."
+      (error "Finding definitions is not defined for %s. Update the variable 'boon-find-definition-dispatch'."
              major-mode))))
 
 (defcustom boon-hints-enabled 't "Display hints." :group 'boon)
