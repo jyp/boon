@@ -753,6 +753,17 @@ unless: 1. the previous character is a backslash, in which case a
     (self-insert-command 2)
     (backward-char 1))))
 
+(defun boon-c-god ()
+  "Handle C key"
+  (interactive)
+  (let ((keys '((control c)))
+        (binding t))
+    (while (and binding (not (commandp binding)))
+      (push (list 'control (read-event (format "%s" (reverse keys)))) keys)
+      (setq binding (key-binding (vconcat (reverse keys)))))
+    (setq this-command-keys (vconcat (reverse keys)))
+    (call-interactively binding)))
+
 (provide 'boon-main)
 ;;; boon-main.el ends here
 

@@ -40,47 +40,9 @@
   (setq unread-command-events
         (append (kbd kbd-string) unread-command-events)))
 
-(define-key boon-c-map "!" (lambda () (interactive) (boon-push-events "C-c !")))
-(define-key boon-c-map "'" (lambda () (interactive) (boon-push-events "C-c '")))
-(define-key boon-c-map " " (lambda () (interactive) (boon-push-events "C-c C-SPC")))
-(define-key boon-c-map "," (lambda () (interactive) (boon-push-events "C-c C-,")))
-(define-key boon-c-map "." (lambda () (interactive) (boon-push-events "C-c C-.")))
-(define-key boon-c-map ">" (lambda () (interactive) (boon-push-events "C-c C->")))
-(define-key boon-c-map "<" (lambda () (interactive) (boon-push-events "C-c C-<")))
-(define-key boon-c-map "=" (lambda () (interactive) (boon-push-events "C-c C-=")))
-(define-key boon-c-map "[" (lambda () (interactive) (boon-push-events "C-c [")))
-(define-key boon-c-map "]" (lambda () (interactive) (boon-push-events "C-c ]")))
-(define-key boon-c-map "?" (lambda () (interactive) (boon-push-events "C-c C-?")))
-(define-key boon-c-map "a" (lambda () (interactive) (boon-push-events "C-c C-a")))
-(define-key boon-c-map "b" (lambda () (interactive) (boon-push-events "C-c C-b")))
-(define-key boon-c-map "c" (lambda () (interactive) (boon-push-events "C-c C-c")))
-(define-key boon-c-map "d" (lambda () (interactive) (boon-push-events "C-c C-d")))
-(define-key boon-c-map "e" (lambda () (interactive) (boon-push-events "C-c C-e")))
-(define-key boon-c-map "f" (lambda () (interactive) (boon-push-events "C-c C-f")))
-(define-key boon-c-map "g" (lambda () (interactive) (boon-push-events "C-c C-g")))
-(define-key boon-c-map "h" (lambda () (interactive) (boon-push-events "C-c C-h")))
-(define-key boon-c-map "i" (lambda () (interactive) (boon-push-events "C-c C-i")))
-(define-key boon-c-map "j" (lambda () (interactive) (boon-push-events "C-c C-j")))
-(define-key boon-c-map "k" (lambda () (interactive) (boon-push-events "C-c C-k")))
-(define-key boon-c-map "l" (lambda () (interactive) (boon-push-events "C-c C-l")))
-(define-key boon-c-map "m" (lambda () (interactive) (boon-push-events "C-c C-m")))
-(define-key boon-c-map "n" (lambda () (interactive) (boon-push-events "C-c C-n")))
-(define-key boon-c-map "o" (lambda () (interactive) (boon-push-events "C-c C-o")))
-(define-key boon-c-map "p" (lambda () (interactive) (boon-push-events "C-c C-p")))
-(define-key boon-c-map "q" (lambda () (interactive) (boon-push-events "C-c C-q")))
-(define-key boon-c-map "r" (lambda () (interactive) (boon-push-events "C-c C-r")))
-(define-key boon-c-map "s" (lambda () (interactive) (boon-push-events "C-c C-s")))
-(define-key boon-c-map "t" (lambda () (interactive) (boon-push-events "C-c C-t")))
-(define-key boon-c-map "u" (lambda () (interactive) (boon-push-events "C-c C-u")))
-(define-key boon-c-map "v" (lambda () (interactive) (boon-push-events "C-c C-v")))
-(define-key boon-c-map "w" (lambda () (interactive) (boon-push-events "C-c C-w")))
-(define-key boon-c-map "x" (lambda () (interactive) (boon-push-events "C-c C-x")))
-(define-key boon-c-map "y" (lambda () (interactive) (boon-push-events "C-c C-y")))
-(define-key boon-c-map "z" (lambda () (interactive) (boon-push-events "C-c C-z")))
-
-
 
 ;; Off mode rebinds
+
 
 (define-key boon-off-map [(escape)] 'boon-set-command-state)
 

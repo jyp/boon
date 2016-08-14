@@ -10,8 +10,7 @@
 (require 'cl-macs)
 
 ;; Maps
-(defvar boon-c-map (make-sparse-keymap) "Keymap bound to x.")
-(defvar boon-x-map (make-sparse-keymap) "Keymap bound to c.")
+(defvar boon-x-map (make-sparse-keymap) "Keymap bound to x.")
 (set-keymap-parent boon-x-map ctl-x-map)
 
 (defvar boon-command-map (make-sparse-keymap) "Keymap used in Boon command mode.")
