@@ -31,7 +31,10 @@
 (define-key boon-command-map "|" 'shell-command-on-region)
 (define-key boon-command-map "_" 'redo)
 (define-key boon-command-map "-" 'undo)
-(define-key boon-command-map "=" 'universal-argument)
+(dolist (number '("0" "1" "2" "3" "4" "5" "6" "7" "8" "9"))
+  (define-key boon-command-map number 'universal-argument))
+
+
 (define-key boon-command-map " " 'boon-drop-mark)
 (define-key boon-command-map [(escape)] 'boon-quit)
 
