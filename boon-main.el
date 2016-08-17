@@ -753,16 +753,34 @@ unless: 1. the previous character is a backslash, in which case a
     (self-insert-command 2)
     (backward-char 1))))
 
+(defun boon-god-control-swap (event)
+  "Swap the control 'bit' in an event, for event where it makes sense."
+  (interactive (list (read-key)))
+  (cond
+   ((memq event '(9 13)) event)
+   ((<= event 27) (+ 96 event))
+   ((not (eq 0 (logand (lsh 1 26) event))) (logxor (lsh 1 26) event))
+   (t (list 'control event))))
+
 (defun boon-c-god ()
   "Handle C key"
   (interactive)
   (let ((keys '((control c)))
-        (binding t))
-    (while (and binding (not (commandp binding)))
-      (push (list 'control (read-event (format "%s" (reverse keys)))) keys)
-      (setq binding (key-binding (vconcat (reverse keys)))))
-    (setq this-command-keys (vconcat (reverse keys)))
-    (call-interactively binding)))
+        (binding (key-binding (kbd "C-c")))
+        (key-vector (kbd "C-c"))
+        (prompt "C-c-"))
+    (while (and binding (not (symbolp binding)))
+      (let ((key (read-key (format "%s" prompt))))
+        (if (eq key ?h) (describe-bindings key-vector)
+          (push (boon-god-control-swap key) keys)
+          (setq key-vector (vconcat (reverse keys)))
+          (setq prompt (key-description key-vector))
+          (setq binding (key-binding key-vector)))))
+    (setq this-command-keys key-vector)
+    (cond
+     ((not binding) (error "No command bound to %s" prompt))
+     ((commandp binding) (call-interactively binding))
+     (t (error "key not bound to a command: %s" binding)))))
 
 (provide 'boon-main)
 ;;; boon-main.el ends here
