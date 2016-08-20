@@ -3,8 +3,9 @@
 ;;; Commentary:
 
 
-;; A region list has the following form: ('region (begining . end) (begining . end) ...)
-
+;; A region list has either of the following forms:
+;;  ('region (begining . end) (begining . end) ...)
+ 
 ;;; Code:
 
 (require 'boon-core)
@@ -42,7 +43,7 @@
 
 (defun boon-select-thing-at-point (thing)
   "Return a region list with a single item pointing to the THING at point."
-  (list 'region (bounds-of-thing-at-point thing)))
+  (cons 'bounds (bounds-of-thing-at-point thing)))
 
 (defun boon-select-from-region (select-fun)
   "Return a region list with a single item: the region selected after calling SELECT-FUN (interactively)."
@@ -50,14 +51,14 @@
   (save-excursion
     ;; FIXME: deactivate mark
     (call-interactively select-fun)
-    (list 'region (cons (region-beginning) (region-end)))))
+    (cons 'bounds (cons (region-beginning) (region-end)))))
 
 (defun boon-select-wim () ;; what i mean
   "Return a region list with a single item: either the symbol at point, or, if this fails, the sexp at point."
   (interactive)
   (let ((bounds (or (bounds-of-thing-at-point 'symbol)
                     (bounds-of-thing-at-point 'sexp))))
-    (list 'region bounds)))
+    (cons 'bounds bounds)))
 
 (defun boon-jump-over-blanks-forward ()
   "Jump over blanks, forward."
@@ -72,7 +73,7 @@
 (defun boon-select-org-table-cell ()
   "Return the region between pipes (|)."
   (interactive)
-  (list 'region
+  (cons 'bounds
         (cons (save-excursion
                 (skip-chars-backward "^|") (point))
               (save-excursion
@@ -80,7 +81,7 @@
 
 (defun boon-select-justline ()
   "Return the region of the current line, without any newline."
-  (interactive) (list 'region (cons (line-beginning-position) (line-end-position))))
+  (interactive) (cons 'bounds (cons (line-beginning-position) (line-end-position))))
 
 (defun boon-select-line (count)
   "Return a region of COUNT visual lines."
@@ -92,11 +93,11 @@
   "Return a region of COUNT objects defined by GOTO-BEGINNING and FORWARD-N."
   (save-excursion
     (funcall goto-beginning)
-    (list 'region (cons (point) (progn (funcall forward-n count) (point))))))
+    (cons 'bounds (cons (point) (progn (funcall forward-n count) (point))))))
 
 (defun boon-select-paragraph (count) (interactive "p") (boon-select-n count 'start-of-paragraph-text 'forward-paragraph))
 (defun boon-select-document () (interactive)
-  (list 'region (cons (point-min) (point-max))))
+  (cons 'bounds (cons (point-min) (point-max))))
 (defun boon-select-word () (interactive) (boon-select-thing-at-point 'word))
 (defun boon-select-sentence () (interactive) (boon-select-thing-at-point 'sentence))
 (defun boon-select-symbol () (interactive) (boon-select-thing-at-point 'symbol))
@@ -109,7 +110,7 @@
 (defun boon-select-whitespace () (interactive) (boon-select-thing-at-point 'whitespace))
 (defun boon-select-blanks ()
   (interactive)
-  (list 'region (cons
+  (cons 'bounds (cons
                  (save-excursion
                    (boon-jump-over-blanks-backward)
                    (point))
@@ -168,10 +169,10 @@ This function is meant to be called interactively."
   
 (defun boon-multiple-cursor-regs ()
   "Return all regions defined by multiple-cursors-mode, and outside."
-  (cons (cons (mark) (point))
+  (cons (boon-mk-reg (mark) (point) nil)
         (if (boon-bypass-mc)
             ;; TODO: is marker-position really necessary here?
-            (mapcar (lambda (o) (cons (marker-position (overlay-get o 'mark)) (marker-position (overlay-get o 'point))))
+            (mapcar (lambda (o) (boon-mk-reg (marker-position (overlay-get o 'mark)) (marker-position (overlay-get o 'point)) o))
                     (mc/all-fake-cursors))
           nil)))
 
@@ -209,7 +210,7 @@ once (not once per cursor), you get a region for each cursor."
         (setq current-prefix-arg nil))
       ;; The command is ready; we now execute it (once per cursor if applicable).
       (if km (apply 'append (mapcar (lambda (in-reg)
-                                     (let (regs final (orig (cdr in-reg)))
+                                     (let (regs final (orig (boon-reg-point in-reg)))
                                        (save-excursion
                                          (goto-char orig)
                                          (setq regs (call-interactively km))
@@ -217,9 +218,12 @@ once (not once per cursor), you get a region for each cursor."
                                        ;; (message "in-reg=%s regs=%s orig=%s final=%s" in-reg regs orig final)
                                        (if (and regs
                                                 (listp regs)
-                                                (eq (car regs) 'region))
-                                           (cdr regs)
-                                         (list (cons orig final)))))
+                                                )
+                                           (if (eq (car regs) 'bounds)
+                                               (progn 
+                                                (mapcar (lambda (bnds) (boon-mk-reg (car bnds) (cdr bnds) (boon-reg-cursor in-reg))) (list (cdr regs))))
+                                               (cdr regs))
+                                         (list (boon-mk-reg orig final (boon-reg-cursor in-reg))))))
                                    orig-regs))
         (error "Unknown region specifier"))))))
 

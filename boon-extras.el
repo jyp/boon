@@ -40,8 +40,7 @@
   "Toggle comments in the regions REGS."
   (interactive (list (boon-spec-region "toggle comment")))
   (dolist (reg regs)
-    (comment-or-uncomment-region (min (car reg) (cdr reg))
-                                 (max (car reg) (cdr reg)))))
+    (comment-or-uncomment-region (boon-reg-begin reg)(boon-reg-end reg))))
 
 (define-key boon-x-map "rr" 'boon-query-replace) ; replace the region if it is selected
 (define-key boon-x-map "t" 'boon-toggle-comment) ; commenT

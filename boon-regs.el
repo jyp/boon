@@ -3,33 +3,34 @@
 ;;; Commentary:
 
 
-;; A region list has the following form: ((mark . point) (mark . point) ...)
-
 ;;; Code:
 
-(defun boon-reg-point (reg)
-  (cdr reg))
+(defun boon-mk-reg (mrk pnt &optional cursor)
+  (list mrk pnt cursor))
 
 (defun boon-reg-mark (reg)
   (car reg))
 
-(defun boon-mk-reg (mrk pnt)
-  (cons mrk pnt))
+(defun boon-reg-point (reg)
+  (cadr reg))
+
+(defun boon-reg-cursor (reg)
+  (caddr reg))
 
 (defun boon-normalize-reg (reg)
   "Normalize the region REG by making sure that mark < point."
-  (boon-mk-reg (boon-reg-begin reg) (boon-reg-end reg)))
+  (boon-mk-reg (boon-reg-begin reg) (boon-reg-end reg) (boon-reg-cursor reg)))
 
 (defun boon-reg-to-markers (reg)
   "Put copy the markers defining REG borders, and return that."
-  (boon-mk-reg (copy-marker (boon-reg-mark reg)) (copy-marker (boon-reg-point reg))))
+  (boon-mk-reg (copy-marker (boon-reg-mark reg)) (copy-marker (boon-reg-point reg)) (boon-reg-cursor reg)))
 
 (defun boon-borders (reg how-much)
   "Given a normalized region REG, return its borders (as a region list).
 The size of the borders is HOW-MUCH."
-  ;; TODO: if the results would tourch or overlap, return the input region
-  (list (boon-mk-reg (boon-reg-end reg)   (- (boon-reg-end reg) how-much))
-        (boon-mk-reg (boon-reg-begin reg) (+ (boon-reg-begin reg) how-much))))
+  ;; TODO: if the results would touch or overlap, return the input region
+  (list (boon-mk-reg (boon-reg-end reg)   (- (boon-reg-end reg) how-much) (boon-reg-cursor reg))
+        (boon-mk-reg (boon-reg-begin reg) (+ (boon-reg-begin reg) how-much) (boon-reg-cursor reg))))
 
 ;; TODO: also include surrounding blank lines if the other boundary is at bol/eol.
 (defun boon-include-surround-spaces (reg)
@@ -49,7 +50,8 @@ directed forward, or or before, if the region is backwards."
              (progn
                (goto-char pt)
                (skip-syntax-backward "-")
-               (point)))))))
+               (point)))
+               (boon-reg-cursor reg)))))
 
 (defun boon-reg-begin (reg)
   "The begining of region REG."
@@ -61,7 +63,7 @@ directed forward, or or before, if the region is backwards."
 
 (defun boon-content (reg)
   "Given a region REG, return its contents (crop the region by 1)."
-  (boon-mk-reg (+ (boon-reg-begin reg) 1) (- (boon-reg-end reg) 1)))
+  (boon-mk-reg (+ (boon-reg-begin reg) 1) (- (boon-reg-end reg) 1) (boon-reg-cursor reg)))
 
 (defun boon-reg-after (r1 r2)
   "Return non-nil when R1 occurs after R2."
