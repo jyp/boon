@@ -43,7 +43,7 @@
 
 (defun boon-select-thing-at-point (thing)
   "Return a region list with a single item pointing to the THING at point."
-  (cons 'bounds (bounds-of-thing-at-point thing)))
+  (lambda ()(cons 'bounds (bounds-of-thing-at-point thing))))
 
 (defun boon-select-from-region (select-fun)
   "Return a region list with a single item: the region selected after calling SELECT-FUN (interactively)."
@@ -51,14 +51,14 @@
   (save-excursion
     ;; FIXME: deactivate mark
     (call-interactively select-fun)
-    (cons 'bounds (cons (region-beginning) (region-end)))))
+    (lambda ()(cons 'bounds (cons (region-beginning) (region-end))))))
 
 (defun boon-select-wim () ;; what i mean
   "Return a region list with a single item: either the symbol at point, or, if this fails, the sexp at point."
   (interactive)
-  (let ((bounds (or (bounds-of-thing-at-point 'symbol)
-                    (bounds-of-thing-at-point 'sexp))))
-    (cons 'bounds bounds)))
+  (lambda ()(let ((bounds (or (bounds-of-thing-at-point 'symbol)
+                              (bounds-of-thing-at-point 'sexp))))
+              (cons 'bounds bounds))))
 
 (defun boon-jump-over-blanks-forward ()
   "Jump over blanks, forward."
@@ -73,11 +73,11 @@
 (defun boon-select-org-table-cell ()
   "Return the region between pipes (|)."
   (interactive)
-  (cons 'bounds
+  (lambda ()(cons 'bounds
         (cons (save-excursion
                 (skip-chars-backward "^|") (point))
               (save-excursion
-                (skip-chars-forward "^|") (point)))))
+                (skip-chars-forward "^|") (point))))))
 
 (defun boon-select-justline ()
   "Return the region of the current line, without any newline."
@@ -91,13 +91,12 @@
 
 (defun boon-select-n (count goto-beginning forward-n)
   "Return a region of COUNT objects defined by GOTO-BEGINNING and FORWARD-N."
-  (save-excursion
+  (lambda()(save-excursion
     (funcall goto-beginning)
-    (cons 'bounds (cons (point) (progn (funcall forward-n count) (point))))))
+    (cons 'bounds (cons (point) (progn (funcall forward-n count) (point)))))))
 
 (defun boon-select-paragraph (count) (interactive "p") (boon-select-n count 'start-of-paragraph-text 'forward-paragraph))
-(defun boon-select-document () (interactive)
-  (cons 'bounds (cons (point-min) (point-max))))
+(defun boon-select-document () (interactive) (cons 'bounds (cons (point-min) (point-max))))
 (defun boon-select-word () (interactive) (boon-select-thing-at-point 'word))
 (defun boon-select-sentence () (interactive) (boon-select-thing-at-point 'sentence))
 (defun boon-select-symbol () (interactive) (boon-select-thing-at-point 'symbol))
@@ -140,41 +139,41 @@ Display PROMPT in the echo area."
         (goto-char (boon-reg-begin reg))
         (while (search-forward what (boon-reg-end reg) t)
           (setq result (cons (boon-mk-reg (match-beginning 0)
-                                          (match-end 0))
+                                          (match-end 0)
+                                          (boon-reg-cursor reg))
                               result))))
       (cons 'region result))))
 
 (defun boon-select-borders (how-much regs)
   "Return the bordering (of size HOW-MUCH) of a region list REGS.
 This function is meant to be called interactively."
-  (interactive (list (prefix-numeric-value current-prefix-arg) (boon-spec-region "select contents")))
-  (cons 'region (apply 'append (mapcar (lambda (reg) (boon-borders reg how-much)) (mapcar 'boon-normalize-reg regs)))))
+  (interactive (list (prefix-numeric-value current-prefix-arg) (boon-spec-region-lazy "select contents")))
+  (lambda ()(cons 'region (apply 'append (mapcar (lambda (reg) (boon-borders reg how-much)) (mapcar 'boon-normalize-reg (funcall regs)))))))
 
 (defun boon-select-with-spaces (regs)
   "Return the regions REGS, including some surrounding spaces.
 This function is meant to be called interactively."
-  (interactive (list (boon-spec-region "select with spaces")))
-  (cons 'region (mapcar (lambda (reg) (boon-include-surround-spaces reg)) (mapcar 'boon-normalize-reg regs))))
+  (interactive (list (boon-spec-region-lazy "select with spaces")))
+  ((lambda ())(cons 'region (mapcar (lambda (reg) (boon-include-surround-spaces reg)) (mapcar 'boon-normalize-reg (funcall regs))))))
 
 (defun boon-select-content (regs)
   "Return the contents (of size HOW-MUCH) of a region list REGS.
 This function is meant to be called interactively."
-  (interactive (list (boon-spec-region "select borders")))
-  (cons 'region (mapcar 'boon-content (mapcar 'boon-normalize-reg regs))))
+  (interactive (list (boon-spec-region-lazy "select borders")))
+  (lambda ()(cons 'region (mapcar 'boon-content (mapcar 'boon-normalize-reg (funcall regs))))))
 
 (defun boon-bypass-mc ()
   "Should we bypass multiple cursors when gathering regions?"
   (and (bound-and-true-p multiple-cursors-mode)
        (memq this-command mc/cmds-to-run-once)))
-  
+
 (defun boon-multiple-cursor-regs ()
   "Return all regions defined by multiple-cursors-mode, and outside."
   (cons (boon-mk-reg (mark) (point) nil)
         (if (boon-bypass-mc)
             ;; TODO: is marker-position really necessary here?
             (mapcar (lambda (o) (boon-mk-reg (marker-position (overlay-get o 'mark)) (marker-position (overlay-get o 'point)) o))
-                    (mc/all-fake-cursors))
-          nil)))
+                    (mc/all-fake-cursors)))))
 
 (defun boon-read-char (&optional prompt inherit-input-method seconds)
   "Read a character, bypassing multiple cursors defadvice if applicable."
@@ -186,46 +185,66 @@ This function is meant to be called interactively."
 
 (defun boon-spec-region (msg)
   "Specify a region concisely using the keyboard.
-The prompt (as MSG) is displayed.  This function actually returns
-a list of regions, in the form ((beginning . end) ...).  If
-multiple-cursors are enabled BUT the command is executed just
-once (not once per cursor), you get a region for each cursor."
+The prompt (as MSG) is displayed.  This function returns a list
+of regions (See boon-regs.el).  If multiple-cursors are enabled
+BUT the command is executed just once (not once per cursor), you
+get a region for each cursor.
+"
   (let ((orig-regs (boon-multiple-cursor-regs)))
-    (if (use-region-p)
-        orig-regs
-    (let (current-prefix-arg
-          ;; this code fiddles with the prefix arg; but if we do not
-          ;; hide our fiddling, the next command will use the prefix
-          ;; arg that we have set. So we dynamically bind another
-          ;; current-prefix-arg here.
-          (km boon-select-map))
-      ;; We read an entry in the appropriate keymap. This is done "by hand."
-      (setq current-prefix-arg 0)
-      (while (and km (keymapp km))
-        (let ((last-char (boon-read-char (format "%s %s" msg current-prefix-arg))))
-          (if (and (>= last-char ?0) (<= last-char ?9))
-              (setq current-prefix-arg (+ (- last-char ?0) (* 10 current-prefix-arg )))
-            (setq km (lookup-key km (vector last-char))))))
-      (when (eq current-prefix-arg 0)
-        (setq current-prefix-arg nil))
+    (if (use-region-p) orig-regs
+      (let ((selector (boon-spec-region-lazy msg)))
+        (apply 'append
+               (mapcar (lambda (in-reg)
+                         (save-excursion
+                           (goto-char (boon-reg-point in-reg))
+                           (mapcar (lambda (r) (boon-mk-reg (boon-reg-mark r)
+                                                            (boon-reg-point r)
+                                                            (boon-reg-cursor in-reg)))
+                                   (funcall selector))))
+                       orig-regs))))))
+
+(defun boon-spec-region-lazy (msg)
+  "Specify a region selector concisely using the keyboard.
+The prompt (as MSG) is displayed.  This function returns a
+non-interactive function which, when run, will return bounds.
+The bounds have either of the following forms: ('bounds . begin
+. end) OR a list of regions (see boon-regs.el) OR something else,
+in which case the region is defined by the movement of the point.
+"
+  (let ((my-prefix-arg 0)
+        (kmv boon-moves-map)
+        (kms boon-select-map)
+        last-char)
+    ;; We read a move or selection, in both keymaps in parallel. First command found wins.
+    (while (and (or kmv kms)  (not (commandp kms)) (not (commandp kmv)))
+      (let ((last-char (boon-read-char (format "%s %s" msg my-prefix-arg))))
+        (if (and (>= last-char ?0) (<= last-char ?9))
+            (setq my-prefix-arg (+ (- last-char ?0) (* 10 my-prefix-arg )))
+          (if kms (setq kms (lookup-key kms (vector last-char))))
+          (if kmv (setq kmv (lookup-key kmv (vector last-char)))))))
+    (when (eq my-prefix-arg 0) (setq my-prefix-arg nil))
       ;; The command is ready; we now execute it (once per cursor if applicable).
-      (if km (apply 'append (mapcar (lambda (in-reg)
-                                     (let (regs final (orig (boon-reg-point in-reg)))
-                                       (save-excursion
-                                         (goto-char orig)
-                                         (setq regs (call-interactively km))
-                                         (setq final (point)))
-                                       ;; (message "in-reg=%s regs=%s orig=%s final=%s" in-reg regs orig final)
-                                       (if (and regs
-                                                (listp regs)
-                                                )
-                                           (if (eq (car regs) 'bounds)
-                                               (progn 
-                                                (mapcar (lambda (bnds) (boon-mk-reg (car bnds) (cdr bnds) (boon-reg-cursor in-reg))) (list (cdr regs))))
-                                               (cdr regs))
-                                         (list (boon-mk-reg orig final (boon-reg-cursor in-reg))))))
-                                   orig-regs))
-        (error "Unknown region specifier"))))))
+    (if (or kms kmv)
+        (if (commandp kms)
+          ;; we have a 'selection'. These commands may take prefix
+          ;; args, which they parse right away, and return a
+          ;; continuation constructing the region.
+            (let ((action (let ((current-prefix-arg my-prefix-arg))
+                            (call-interactively kms)))) ;; must be called first so that the interactive arguments are read
+              (lambda () ;; FIXME: massage the return value into common format.
+                (let ((regs (funcall action)))
+                  (if (eq (car regs) 'bounds)
+                      (mapcar 'boon-reg-from-bounds (list (cdr regs)))
+                    (cdr regs))
+                  )))
+          ;; we have a 'move'. These commands do not take non-universal arguments. So just run it.
+            (lambda ()
+              (save-excursion
+                (let ((orig (point)))
+                  (let ((current-prefix-arg my-prefix-arg)) ;; dynamic bindig so env remains clean
+                    (call-interactively kmv))
+                  (list (boon-mk-reg orig (point) nil))))))
+      (error "Unknown region specifier"))))
 
 (provide 'boon-arguments)
 ;;; boon-arguments.el ends here

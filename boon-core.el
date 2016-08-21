@@ -10,6 +10,7 @@
 (require 'cl-macs)
 
 ;; Maps
+
 (defvar boon-x-map (make-sparse-keymap) "Keymap bound to x.")
 (set-keymap-parent boon-x-map ctl-x-map)
 
@@ -19,10 +20,10 @@
 (set-keymap-parent boon-command-map boon-moves-map)
 (defvar boon-select-map (make-sparse-keymap)
   "Keymap for selection of text regions.  Any move is also a valid text region.")
-(set-keymap-parent boon-select-map boon-moves-map)
 (defvar boon-off-map (make-sparse-keymap))
 (defvar boon-insert-map (make-sparse-keymap))
 (defvar boon-special-map (make-sparse-keymap))
+
 
 (defvar boon-mode-map-alist (list (cons 'boon-command-state boon-command-map)
                                   (cons 'boon-off-state     boon-off-map)

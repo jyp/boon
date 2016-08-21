@@ -8,6 +8,12 @@
 (defun boon-mk-reg (mrk pnt &optional cursor)
   (list mrk pnt cursor))
 
+(defun boon-reg-from-bounds (bnds)
+  (list 'region (boon-mk-reg (car bnds) (cdr bnds) nil)))
+
+(defun boon-regs-from-bounds (bnds)
+  (list (boon-mk-reg (car bnds) (cdr bnds) nil)))
+
 (defun boon-reg-mark (reg)
   (car reg))
 
