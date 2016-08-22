@@ -12,7 +12,7 @@
   (boon-mk-reg (car bnds) (cdr bnds) nil))
 
 (defun boon-regs-from-bounds (bnds)
-  (list 'region (boon-mk-reg (car bnds) (cdr bnds) nil)))
+  (list (boon-mk-reg (car bnds) (cdr bnds) nil)))
 
 (defun boon-reg-mark (reg)
   (car reg))
