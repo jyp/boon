@@ -270,7 +270,6 @@ Return nil if no changes are made."
 (defun boon-smarter-upward (count)
   "Move upward, to a line with the same level of indentation, or less, COUNT times."
   (interactive "p")
-  (back-to-indentation)
   (dotimes (_number count)
     (previous-logical-line)
     (while (boon-at-indent-or-more-p) (previous-logical-line)))
@@ -279,7 +278,6 @@ Return nil if no changes are made."
 (defun boon-smarter-downward (count)
   "Move downward, to a line with the same level of indentation, or less COUNT times."
   (interactive "p")
-  (back-to-indentation)
   (dotimes (_number count)
     (next-logical-line)
     (while (boon-at-indent-or-more-p) (next-logical-line)))
