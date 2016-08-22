@@ -13,7 +13,7 @@
 (require 'er-basic-expansions)
 (require 'multiple-cursors)
 (require 'subr-x)
-
+(require 'dash)
 
 ;;; Jumping to definitions (at point):
 
@@ -470,7 +470,7 @@ NOTE: Do not run for every cursor."
   "Move point leftwards to the first visible beginning of line."
   (interactive)
   (beginning-of-line)
-  (while (outline-invisible-p)
+  (while (bound-and-true-p outline-invisible-p)
     (backward-char 1)
     (beginning-of-line 1)))
 
@@ -538,6 +538,8 @@ line."
   (next-logical-line)
   (boon-open-line-and-insert))
 
+;; alternative:
+;; (defalias 'boon-open-line 'crux-smart-open-line-above)
 (defun boon-open-line ()
   "Open the line before the current one."
   (interactive)
@@ -621,21 +623,28 @@ If there is more than one, use mc/create-fake-cursor-at-point."
   (dolist (reg regs)
     (goto-char (boon-reg-begin reg))))
 
+(defun boon-execute-for-cursor (cursor fun)
+  (if cursor
+        (mc/save-excursion
+         (mc/save-window-scroll
+          (mc/execute-command-for-fake-cursor (lambda () (interactive)(funcall fun)) cursor)))
+    (funcall fun)))
+
 (defun boon-take-region (regs)
   "Kill the region given as REGS."
   (interactive (list (boon-spec-region "take")))
-  (dolist (reg (sort regs 'boon-reg-after)
-               ; Wrong: (mapcar 'boon-reg-to-markers regs)
-               ;; We can't run 'kill-region' on markers. Indeed, using
-               ;; markers messes the logic used in kill-region to
-               ;; determine whether to prepend or append the thing
-               ;; just killed to the top of the kill ring.  So, we
-               ;; sort the regions by latest first, so that killing
-               ;; does not affect the positions of the next regions in
-               ;; the list.
-               )
-    ;; (message "Taking: %s %s" reg (< (boon-reg-point reg) (boon-reg-mark reg)))
-    (kill-region (boon-reg-mark reg) (boon-reg-point reg))))
+  ;; convert to markers, so that deleting text does not mess with
+  ;; positions
+  (dolist (reg-group (-partition-by 'boon-reg-cursor (mapcar 'boon-reg-to-markers regs)))
+    (boon-execute-for-cursor (boon-reg-cursor (car reg-group))
+     (lambda ()
+       (dolist (reg (mapcar 'boon-reg-from-markers reg-group))
+         ;; We can't run 'kill-region' on markers. Indeed, using
+         ;; markers messes the logic used in kill-region to
+         ;; determine whether to prepend or append the thing
+         ;; just killed to the top of the kill ring.  
+      (message "Taking: %s " reg)
+       (kill-region (boon-reg-mark reg) (boon-reg-point reg)))))))
 
 (defun boon-treasure-region (regs)
   "Copy (kill-ring-save) the regions REGS."
