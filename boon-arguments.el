@@ -154,7 +154,7 @@ This function is meant to be called interactively."
   "Return the regions REGS, including some surrounding spaces.
 This function is meant to be called interactively."
   (interactive (list (boon-spec-region-lazy "select with spaces")))
-  ((lambda ())(cons 'region (mapcar (lambda (reg) (boon-include-surround-spaces reg)) (mapcar 'boon-normalize-reg (funcall regs))))))
+  (lambda ()(cons 'region (mapcar (lambda (reg) (boon-include-surround-spaces reg)) (mapcar 'boon-normalize-reg (funcall regs))))))
 
 (defun boon-select-content (regs)
   "Return the contents (of size HOW-MUCH) of a region list REGS.
@@ -233,10 +233,12 @@ in which case the region is defined by the movement of the point.
                             (call-interactively kms)))) ;; must be called first so that the interactive arguments are read
               (lambda () ;; FIXME: massage the return value into common format.
                 (let ((regs (funcall action)))
-                  (if (eq (car regs) 'bounds)
-                      (mapcar 'boon-reg-from-bounds (list (cdr regs)))
-                    (cdr regs))
-                  )))
+                  (cond ((eq (car regs) 'bounds)
+                         (mapcar 'boon-reg-from-bounds (list (cdr regs))))
+                        ((eq (car regs) 'region)
+                         (message "")
+                         (cdr regs))
+                        (t (error "unknown regs format"))))))
           ;; we have a 'move'. These commands do not take non-universal arguments. So just run it.
             (lambda ()
               (save-excursion

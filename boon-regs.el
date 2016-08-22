@@ -9,10 +9,10 @@
   (list mrk pnt cursor))
 
 (defun boon-reg-from-bounds (bnds)
-  (list 'region (boon-mk-reg (car bnds) (cdr bnds) nil)))
+  (boon-mk-reg (car bnds) (cdr bnds) nil))
 
 (defun boon-regs-from-bounds (bnds)
-  (list (boon-mk-reg (car bnds) (cdr bnds) nil)))
+  (list 'region (boon-mk-reg (car bnds) (cdr bnds) nil)))
 
 (defun boon-reg-mark (reg)
   (car reg))
@@ -30,6 +30,9 @@
 (defun boon-reg-to-markers (reg)
   "Put copy the markers defining REG borders, and return that."
   (boon-mk-reg (copy-marker (boon-reg-mark reg)) (copy-marker (boon-reg-point reg)) (boon-reg-cursor reg)))
+
+(defun boon-reg-from-markers (reg)
+  (boon-mk-reg (marker-position (boon-reg-mark reg)) (marker-position (boon-reg-point reg)) (boon-reg-cursor reg)))
 
 (defun boon-borders (reg how-much)
   "Given a normalized region REG, return its borders (as a region list).
@@ -74,6 +77,12 @@ directed forward, or or before, if the region is backwards."
 (defun boon-reg-after (r1 r2)
   "Return non-nil when R1 occurs after R2."
   (> (boon-reg-begin r1) (boon-reg-end r2)))
+
+(defun boon-reg-cur-after (r1 r2)
+  (or (not (boon-reg-cursor r1))
+      (and (boon-reg-cursor r2)
+           (> (overlay-end (boon-reg-cursor r1))
+              (overlay-end (boon-reg-cursor r2))))))
 
 (provide 'boon-regs)
 ;;; boon-regs.el ends here
