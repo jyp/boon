@@ -184,8 +184,8 @@ This function is meant to be called interactively."
   "Specify a region concisely using the keyboard.
 The prompt (as MSG) is displayed.  This function returns a list
 of regions (See boon-regs.el).  If multiple-cursors are enabled
-BUT the command is executed just once (not once per cursor), you
-get a region for each cursor.
+BUT 'this-command' is executed just once (not once per
+cursor), you get a region for each cursor.
 "
   (let ((orig-regs (boon-multiple-cursor-regs)))
     (if (use-region-p) orig-regs
@@ -203,22 +203,26 @@ get a region for each cursor.
 (defun boon-spec-region-lazy (msg)
   "Specify a region selector concisely using the keyboard.
 The prompt (as MSG) is displayed.  This function returns a
-non-interactive function which, when run, will return bounds.
-The bounds have the form of a list of regions (see boon-regs.el).
+non-interactive function which, when run, will return
+bounds. This allows to run the function in question multiple
+times (describing the region just once with the keyboard). This
+can be useful when having multiple cursors, or just using
+descriptors referring to several disjoint subregions.  The bounds
+that are eventually returned are in the form of a list of regs,
+see boon-regs.el.
 "
   (let ((my-prefix-arg 0)
         (kmv boon-moves-map)
-        (kms boon-select-map)
-        last-char)
+        (kms boon-select-map))
     ;; We read a move or selection, in both keymaps in parallel. First command found wins.
-    (while (and (or kmv kms)  (not (commandp kms)) (not (commandp kmv)))
+    (while (and (or kmv kms) (not (commandp kms)) (not (commandp kmv)))
       (let ((last-char (boon-read-char (format "%s %s" msg my-prefix-arg))))
         (if (and (>= last-char ?0) (<= last-char ?9))
             (setq my-prefix-arg (+ (- last-char ?0) (* 10 my-prefix-arg )))
           (if kms (setq kms (lookup-key kms (vector last-char))))
           (if kmv (setq kmv (lookup-key kmv (vector last-char)))))))
     (when (eq my-prefix-arg 0) (setq my-prefix-arg nil))
-      ;; The command is ready; we now execute it (once per cursor if applicable).
+    ;; The command is ready; we now execute it (once per cursor if applicable).
     (if (or kms kmv)
         (if (commandp kms)
           ;; we have a 'selection'. These commands may take prefix
@@ -229,9 +233,9 @@ The bounds have the form of a list of regions (see boon-regs.el).
           ;; we have a 'move'. These commands do not take non-universal arguments. So just run it.
             (lambda ()
               (save-excursion
-                (let ((orig (point)))
-                  (let ((current-prefix-arg my-prefix-arg)) ;; dynamic bindig so env remains clean
-                    (call-interactively kmv))
+                (let ((orig (point))
+                      (current-prefix-arg my-prefix-arg)) ;; dynamic bindig so env remains clean
+                  (call-interactively kmv)
                   (list (boon-mk-reg orig (point) nil))))))
       (error "Unknown region specifier"))))
 
