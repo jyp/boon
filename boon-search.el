@@ -51,10 +51,7 @@ the regexp."
   (interactive)
   (boon-set-search-string (boon-stuff-at-point))
   (boon-qsearch t)
-  (activate-mark)
-  (set-marker (mark-marker) (match-end 0))
-  (goto-char (match-beginning 0))
-  )
+  (deactivate-mark))
 
 (defun boon-qsearch-previous-at-point ()
   "Search the previous occurence of the current string at point and select the match."
@@ -66,10 +63,7 @@ the regexp."
       ;; selected, by moving the point at the beginning of the match.
       (goto-char (region-beginning)))
     (boon-qsearch nil))
-  (activate-mark)
-  (set-marker (mark-marker) (match-end 0))
-  (goto-char (match-beginning 0))
-  )
+  (deactivate-mark))
 
 (defun boon-set-search-string (string)
   "Set the search regexp by providing a string so match (as STRING)."
