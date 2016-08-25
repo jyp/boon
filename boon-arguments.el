@@ -93,7 +93,7 @@
     (boon-regs-from-bounds (cons (point) (progn (funcall forward-n count) (point)))))))
 
 (defun boon-select-paragraph (count) (interactive "p") (boon-select-n count 'start-of-paragraph-text 'forward-paragraph))
-(defun boon-select-document () (interactive) (boon-regs-from-bounds (cons (point-min) (point-max))))
+(defun boon-select-document () (interactive) (lambda () (boon-regs-from-bounds (cons (point-min) (point-max)))))
 (defun boon-select-word () (interactive) (boon-select-thing-at-point 'word))
 (defun boon-select-sentence () (interactive) (boon-select-thing-at-point 'sentence))
 (defun boon-select-symbol () (interactive) (boon-select-thing-at-point 'symbol))
@@ -114,32 +114,34 @@
                    (boon-jump-over-blanks-forward)
                    (point)))))
 
-(defun boon-spec-string (prompt)
+(defun boon-spec-string-lazy (prompt)
   "Read a string using the region selection functionality.
 Intented to be used as an argument to interactive.
 Display PROMPT in the echo area."
   (let ((head (read-event)))
-    (if (equal head ? ) (read-string (concat prompt ": "))
+    (if (equal head ? ) (let ((str (read-string (concat prompt ": ")))) (lambda () str))
       ; if space, read a literal string, otherwise use the region specifier.
-      (setq unread-command-events
-            (cons head unread-command-events))
-      (let* ((regs (boon-spec-region prompt))
-             (reg (car regs)))
-        (buffer-substring-no-properties (boon-reg-begin reg) (boon-reg-end reg))))))
+      (setq unread-command-events (cons head unread-command-events))
+      (let ((regs (boon-spec-region-lazy prompt)))
+        (lambda ()
+          (let ((reg (car (funcall regs))))
+            (buffer-substring-no-properties (boon-reg-begin reg) (boon-reg-end reg))))))))
 
-(defun boon-select-occurences (what where)
+(defun boon-select-occurences (what-fun where)
   "Return the occurences of WHAT as sub-regions of WHERE."
-  (interactive (list (boon-spec-string "occurences of what?") (boon-spec-region "where?")))
-  (let ((result nil))
-    (save-excursion
-      (dolist (reg where)
-        (goto-char (boon-reg-begin reg))
-        (while (search-forward what (boon-reg-end reg) t)
-          (setq result (cons (boon-mk-reg (match-beginning 0)
-                                          (match-end 0)
-                                          (boon-reg-cursor reg))
-                              result))))
-      result)))
+  (interactive (list (boon-spec-string-lazy "occurences of what?") (boon-spec-region-lazy "where?")))
+  (lambda ()
+    (let ((result nil)
+          (what (funcall what-fun)))
+      (save-excursion
+        (dolist (reg (funcall where))
+          (goto-char (boon-reg-begin reg))
+          (while (search-forward what (boon-reg-end reg) t)
+            (setq result (cons (boon-mk-reg (match-beginning 0)
+                                            (match-end 0)
+                                            (boon-reg-cursor reg))
+                               result))))
+        result))))
 
 (defun boon-select-borders (how-much regs)
   "Return the bordering (of size HOW-MUCH) of a region list REGS.
