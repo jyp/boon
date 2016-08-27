@@ -6,7 +6,7 @@ Make sure boon is installed. Load the colemak configuration with:
 
 (require 'boon-colemak)
 
-You may also
+You may also additionally
 
 (require 'boon-extras)
 
@@ -24,15 +24,17 @@ M-x turn-on-boon-mode
 Boon indicates the difference between command mode and insert mode in
 several ways:
 
-- The modeline says Boon:STATE (where state can be INS or CMD)
+- The modeline says Boon:<STATE> (where state can be INS or CMD)
 
 - The cursor is a box in command mode, and a bar in insert mode.
 
-- The modeline is red in insert mode (and its regular color in command
-  mode)
+- If you eval (boon-powerline-theme) and have powerline installed then
+  the mode text will be of various colors.
 
-You can switch to insert mode by typing v (mnemonic: v looks like an
-insert mark) and back to command mode by typing <ESC>.
+You can switch from command to insert mode by typing v (mnemonic: v
+looks like an insert mark) and back to command mode by typing <ESC>.
+
+>> Switch to command mode now (type <ESC>)
 
 Most Emacs keychord commands via M-... and C-... are accessible as
 normal.  For example, M-x turn-off-boon-mode reverts to your regular
@@ -41,28 +43,22 @@ experience.
 The characters ">>" at the left margin indicate directions for you to
 try using a command.  For instance:
 
-
-
-
-[Middle of page left blank for didactic purposes.   Text continues below]
-
-
->> You can also type C-u and C-y to scroll
+>> Type C-u and C-y to scroll this text
 
 
 * BASIC CURSOR CONTROL
 ----------------------
+
 
 How do you move to a specific place within the text on the screen?
 
 The whole right-hand side of the keyboard is dedicated to this
 purpose.
 
-
-There are several ways you can do this.  You can still use the arrow keys,
-but it's more efficient to keep your hands in the standard position
-and use the commands: e i u y. These characters
-are equivalent to the four arrow keys, like this:
+There are several ways you can do this.  You can still use the arrow
+keys, but it's more efficient to keep your right hand around the home
+row and use the commands: e i u y. These characters are equivalent to
+the four arrow keys, like this:
 
 			  Previous line, u
 				  :
@@ -75,13 +71,13 @@ are equivalent to the four arrow keys, like this:
 >> Move the cursor to the line in the middle of that diagram.
 
 You'll find it easy to remember these letters by their location on the
-keyboard.  Note that, when you navigate within a line your hand stays
-on the home row.  Navigating lines happens on the top row. Soon you
-will forget the letters that your hand is typing when moving the
-cursor.  You will be using these basic cursor positioning commands a
-lot, but there are faster ways to go about moving the cursor.
-
-The movement of cursor across lines is the same as in regular Emacs.
+keyboard. In fact, most of the time you'll forget what you're typing
+exactly, and just know intuitively what you're doing.  Note that,
+when you navigate within a line your hand stays on the home row.
+Navigating lines happens on the top row. Soon you will forget the
+letters that your hand is typing when moving the cursor.  You will be
+using these basic cursor positioning commands a lot, but there are
+faster ways to go about moving the cursor.
 
 If moving by characters is too slow, you can move by words. The key "o"
 moves forward a word and "n" moves back a word.
@@ -91,11 +87,12 @@ moves forward a word and "n" moves back a word.
 As in regular Emacs, when you are in the middle of a word, o moves to
 the end of the word.  When you are in white space between words, o
 moves to the end of the following word.  "n" works likewise in the
-opposite direction. In fact, o and n move by whole syntactic units.
+opposite direction. In fact, o and n move by whole syntactic units:
+they will skip over parentheses when it makes sense.
 
->> Type o and n a few times within a parenthesized expression. Combine
-   it with e and i to get to the place you want.
-
+>> Move the cursor to the '*' in the following expression. Move to the
+   relevant line, then type o and n a few times. Combine these keys
+   with e and i to get to the place you want.
 
 54 / ((8 + y) * (x - 3))
 
@@ -113,7 +110,7 @@ If you want to speed up moving up and down, use the shift key: "U" and
 "Y" move by whole paragraphs.
 
 >> Try a couple of "U", and then a couple of "Y".
-   Try a couple of "l", and then a couple of ";"
+>> Try a couple of "l", and then a couple of ";"
 
 Checkout the cheat sheet (linked from README) for a summary of
 movement operations.
@@ -121,32 +118,35 @@ movement operations.
 >> Try all of these commands now a few times for practice.
    These are the most often used commands.
 
-Two other (less important) cursor motion commands are "<d" (two
-characters), which moves to the beginning of the whole text, and ">d",
+Two other (less important) cursor motion commands are "<" (two
+characters), which moves to the beginning of the whole text, and ">",
 which moves to the end of the whole text.
 
->> Try <d now, to move to the beginning of the tutorial.
+>> Try < now, to move to the beginning of the tutorial.
    Then use Y repeatedly to move back here.
 
-In fact, the 'd' character in the above sequences is the argument to
-the commands < and >. We will see later more commands taking arguments
-which can be specified in this way.
+You can type a prefix argument by typing the numbers before the
+command.
 
->> Try >p and <p to move to the beginning and end of a paragraph.
+>> Move forward by seven words.
 
-You can type a prefix argument by using "\" (backslash).
+To insert a character several times, you can use the escaping
+command "q" (mnemonic: quote).
+
+>> Try that now -- type 8 q * to insert ********.
+
 
 * OTHER MOVEMENT COMMANDS
 -------------------------
 
-There are three other movement commands, bound to j, h and k.
-- j (mnemonic: jump) expects a character an jumps to it
-
->> Move to this line and type j-
+There are two other movement commands, bound to h and k.
 
 - k (mnemonic: bacK to marK) jumps pops a mark and jumps to it. (If a region is active, exchange point and mark)
 
-- h (mnemonic: hop) activates ace-jump-mode (if installed)
+- h (mnemonic: hop) activates avy-goto-word-1 (if installed)
+
+- Additionally, j is bound to 'jump to definition' which is
+  mode-dependent.
 
 * IF EMACS STOPS RESPONDING
 ---------------------------
@@ -169,28 +169,40 @@ Instead of the C-x prefix; you may just type 'x'
 >> Type x 2 to split this window
 >> Type x 1 to close the other windows
 
+Additionally, the execute-command command (M-x) is bound to 'xx'
+
+* C-c prefix
+------------
+
+Mode-specific commands have often the form "C-c C-<key>". These are
+accessible by typing simply "c <key>" from command mode. Unfortunately
+there is no such binding in text mode by default --- so you cannot
+test this right away.
+
+
 * INSERTING AND DELETING
 ------------------------
 
 If you want to insert text, type 'v' (can you remember the mnemonic?).
 Ordinary characters, like A, 7, *, etc., are then inserted as you type
-them.  To insert a Newline character, type <Return>.
+them.  To insert a Newline character, simply type <Return>.
 
 In insert mode, regular Emacs editing commands can be used.
 
 >> Type v to insert some text; then <ESC> to go back to command mode.
 
-
 Deleting text is mostly done with the 't' command (mnemonic: take).
+The take command expects an argument. This argument can be any
+right-hand move command, such as 'e' (backward-char).
 
 >> Type "te" to delete the character before the cursor
 
 In the above "e" is the argument to the "t" command.
 
-
 >> Type "tn" to delete backwards, up to the beginning of a word
 
-You can also use a left-hand region specifier to delete:
+You can also use a left-hand _region specifier_ as an argument to
+'take'. Such arguments include 's': the symbol at point.
 
 >> Type "ts" to delete the symbol where the cursor is (even if in the
    middle of the symbol)
@@ -200,28 +212,19 @@ current line.
 
 >> Type "t<spc>" to delete the current line.
 
-
 The region specifiers are defined in the boon-select-map keymap. (Type
 C-h v boon-select-map to inspect it)
 
-* MULTIPLYING
--------------
-
-Arguments can be given a repeat count.
+Region arguments can be given a repeat count.
 
 >> Type "t7e" to delete seven characters forward.
 
-To insert a character several times, you can use the escaping
-command "q" (mnemonic: quote).
-
->> Try that now -- type \ 8 q * to insert ********.
-
-You can also kill a segment of text with one uniform method.  Move to
-one end of that part, and type <SPC>.  (<SPC> is the Space bar.)
-Next, move the cursor to the other end of the text you intend to kill.
-As you do this, Emacs highlights the text between the cursor and the
-position where you typed C-<SPC>.  Finally, type "t".  This kills all
-the text between the two positions.
+You can also kill a segment of text by selecting it first, then use
+the kill command. Move to one end of that part, and type <SPC>.
+(<SPC> is the Space bar.)  Next, move the cursor to the other end of
+the text you intend to kill.  As you do this, Emacs highlights the
+text between the cursor and the position where you typed <SPC>.
+Finally, type "t".  This kills all the text between the two positions.
 
 >> Move the cursor to the Y at the start of the previous paragraph.
 >> Type <SPC>.  Emacs should display a message "mark 0"
@@ -231,25 +234,39 @@ the text between the two positions.
 >> Type t.  This will kill the text starting from the Y,
    and ending just before the n.
 
-Selecting text with <SPC> actually takes an argument.
+Selecting text with <SPC> actually takes a region argument. When this
+argument is a move command, <SPC> behaves like putting a mark at the
+current point. But, <SPC> can take any region argument, including
+left-hand ones.
 
 >> Type "<SPC>p" to select a paragraph
 
 >> Type <SPC> again to undo the selection
 
-The region specifier "current line" (<SPC>) can be given to the
-marking command (<SPC>).
+In particular, the region specifier "current line" (<SPC>) can be
+given to the marking command (<SPC>).
 
 >> Type <SPC><SPC> to select the current line
 >> Type "y" a few times to select some lines
 >> Type "t" to delete all these lines
 
-The command for yanking is "s". (mnemonic: splice)  
+You can kill and switch to insert mode in a single command, bound to
+'r' (mnemonic: replace).
+
+>> Try typing 'rs' to replace the symbol at point.
+
+The command for yanking is "s". (mnemonic: splice)
 
 >> Try it; type s to yank the text back.
 
-Shifted "S" does yank-pop.
+(Shifted "S" does yank-pop.)
 
+It is often the case that yanking a word does not give correct
+spacing. You can automatically fix the spacing after a yanking by
+repeating the command; (type 'ss').
+
+>> Kill the word between parentesis, for example by using "ts": (very).
+>> Yank it somewhere in a sentence using "ss".
 
 * UNDO
 ------
@@ -265,7 +282,9 @@ The command 'a' (mnemonic: around) adds parentheses around a region.
 It takes two arguments:
 
 1. the kind of parentheses to use ('p' for regular parentheses)
-2. the region (specified by the same language as the 't' command)
+
+2. the region to surround. This region is specified by the same
+   language as the 't' command
 
 >> Move the cursor inside a word and type 'aps' to
    enclose it in parens.
@@ -273,7 +292,7 @@ It takes two arguments:
 >> Inspect the kind of parentheses available by typing 'C-h v boon-enclosures <RET>'
 
 It is possible to remove parentheses by using the 'a' operator, which
-transforms a region spec to its enclosure.
+transforms a region argument to its enclosure.
 
 >> Move the cursor inside a (sexp), and type 'tx' to delete the
    expression.
@@ -281,18 +300,44 @@ transforms a region spec to its enclosure.
 >> Move the cursor inside another (sexp), and type 'tax' to delete the
    parens.
 
-Region specifiers can be freely combined.
-
+The 'a' operator is especially useful when applied to 'x' (sexp), 'n'
+and 'o' --- but works on any region.
 
 
 * SEARCHING
 -----------
 
-Searching is bound to "f?" (search forward) and "w?" (search backward).
+Searching is bound to "f<key>" (search forward) and "w<key>" (search backward).
 
-The question mark stands for the kind of thing you want to search. For example
-"fe" moves to the next error. "f<spc>" does incremental search.
-Use "f C-h" to see all the things you can search.
+The <key> stands for the kind of thing you want to search. For example
+"fe" moves to the next error. "f<spc>" does incremental search. "fs"
+searches the symbol at point. "F" finds the next occurence.  Use "f
+C-h" to see all the things you can search.
+
+
+* MULTIPLE REGIONS, MULTIPLE CURSORS
+------------------------------------
+
+Boon provides a region operator to work on all occurences of a string
+in a region. This operator takes two arguments: 1. the string 2. the
+region where to match the string. The string itself is specified by a
+region containing it. For example, you can remove all occurences of
+boon in this paragraph.
+
+>> Move the cursor inside the word 'boon' in the above paragraph
+>> Type 't@sp'
+
+If you have the 'multiple-cursors' package installed, you can also
+replace such occurences.
+
+>> Undo the previous command
+>> Move the cursor inside the word 'boon' in the above paragraph
+>> Type 'r@sp'
+
+Boon has special support for multiple cursors, which means that all
+commands described above should work out of the box with multiple
+cursors.
+
 
 * HELM
 -------
@@ -306,29 +351,36 @@ occurrences of a pattern in the current buffer.
 
 >> Type 'p' now
 
-You are now in a helm "command" state, which accepts a number of
-commands to govern helm. One of the most used commands is to revert to
-helm insert state. This can be done by typing "v" or "<spc>".
-
->> type <spc>
-
-then
-
 >> type "helm" <return> to jump to the beginning of this section.
 
-You can search for the current symbol by typing "s" while in helm
-command state.
+You can search for the current symbol by typing "<spc>" in an empty
+helm mini-buffer.
 
->> Move the cursor to an occurrence of the helm word, and type "ps".
+>> Move the cursor to an occurrence of the helm word, and type "p<spc>".
 
->> Use y and u to select an occurrence, then type <return> to jump to
+>> Use C-y and C-u to select an occurrence, then type <return> to jump to
    the currently selected occurrence
 
-The keymap for this helm command state is boon-helm-command-map.
-
-Other, less common uses for helm are bound to "g?".
+Other, less common uses for helm are bound to "g<key>".
 
 >> Type "g C-h" to see the bound helm variants.
+
+
+* SPECIAL BUFFERS
+-----------------
+
+Certain emacs mode already offer their "own" command system. Such
+modes include 'dired', 'magit', and others. In such buffers, it makes
+little sense to have an 'insert mode', and most edit commands do not
+make sense either. Thus, boon switches to "special mode". In "special
+mode", boon overrides just a few keys:
+
+- x (C-x map)
+- g (helm)
+- G (revert-buffer)
+
+You can get the original behaviour of x, g and G by prefixing them
+with a quote (').
 
 * COPYING
 ---------
