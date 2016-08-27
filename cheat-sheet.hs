@@ -14,7 +14,7 @@ import MarXup.Latex.Math (ensureMath)
 import Control.Lens (set)
 -- import Data.String
 import Data.Traversable
-import Data.List (zip4,zipWith4,isSuffixOf)
+import Data.List (zip4,zipWith4,isSuffixOf,isPrefixOf)
 import Algebra.Classes
 preamble body = do
   documentClass "article" ["10pt"]
@@ -72,7 +72,7 @@ leftHandL = [[("escape",Char), ("search backward",SearchObject), ("search forwar
             ]
 
 leftHandR = [[("quotes (string)",None), ("word",None), ("word",None), ("paragraph",None), reserved]
-            ,[("enclosure",TextRegion), ("whole-line",None), ("symbol",None), reserved, ("document",None)]
+            ,[("enclosure",TextRegion), ("whole-line",None), ("symbol",None), reserved, ("document",None), ("previous-region",None)]
             ,[("inclosure",TextRegion), ("s-expr",None), ("s-expr contents",None), reserved, reserved]
             ]
 
@@ -84,18 +84,19 @@ leftHandU = [[reserved, ("re-search backward",None), ("re-search forward",None),
 
 moveC :: String -> (TeX,Argument)
 moveC "" = ("",Reserved)
+moveC x | "avy" `isPrefixOf` x = (textual x,Char)
 moveC x | "region" `isSuffixOf` x = (textual x,TextRegion)
 moveC x = (textual x,None)
 movesC = map (map moveC)
 rightHandL = movesC
              [["jump-to-def", "begin-of-line", "previous-line", "next-line", "end-of-line"]
-            ,["ace-jump", "smarter-left", "backward-char", "forward-char", "smarter-right", "toggle mark-active"]
+            ,["avy-jump", "smarter-left", "backward-char", "forward-char", "smarter-right", "toggle mark-active"]
             ,["pop-mark", "", "begin-of-expr", "end-of-expr", ""]
             ]
 
 rightHandU = movesC
              [["reserved", "", "previous-paragraph", "next-paragraph", ""]
-             ,["ace-jump-char", "smarter-up", "", "", "smarter-down", ""]
+             ,["avy-jump-char", "smarter-up", "", "", "smarter-down", ""]
              ,["pop-mark-quick", "", "begin-of-buffer", "end-of-buffer", ""]
             ]
 

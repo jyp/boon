@@ -641,8 +641,7 @@ If there is more than one, use mc/create-fake-cursor-at-point."
          ;; markers messes the logic used in kill-region to
          ;; determine whether to prepend or append the thing
          ;; just killed to the top of the kill ring.  
-      (message "Taking: %s " reg)
-       (kill-region (boon-reg-mark reg) (boon-reg-point reg)))))))
+         (kill-region (boon-reg-mark reg) (boon-reg-point reg)))))))
 
 (defun boon-treasure-region (regs)
   "Copy (kill-ring-save) the regions REGS."
