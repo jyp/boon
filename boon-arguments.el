@@ -44,18 +44,18 @@
 
 (defun boon-select-from-region (select-fun)
   "Return a region list with a single item: the region selected after calling SELECT-FUN (interactively)."
-  (interactive)
-  (save-excursion
-    ;; FIXME: deactivate mark
-    (call-interactively select-fun)
-    (lambda ()(boon-regs-from-bounds (cons (region-beginning) (region-end))))))
+  (lambda ()
+    (save-excursion
+      ;; FIXME: deactivate mark
+      (call-interactively select-fun)
+      (boon-regs-from-bounds (cons (region-beginning) (region-end))))))
 
 (defun boon-select-wim () ;; what i mean
-  "Return a region list with a single item: either the symbol at point, or, if this fails, the sexp at point."
+  "Return a region list with a single item: either the symbol at
+point, or, if this fails, the sexp at point."
   (interactive)
-  (lambda ()(let ((bounds (or (bounds-of-thing-at-point 'symbol)
-                              (bounds-of-thing-at-point 'sexp))))
-              (boon-regs-from-bounds bounds))))
+  (lambda () (boon-regs-from-bounds (or (bounds-of-thing-at-point 'symbol)
+                                        (bounds-of-thing-at-point 'sexp)))))
 
 (defun boon-jump-over-blanks-forward ()
   "Jump over blanks, forward."
