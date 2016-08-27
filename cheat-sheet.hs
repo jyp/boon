@@ -1,20 +1,21 @@
-{-# OPTIONS_GHC -XTypeSynonymInstances -XOverloadedStrings -XRecursiveDo -pgmF marxup3 -F #-}
+{-# OPTIONS_GHC -XTypeSynonymInstances -XOverloadedStrings -XRecursiveDo -pgmF marxup -F #-}
 {-# LANGUAGE TupleSections #-}
 import Data.Char (toUpper)
-import Prelude hiding (mapM,sequence)
+import Prelude hiding (mapM,sequence,Num(..),(/))
 import MarXup
 import MarXup.Latex
-import MarXup.Tex
+import MarXup.Tex hiding (label)
 import Control.Applicative
 import Data.Monoid
 import Control.Monad (unless)
+import Graphics.Diagrams
 import MarXup.Diagram
 import MarXup.Latex.Math (ensureMath)
 import Control.Lens (set)
 -- import Data.String
 import Data.Traversable
 import Data.List (zip4,zipWith4,isSuffixOf)
-
+import Algebra.Classes
 preamble body = do
   documentClass "article" ["10pt"]
   usepackage "fontspec" []
@@ -87,15 +88,15 @@ moveC x | "region" `isSuffixOf` x = (textual x,TextRegion)
 moveC x = (textual x,None)
 movesC = map (map moveC)
 rightHandL = movesC
-             [["jump-to-char", "begin-of-line", "previous-line", "next-line", "end-of-line"]
+             [["jump-to-def", "begin-of-line", "previous-line", "next-line", "end-of-line"]
             ,["ace-jump", "smarter-left", "backward-char", "forward-char", "smarter-right", "toggle mark-active"]
             ,["pop-mark", "", "begin-of-expr", "end-of-expr", ""]
             ]
 
 rightHandU = movesC
-             [["forward jump-to-char", "", "previous-paragraph", "next-paragraph", ""]
+             [["reserved", "", "previous-paragraph", "next-paragraph", ""]
              ,["ace-jump-char", "smarter-up", "", "", "smarter-down", ""]
-             ,["pop-mark-quick", "", "begin-of-region", "end-of-region", ""]
+             ,["pop-mark-quick", "", "begin-of-buffer", "end-of-buffer", ""]
             ]
 
 sm = cmd0 "shortmid"
@@ -119,26 +120,23 @@ keySize = 65
 fontsize :: String -> String -> TeX -> TeX
 fontsize x y body = braces $ cmdn_ "fontsize" [tex x, tex y] <> body
 
-keyHalf :: String -> (TeX,Argument) -> Diagram Anchorage
+-- keyHalf :: String -> (TeX,Argument) -> TexDiagram Anchorage
 keyHalf k (act,arg) = do
-  up <- box
-  using (fill (argColor arg)) $ draw $ rectangleShape up
-  upK <- labelObj $  textSize Huge $ textual $ k
-  upT <- labelObj $ varwidth "45pt" $ sans $ textSize ScriptSize $ act
+  up <- using (fill (argColor arg)) $ draw $ box "keyHalf"
+  upK <- label "k" $  textSize Huge $ sans $ textual $ k
+  upT <- label "scr" $ varwidth "45pt" $ sans $ textSize ScriptSize $ act
   up # E .=. upT # E
   up # W .=. upK # W
   width up === constant keySize
   height up === constant (keySize / 2)
   return up
 
-  
--- keyDiagram :: Double -> (String,String,(String,Argument),(String,Argument)) -> Diagram Anchorage
+
 keyDiagram k mnem l u = do
-  b <- box
-  using (set lineWidth thick) $ draw $ rectangleShape b
+  b <- using (set lineWidth thick) $ draw $ box "keyB"
   up <- keyHalf (map upKey k) u
   down <- keyHalf k l
-  m <- extend 2 <$> (texBox $ sans $ textSize Tiny $ mnem)
+  m <- (label "mnem" $ sans $ textSize Tiny $ mnem)
   m # SW .=. b # SW
   up # S .=. down # N
   b # NW .=. up # NW
@@ -146,14 +144,13 @@ keyDiagram k mnem l u = do
   b # SE .=. down # SE
   return b
 
-keyFull :: Constant -> String -> TeX -> Argument -> Diagram Anchorage
+keyFull :: Constant -> String -> TeX -> Argument -> TexDiagram Object
 keyFull w k act arg = do
-  b <- box
-  using (set lineWidth thick . fill (argColor arg)) $ draw $ rectangleShape b
+  b <- using (set lineWidth thick . fill (argColor arg)) $ draw $ box "kf"
   width b === constant w
   height b === constant keySize
-  k' <- labelObj $ textSize Huge $ textual $ k
-  act' <- labelObj $ varwidth "55pt" $ sans $ textSize ScriptSize $ act
+  k' <- label "huge" $ textSize Huge $ textual $ k
+  act' <- label "scr2" $ varwidth "55pt" $ sans $ textSize ScriptSize $ act
   k' # NW .=. b # NW
   act' # S .=. b # S
   return b
@@ -171,20 +168,22 @@ argDescs =
   -- ,(Enclosure,"An enclosure")
   ,(Reserved,"(Reserved key)")]
 
-legend :: Diagram ()
+legend :: TexDiagram ()
 legend = do
+  txt <- label "legleg" (textSize Tiny $ "Color corresponds to the type of expected argument:")
   ds <- forM argDescs $
     \ (arg,desc) -> do
-        b <- box
-        using (set lineWidth thick . fill (argColor arg)) $ draw $ rectangleShape b
+        b <- using (set lineWidth thick . fill (argColor arg)) $ draw $ box "legend"
         width b === constant 15
         height b === constant 15
-        l <- labelObj $ desc
+        l <- label "desc" desc
         b # E .=. l # W
         return b
-  spread vdist 7 ds
+  let ds' = ds++[txt]
+  align xpart (map (# W) ds')
+  spread vdist (constant 5) ds'
 
-matrixDiag :: Anchored a => [[Diagram a]] -> Diagram [[a]]
+matrixDiag :: [[TexDiagram Object]] -> TexDiagram [[Object]]
 matrixDiag matrix = do
   keys <- mapM sequence $ reverse $ matrix
   spread hdist (constant keyDist) $ (keys !! 1)
@@ -195,22 +194,22 @@ matrixDiag matrix = do
 keyBDiag = do
   keys <- matrixDiag (zzip4 keyDiagram (leftHandK +++ rightHandK) (leftHandM +++ rightHandM) (leftHandL +++ rightHandL) (leftHandU +++ rightHandU))
   esc <- keyFull keySize "esc" "back to normal mode" None
-  esc # SW .=. (keys !! 0 !! 0) # NW + (Point 0 (constant keyDist))
+  esc # SW .=. (keys !! 0 !! 0) # NW + (Point zero (constant keyDist))
   bar <- keyFull (keySize * 6 + keyDist * 5) "space" "select region" TextRegion
-  keys !! 2 !! 2 # SW .=. bar # NW  + (Point 0 (constant keyDist))
+  keys !! 2 !! 2 # SW .=. bar # NW  + (Point zero (constant keyDist))
   return ()
 
 regDiag = do
-  txt <- mkLabel «Left-hand text region specifiers:»
+  txt <- label "lhtrs" "Left-hand text region specifiers:"
   keys <- matrixDiag (zzipWith keyHalf leftHandK leftHandR)
-  spread vdist 7 [keys!!0!!0,txt]
+  spread vdist (constant 7) [keys!!0!!0,txt]
   return ()
   
 (+++) :: [[a]] -> [[a]] -> [[a]]
 x +++ y = zipWith (++) x y
 
 
-main = renderTex "cheat-sheet" docu
+main = renderTex Plain "cheat-sheet" docu
 
 docu :: TeX
 docu = preamble «
@@ -220,6 +219,9 @@ Command mode bindings.
 @keyBDiag
 
 @vspace"1em"
-@regDiag @hfill @legend
+
+@regDiag
+@hfill
+@legend
 »
 
