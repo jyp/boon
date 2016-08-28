@@ -72,33 +72,37 @@
     (self-insert-command 1)))
 
 ;; Helm keys
-(eval-after-load 'helm
-  '(progn
-     (define-key helm-map [(tab)]            'helm-select-action)
-     (define-key helm-map (kbd "C-z")        'undefined)
-     (define-key helm-map [(escape)] 'helm-keyboard-quit)
-     (define-key helm-map [(control f)] 'helm-follow-mode)
-     (define-key helm-map (kbd "SPC")        'boon-completer-space)
-     (define-key helm-map (kbd "M-SPC")    'helm-toggle-visible-mark)
-     (define-key helm-map (kbd "C-<down>") 'helm-narrow-window)
-     (define-key helm-map (kbd "C-<up>")   'helm-enlarge-window)
-     (define-key helm-map (kbd "C-<RET>")  'helm-execute-persistent-action)
-     (define-key helm-map [(shift backspace)] 'helm-unmark-all)
-     ))
+(defun boon-helm-browse (action)
+  "Run the ACTION and set 'boon-helm-command-map' as transient keymap."
+  (lambda ()
+    (interactive)
+    (call-interactively action)
+    (setq cursor-type 'box)
+    (set-transient-map boon-helm-command-map t (lambda () (setq cursor-type 'bar)))))
+
+(defun define-helm-key (key action)
+  (define-key helm-map (vconcat (mapcar 'boon-god-control-swap key)) (boon-helm-browse action))
+  (define-key boon-helm-command-map key action))
 
 (defvar boon-helm-command-map (make-sparse-keymap))
 (suppress-keymap boon-helm-command-map 't)
 
-(defun boon-helm-browse (action)
-  "Run the ACTION and set 'boon-helm-command-map' as transient keymap."
-  (interactive)
-  (call-interactively action)
-  (setq cursor-type 'box)
-  (set-transient-map boon-helm-command-map t (lambda () (setq cursor-type 'bar))))
+(eval-after-load 'helm
+  '(progn
+     (define-key helm-map [(tab)]             'helm-select-action)
+     (define-key helm-map (kbd "C-z")         'undefined)
+     (define-key helm-map [(escape)]          'helm-keyboard-quit)
+     (define-key helm-map [(control f)]       'helm-follow-mode)
+     (define-key helm-map (kbd "SPC")         'boon-completer-space)
+     (define-key helm-map (kbd "M-SPC")       'helm-toggle-visible-mark)
+     (define-key helm-map (kbd "C-<down>")    'helm-narrow-window)
+     (define-key helm-map (kbd "C-<up>")      'helm-enlarge-window)
+     (define-key helm-map (kbd "C-<RET>")     'helm-execute-persistent-action)
+     (define-key helm-map [(shift backspace)] 'helm-unmark-all)
+     (define-helm-key (kbd "f")               'helm-follow-mode)
+     ))
 
-
-
-;; (define-key boon-goto-map "R" 'helm-registers)
+(define-key boon-goto-map "r" 'helm-register)
 (define-key boon-goto-map "a" 'helm-apropos)
 (define-key boon-goto-map "b" 'helm-buffers-list)
 (define-key boon-goto-map "f" 'helm-for-files) ;; see http://amitp.blogspot.se/2012/10/emacs-helm-for-finding-files.html

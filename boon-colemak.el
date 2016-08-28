@@ -102,36 +102,16 @@
 
 (eval-after-load 'helm
   '(progn
-     (define-key helm-map (kbd "C-f")        (lambda () (interactive) (boon-helm-browse 'helm-follow-mode)))
-     (define-key helm-map (kbd "C-u")        (lambda () (interactive) (boon-helm-browse 'helm-previous-line)))
-     (define-key helm-map (kbd "C-y")        (lambda () (interactive) (boon-helm-browse 'helm-next-line)))
-     (define-key helm-map (kbd "C-,")        (lambda () (interactive) (boon-helm-browse 'helm-previous-page)))
-     (define-key helm-map (kbd "C-.")        (lambda () (interactive) (boon-helm-browse 'helm-next-page)))
+     (define-helm-key (kbd "u") 'helm-previous-line)
+     (define-helm-key (kbd "y") 'helm-next-line)
+     (define-helm-key (kbd ",") 'helm-previous-page)
+     (define-helm-key (kbd ".") 'helm-next-page)
      ))
 
-;; actions
-(define-key boon-helm-command-map (kbd "j")   'helm-execute-persistent-action)
-(define-key boon-helm-command-map (kbd "h")   'helm-select-2nd-action)
-(define-key boon-helm-command-map (kbd "k")   'helm-select-3rd-action)
-
 ;; top row
-(define-key boon-helm-command-map (kbd "q")   'helm-keyboard-quit)
 (define-key boon-helm-command-map (kbd "f")   'helm-follow-mode)
-
-;; home row: yanking/killing
-;; (define-key boon-helm-command-map (kbd "r")   'helm-yank-selection)
-;; (define-key boon-helm-command-map (kbd "s")   'next-history-element) ;; has the effect of getting the whole symbol at point
-(define-key boon-helm-command-map (kbd "s")   'helm-yank-text-at-point)
-(define-key boon-helm-command-map (kbd "d")   'helm-delete-minibuffer-contents)
-
 (define-key boon-helm-command-map (kbd "y")   'helm-next-line)
 (define-key boon-helm-command-map (kbd "u")   'helm-previous-line)
-(define-key boon-helm-command-map (kbd "U")   'helm-previous-source)
-(define-key boon-helm-command-map (kbd "Y")   'helm-next-source)
-(define-key boon-helm-command-map (kbd ",")   'helm-previous-page)
-(define-key boon-helm-command-map (kbd ".")   'helm-next-page)
-(define-key boon-helm-command-map (kbd ">")   'helm-goto-next-file)
-(define-key boon-helm-command-map (kbd "<")   'helm-goto-precedent-file)
 
 
 (define-key isearch-mode-map [(control p)] 'helm-occur-from-isearch)
