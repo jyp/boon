@@ -1,14 +1,5 @@
-* fix swap-region
-* DONE change helm-command-map
-** change c to be as in the regular map
-* When 24.4 rolls out:
-** TODO use string-blank-p
-**    bind rectangle-mark-mode in extras
-** DONE checkout electric-pair-mode options (http://www.masteringemacs.org/articles/2013/12/29/whats-new-in-emacs-24-4/) and clean the code
-* DONE Add enclosure " "text<RET> for arbitrary enclosures
-* DONE Add region specifier ' (former selected region)
-* When inserting a newline; remove spaces before and after the point.
-* DONE Support Fundamental buffers (see evil code)
+* swap-region
+* Fully Support Fundamental buffers (see evil code?)
 * Repeat "last command" (bind on return?)
 No idea how to do that
 
