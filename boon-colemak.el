@@ -223,12 +223,15 @@
 ;; Most of these are actually in the boon-moves-map; however some don't quite work there; so they end up here.
 (define-key boon-command-map (kbd "C-u") 'scroll-down-line)
 (define-key boon-command-map (kbd "C-y") 'scroll-up-line)
-(define-key boon-command-map "'" 'boon-toggle-mark)
 
+(define-key indent-rigidly-map "i" 'indent-rigidly-right)
+(define-key indent-rigidly-map "e" 'indent-rigidly-left)
+
+(define-key boon-special-map "x" boon-x-map)
+(define-key boon-special-map "g" boon-goto-map)
+(define-key boon-special-map "G" 'revert-buffer)
 
 (provide 'boon-colemak)
 ;;; boon-colemak.el ends here
 
 
-(define-key indent-rigidly-map "i" 'indent-rigidly-right)
-(define-key indent-rigidly-map "e" 'indent-rigidly-left)

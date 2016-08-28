@@ -13,10 +13,8 @@
 (defvar boon-goto-map (make-sparse-keymap))
 
 (define-key boon-select-map " "  'boon-select-line)
+(define-key boon-command-map "'" 'boon-toggle-mark)
 
-(define-key boon-special-map "x" boon-x-map)
-(define-key boon-special-map "g" boon-goto-map)
-(define-key boon-special-map "G" 'revert-buffer)
 (define-key boon-special-map "`" 'boon-quote-character)
 (define-key boon-special-map "'" 'boon-quote-character)
 
