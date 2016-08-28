@@ -743,22 +743,6 @@ If no such text exists, throw an error."
     (delete-char 1))
   (backward-delete-char-untabify 1))
 
-(defun boon-self-insert-quote ()
-  "Insert doubled quote.
-unless: 1. the previous character is a backslash, in which case a
-  single quote is inserted or 2. the next character is a quote in
-  which case the cursor simply jumps over it."
-  (interactive)
-  (declare (obsolete "emacs 24.5 electric pair mode is good enough" "20150527"))
-  (cond
-   ((equal (this-command-keys) (make-string 1 (following-char)))
-    (forward-char 1))
-   ((eq (preceding-char) ?\\)
-    (self-insert-command 1))
-   (t
-    (self-insert-command 2)
-    (backward-char 1))))
-
 (defun boon-god-control-swap (event)
   "Swap the control 'bit' in an event, for event where it makes sense."
   (interactive (list (read-key)))
