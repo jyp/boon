@@ -96,7 +96,7 @@ rightHandL = movesC
 
 rightHandU = movesC
              [["reserved", "", "previous-paragraph", "next-paragraph", ""]
-             ,["avy-jump-char", "smarter-up", "", "", "smarter-down", ""]
+             ,["avy-jump-char", "", "smarter-up", "smarter-down", "", ""]
              ,["pop-mark-quick", "", "begin-of-buffer", "end-of-buffer", ""]
             ]
 
