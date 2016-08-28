@@ -46,7 +46,6 @@
 (define-key boon-x-map "t" 'boon-toggle-comment) ; commenT
 (define-key boon-x-map "i" 'boon-adjust-indent)
 (define-key boon-x-map [(return)] 'boon-split-line)
-(define-key boon-x-map " " 'boon-split-word)
 
 (define-key boon-x-map "U" 'undo-tree-visualize)
 (define-key boon-x-map "O" 'previous-window) ;; o is next window
