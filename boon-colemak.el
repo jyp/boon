@@ -24,13 +24,10 @@
 (define-key boon-select-map "C"  'boon-select-comment)
 (define-key boon-select-map "x"  'boon-select-outside-pairs) ;; eXpression
 (define-key boon-select-map "c"  'boon-select-inside-pairs) ;; Contents
-(define-key boon-select-map "v"  'boon-select-block)
 
 (define-key boon-select-map "z"  'boon-select-content) ;; inZide
 
-(define-key boon-select-map "'"  'boon-switch-mark)
 (define-key boon-select-map "k"  'boon-select-blanks) ;; blanKs
-
 
 (define-key boon-moves-map "k" 'boon-switch-mark) ; bacK to marK
 (define-key boon-moves-map "K" 'pop-tag-mark)

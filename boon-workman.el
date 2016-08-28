@@ -16,7 +16,6 @@
 (define-key boon-select-map (kbd "m")  'boon-select-inside-pairs) ;; Contents
 (define-key boon-select-map (kbd "h")  'boon-select-wim) ;; symbol
 (define-key boon-select-map (kbd "q")  'boon-select-outside-quotes)
-(define-key boon-select-map (kbd "'")  'boon-select-blanks) ;; blanKs
 (define-key boon-select-map (kbd "SPC")  'boon-select-line)
 (define-key boon-select-map (kbd "s")  'boon-select-justline) ;; Row
 (define-key boon-select-map (kbd "a")  'boon-select-borders) ;; Around
