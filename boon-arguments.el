@@ -106,13 +106,13 @@ point, or, if this fails, the sexp at point."
 (defun boon-select-whitespace () (interactive) (boon-select-thing-at-point 'whitespace))
 (defun boon-select-blanks ()
   (interactive)
-  (boon-regs-from-bounds (cons
+  (lambda ()(boon-regs-from-bounds (cons
                  (save-excursion
                    (boon-jump-over-blanks-backward)
                    (point))
                  (save-excursion
                    (boon-jump-over-blanks-forward)
-                   (point)))))
+                   (point))))))
 
 (defun boon-spec-string-lazy (prompt)
   "Read a string using the region selection functionality.
