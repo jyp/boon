@@ -85,7 +85,7 @@ point, or, if this fails, the sexp at point."
   "Return a region of COUNT visual lines."
   (interactive "p")
   (setq temporary-goal-column 0)
-  (boon-select-n count 'beginning-of-visual-line 'line-move-visual))
+  (boon-select-n count 'beginning-of-line 'forward-visible-line))
 
 (defun boon-select-n (count goto-beginning forward-n)
   "Return a region of COUNT objects defined by GOTO-BEGINNING and FORWARD-N."
