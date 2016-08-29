@@ -84,20 +84,17 @@
 (defvar boon-helm-command-map (make-sparse-keymap))
 (suppress-keymap boon-helm-command-map 't)
 
-(eval-after-load 'helm
-  '(progn
-     (define-key helm-map [(tab)]             'helm-select-action)
-     (define-key helm-map (kbd "C-z")         'undefined)
-     (define-key helm-map [(escape)]          'helm-keyboard-quit)
-     (define-key helm-map [(control f)]       'helm-follow-mode)
-     (define-key helm-map (kbd "SPC")         'boon-completer-space)
-     (define-key helm-map (kbd "M-SPC")       'helm-toggle-visible-mark)
-     (define-key helm-map (kbd "C-<down>")    'helm-narrow-window)
-     (define-key helm-map (kbd "C-<up>")      'helm-enlarge-window)
-     (define-key helm-map (kbd "C-<RET>")     'helm-execute-persistent-action)
-     (define-key helm-map [(shift backspace)] 'helm-unmark-all)
-     (define-helm-key (kbd "f")               'helm-follow-mode)
-     ))
+(with-eval-after-load 'helm
+  (define-key helm-map [(tab)]             'helm-select-action)
+  (define-key helm-map (kbd "C-z")         'undefined)
+  (define-key helm-map [(escape)]          'helm-keyboard-quit)
+  (define-key helm-map (kbd "SPC")         'boon-completer-space)
+  (define-key helm-map (kbd "M-SPC")       'helm-toggle-visible-mark)
+  (define-key helm-map (kbd "C-<down>")    'helm-narrow-window)
+  (define-key helm-map (kbd "C-<up>")      'helm-enlarge-window)
+  (define-key helm-map (kbd "C-<return>")  'helm-execute-persistent-action)
+  (define-key helm-map [(shift backspace)] 'helm-unmark-all)
+  (define-helm-key (kbd "f")               'helm-follow-mode))
 
 (define-key boon-goto-map "r" 'helm-register)
 (define-key boon-goto-map "a" 'helm-apropos)
