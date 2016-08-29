@@ -12,13 +12,15 @@
 
 (defvar boon-goto-map (make-sparse-keymap))
 
+(define-key boon-select-map "@"  'boon-select-occurences)
+(define-key boon-select-map "#"  'boon-select-all)
 (define-key boon-select-map " "  'boon-select-line)
-(define-key boon-command-map "'" 'boon-toggle-mark)
+(define-key boon-moves-map  "'" 'boon-switch-mark)
 
 (define-key boon-special-map "`" 'boon-quote-character)
 (define-key boon-special-map "'" 'boon-quote-character)
-(define-key boon-moves-map  "'" 'boon-switch-mark)
 
+(define-key boon-command-map "'" 'boon-toggle-mark)
 (define-key boon-command-map [(return)] 'undefined)
 (define-key boon-command-map (kbd "<RET>") 'undefined)
 (define-key boon-command-map [(backspace)] 'undefined)
@@ -42,7 +44,6 @@
 
 
 ;; Off mode rebinds
-
 
 (define-key boon-off-map [(escape)] 'boon-set-command-state)
 
