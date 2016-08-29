@@ -21,6 +21,7 @@
 (defvar boon-select-map (make-sparse-keymap)
   "Keymap for selection of text regions.  Any move is also a valid text region.")
 (defvar boon-off-map (make-sparse-keymap))
+(make-obsolete-variable 'boon-off-map nil "20160713")
 (defvar boon-insert-map (make-sparse-keymap))
 (defvar boon-special-map (make-sparse-keymap))
 
@@ -42,7 +43,7 @@ activated. Special is active when special-mode buffers are
 activated. This buffers have their own set of commands, so we use
 those. See 'boon-special-map' for exceptinons.")
 
-(make-obsolete-variable boon-off-state nil "20160713")
+(make-obsolete-variable 'boon-off-state nil "20160713")
 ;; indeed: the special mode is good enough that it's not necessary to
 ;; switch to 'off' mode any longer.
 
