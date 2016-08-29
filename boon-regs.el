@@ -8,6 +8,9 @@
 (defun boon-mk-reg (mrk pnt &optional cursor)
   (list mrk pnt cursor))
 
+(defun boon-reg-nil (reg)
+  (not (or (boon-reg-point reg) (boon-reg-mark reg))))
+
 (defun boon-reg-from-bounds (bnds)
   (boon-mk-reg (car bnds) (cdr bnds) nil))
 

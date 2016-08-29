@@ -8,6 +8,7 @@
 (require 'boon-core)
 (require 'boon-regs)
 (require 'multiple-cursors)
+(require 'dash)
 
 (defcustom boon-enclosures
       '(
@@ -141,6 +142,27 @@ Display PROMPT in the echo area."
                                             (match-end 0)
                                             (boon-reg-cursor reg))
                                result))))
+        result))))
+
+(defun boon-select-all (what where)
+  "Return a list of empty regions starting at the WHAT subregions of WHERE.
+Example: r#<spc>p places a cursor at every begining of line in
+the region, in insertion mode. Subregions won't be overlapping."
+  (interactive (list (boon-spec-region-lazy "what?") (boon-spec-region-lazy "where?")))
+  (lambda ()
+    (let ((result nil))
+      (save-excursion
+        (dolist (reg (funcall where))
+          (goto-char (boon-reg-begin reg))
+          (while (and (< (point) (boon-reg-end reg)))
+            (let ((subregs (-remove 'boon-reg-nil
+                                    (-filter (lambda (r) (> (boon-reg-end r) (point)))
+                                             (funcall what)))))
+              ;; some selectors may return nil. (for exmaple sexp on a non-sexp, etc.)
+              (setq result (append (mapcar (lambda (r) (boon-mk-reg (boon-reg-mark r)
+                                                                    (boon-reg-mark r)))
+                                           subregs) result))
+              (goto-char (apply 'max (+ 1 (point)) (mapcar 'boon-reg-end subregs))))))
         result))))
 
 (defun boon-select-borders (how-much regs)
