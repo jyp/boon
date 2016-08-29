@@ -206,6 +206,43 @@ This is because no command mode is activated in the minibuffer."
    (boon-special-state "SPC")
    (t "???")))
 
+(with-eval-after-load 'multiple-cursors
+  (setq mc--default-cmds-to-run-for-all
+        (append '(boon-beginning-of-expression
+                  boon-beginning-of-line
+                  boon-end-of-expression
+                  boon-end-of-line
+                  boon-end-of-region
+                  boon-find-char-backward
+                  boon-find-char-forward
+                  boon-quote-character
+                  boon-replace-by-character
+                  boon-set-insert-like-state
+                  boon-smarter-backward
+                  boon-smarter-forward
+                  boon-splice
+                  boon-split-line
+                  boon-switch-mark
+                  boon-toggle-character-case
+                  boon-toggle-mark)))
+  (setq mc--default-cmds-to-run-once
+        (append mc--default-cmds-to-run-once
+                '(boon-adjust-indent
+                  boon-drop-cursor
+                  boon-drop-mark
+                  boon-enclose
+                  boon-move-cursor
+                  boon-qsearch-next
+                  boon-qsearch-next-at-point
+                  boon-qsearch-previous
+                  boon-qsearch-previous-at-point
+                  boon-query-replace
+                  boon-quit
+                  boon-set-command-state
+                  boon-substitute-region
+                  boon-take-region
+                  boon-toggle-case))))
+
 (provide 'boon-core)
 ;;; boon-core ends here
 
