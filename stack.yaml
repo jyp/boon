@@ -1,0 +1,47 @@
+
+# Specifies the GHC version and set of packages available (e.g., lts-3.5, nightly-2015-09-21, ghc-7.10.2)
+resolver: lts-6.7
+
+# Local packages, usually specified by relative directory name
+packages:
+- location:
+    git: https://github.com/jyp/lp-diagrams.git
+    commit: 99f1560e2eff018fa82402c40b17efa096063e4d
+- location:
+    git: https://github.com/jyp/gasp
+    commit: 020b3bb288ab6bf82dd9c8a845b1a4117786fbd6
+- location:
+    git: https://github.com/jyp/marxup
+    commit: ac35153d20e6f6d628b5a489a7fddd1ef0cb1140
+
+# Packages to be pulled from upstream that are not in the resolver (e.g., acme-missiles-0.3)
+extra-deps:
+- labeled-tree-1.0.0.0
+- parsek-1.0.1.3
+
+# Override default flag values for local packages and extra-deps
+flags: {}
+
+# Extra package databases containing global packages
+extra-package-dbs: []
+
+# Control whether we use the GHC we find on the path
+# system-ghc: true
+
+# Require a specific version of stack, using version ranges
+# require-stack-version: -any # Default
+# require-stack-version: >= 1.0.0
+
+# Override the architecture used by stack, especially useful on Windows
+# arch: i386
+# arch: x86_64
+
+# Extra directories used by stack for building
+# extra-include-dirs: [/path/to/dir]
+# extra-lib-dirs: [/path/to/dir]
+
+nix:
+  enable: true
+  shell-file: shell.nix
+
+
