@@ -34,7 +34,7 @@
 
 (defun boon-spec-enclosure ()
   "Specify an enclosure style.  To be used as an argument to interactive."
-  (let* ((c (boon-read-char "Specify the enclosure"))
+  (let* ((c (read-event "Specify the enclosure")) ;; read-char is badly advised by mc
          (s (make-string 1 c))
          (choice (assoc c boon-enclosures)))
     (if choice (cdr choice) (list s s))))
@@ -52,8 +52,8 @@
       (boon-regs-from-bounds (cons (region-beginning) (region-end))))))
 
 (defun boon-select-wim () ;; what i mean
-  "Return a region list with a single item: either the symbol at
-point, or, if this fails, the sexp at point."
+  "Return a region list with a single item.
+This item is either the symbol at point, or, if this fails, the sexp at point."
   (interactive)
   (lambda () (boon-regs-from-bounds (or (bounds-of-thing-at-point 'symbol)
                                         (bounds-of-thing-at-point 'sexp)))))
@@ -82,13 +82,13 @@ point, or, if this fails, the sexp at point."
   (interactive) (boon-regs-from-bounds (cons (line-beginning-position) (line-end-position))))
 
 (defun boon-select-line (count)
-  "Return a region of COUNT visual lines."
+  "Return a selector of COUNT visual lines."
   (interactive "p")
   (setq temporary-goal-column 0)
   (boon-select-n count 'beginning-of-line 'forward-visible-line))
 
 (defun boon-select-n (count goto-beginning forward-n)
-  "Return a region of COUNT objects defined by GOTO-BEGINNING and FORWARD-N."
+  "Return a selector of COUNT objects defined by GOTO-BEGINNING and FORWARD-N."
   (lambda()(save-excursion
     (funcall goto-beginning)
     (boon-regs-from-bounds (cons (point) (progn (funcall forward-n count) (point)))))))
@@ -129,7 +129,7 @@ Display PROMPT in the echo area."
             (buffer-substring-no-properties (boon-reg-begin reg) (boon-reg-end reg))))))))
 
 (defun boon-select-occurences (what-fun where)
-  "Return the occurences of WHAT as sub-regions of WHERE."
+  "Return the occurences of WHAT-FUN as sub-regions of WHERE."
   (interactive (list (boon-spec-string-lazy "occurences of what?") (boon-spec-region-lazy "where?")))
   (lambda ()
     (let ((result nil)
@@ -147,7 +147,7 @@ Display PROMPT in the echo area."
 (defun boon-select-all (what where)
   "Return a list of empty regions starting at the WHAT subregions of WHERE.
 Example: r#<spc>p places a cursor at every begining of line in
-the region, in insertion mode. Subregions won't be overlapping."
+the region, in insertion mode.  Subregions won't be overlapping."
   (interactive (list (boon-spec-region-lazy "what?") (boon-spec-region-lazy "where?")))
   (lambda ()
     (let ((result nil))
@@ -196,21 +196,12 @@ This function is meant to be called interactively."
             (mapcar (lambda (o) (boon-mk-reg (marker-position (overlay-get o 'mark)) (marker-position (overlay-get o 'point)) o))
                     (mc/all-fake-cursors)))))
 
-(defun boon-read-char (&optional prompt inherit-input-method seconds)
-  "Read a character, bypassing multiple cursors defadvice if applicable."
-  ;; do this so that mc's read-char defadvice does not kick in; so we can actually read characters here.
-  ;; a hack for now: as read-event doesn't do the same thing as read char.
-  (if (boon-bypass-mc)
-      (read-event prompt inherit-input-method seconds)
-    (read-char prompt inherit-input-method seconds)))
-
 (defun boon-spec-region (msg)
   "Specify a region concisely using the keyboard.
 The prompt (as MSG) is displayed.  This function returns a list
 of regions (See boon-regs.el).  If multiple-cursors are enabled
 BUT 'this-command' is executed just once (not once per
-cursor), you get a region for each cursor.
-"
+cursor), you get a region for each cursor."
   (let ((orig-regs (boon-multiple-cursor-regs)))
     (if (use-region-p) orig-regs
       (let ((selector (boon-spec-region-lazy msg)))
@@ -228,19 +219,19 @@ cursor), you get a region for each cursor.
   "Specify a region selector concisely using the keyboard.
 The prompt (as MSG) is displayed.  This function returns a
 non-interactive function which, when run, will return
-bounds. This allows to run the function in question multiple
-times (describing the region just once with the keyboard). This
+bounds.  This allows to run the function in question multiple
+times (describing the region just once with the keyboard).  This
 can be useful when having multiple cursors, or just using
 descriptors referring to several disjoint subregions.  The bounds
 that are eventually returned are in the form of a list of regs,
-see boon-regs.el.
-"
+see boon-regs.el."
   (let ((my-prefix-arg 0)
         (kmv boon-moves-map)
         (kms boon-select-map))
     ;; We read a move or selection, in both keymaps in parallel. First command found wins.
     (while (and (or kmv kms) (not (commandp kms)) (not (commandp kmv)))
-      (let ((last-char (boon-read-char (format "%s %s" msg my-prefix-arg))))
+      (let ((last-char (read-event (format "%s %s" msg my-prefix-arg))))
+        ;; read-event, because mc badly advises read-char
         (if (and (>= last-char ?0) (<= last-char ?9))
             (setq my-prefix-arg (+ (- last-char ?0) (* 10 my-prefix-arg )))
           (if kms (setq kms (lookup-key kms (vector last-char))))
@@ -261,7 +252,7 @@ see boon-regs.el.
                       (current-prefix-arg my-prefix-arg)) ;; dynamic bindig so env remains clean
                   (call-interactively kmv)
                   (list (boon-mk-reg orig (point) nil))))))
-      (error "Unknown region specifier"))))
+      (error "Unknown selector"))))
 
 (provide 'boon-arguments)
 ;;; boon-arguments.el ends here
