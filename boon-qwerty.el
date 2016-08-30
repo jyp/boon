@@ -155,9 +155,6 @@
 (define-key indent-rigidly-map "k" 'indent-rigidly-right)
 (define-key indent-rigidly-map "l" 'indent-rigidly-left)
 
-(define-key boon-special-map "x" boon-x-map)
-(define-key boon-special-map "g" boon-goto-map)
-(define-key boon-special-map "G" 'revert-buffer)
 
 (provide 'boon-colemak)
 ;;; boon-colemak.el ends here

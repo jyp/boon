@@ -17,9 +17,6 @@
 (define-key boon-select-map " "  'boon-select-line)
 (define-key boon-moves-map  "'" 'boon-switch-mark)
 
-(define-key boon-special-map "`" 'boon-quote-character)
-(define-key boon-special-map "'" 'boon-quote-character)
-
 (define-key boon-command-map "'" 'boon-toggle-mark)
 (define-key boon-command-map [(return)] 'undefined)
 (define-key boon-command-map (kbd "<RET>") 'undefined)
@@ -33,18 +30,18 @@
 (dolist (number '("0" "1" "2" "3" "4" "5" "6" "7" "8" "9"))
   (define-key boon-command-map number 'digit-argument))
 
-
 (define-key boon-command-map " " 'boon-drop-mark)
 (define-key boon-command-map [(escape)] 'boon-quit)
 
-(defun boon-push-events (kbd-string)
-  "Push back some key events (as KBD-STRING) in the queue."
-  (setq unread-command-events
-        (append (kbd kbd-string) unread-command-events)))
+;; Special mode rebinds
+(define-key boon-special-map "`" 'boon-quote-character)
+(define-key boon-special-map "'" 'boon-quote-character)
+(define-key boon-special-map "x" boon-x-map)
 
+;; insert mode rebinds
+(define-key boon-insert-map [(escape)] 'boon-set-command-state)
 
 ;; Off mode rebinds
-
 (define-key boon-off-map [(escape)] 'boon-set-command-state)
 
 ;;  Insert mode rebinds
@@ -78,6 +75,7 @@
     (set-transient-map boon-helm-command-map t (lambda () (setq cursor-type 'bar)))))
 
 (defun define-helm-key (key action)
+  "Bind C-<KEY> in helm-map, and <KEY> in boon-helm-command-map (both to ACTION)."
   (define-key helm-map (vconcat (mapcar 'boon-god-control-swap key)) (boon-helm-browse action))
   (define-key boon-helm-command-map key action))
 
@@ -99,7 +97,6 @@
 (define-key boon-goto-map "r" 'helm-register)
 (define-key boon-goto-map "a" 'helm-apropos)
 (define-key boon-goto-map "b" 'helm-buffers-list)
-(define-key boon-goto-map "f" 'helm-for-files) ;; see http://amitp.blogspot.se/2012/10/emacs-helm-for-finding-files.html
 (define-key boon-goto-map "g" 'helm-resume)
 (define-key boon-goto-map "i" 'helm-git-grep)
 (define-key boon-goto-map "k" 'helm-show-kill-ring)

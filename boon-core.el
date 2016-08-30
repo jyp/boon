@@ -76,10 +76,10 @@ those. See 'boon-special-map' for exceptinons.")
   (force-mode-line-update))
 
 (defun boon-set-insert-like-state ()
-  "Switch to off or insert state, depending on mode."
+  "Switch to sepcial or insert state, depending on mode."
   (interactive)
   (if (boon-special-mode-p)
-      (boon-set-off-state)
+      (boon-set-special-state)
     (boon-set-state 'boon-insert-state)))
 
 (defun boon-set-insert-state ()
