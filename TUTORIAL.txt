@@ -36,7 +36,7 @@ looks like an insert mark) and back to command mode by typing <ESC>.
 
 >> Switch to command mode now (type <ESC>)
 
-Most Emacs keychord commands via M-... and C-... are accessible as
+Most Emacs key-chord commands via M-... and C-... are accessible as
 normal.  For example, M-x turn-off-boon-mode reverts to your regular
 experience.
 
@@ -265,13 +265,40 @@ It is often the case that yanking a word does not give correct
 spacing. You can automatically fix the spacing after a yanking by
 repeating the command; (type 'ss').
 
->> Kill the word between parentesis, for example by using "ts": (very).
+>> Kill the word between parenthesis, for example by using "ts": (very).
 >> Yank it somewhere in a sentence using "ss".
 
 * UNDO
 ------
 
 Undo is bound to "-" (minus); while redo is bound to "_" (underscore).
+
+* WHITESPACE
+------------
+
+In regular Emacs, it is sometimes annoying to manage whitespace;
+yanking a word may leave extra space here and lack a space there. In
+boon, repeating the 'splice' command attempts to automatically fix spaces.
+
+>> Copy the word " very" in this sentence to the kill ring, including
+   a space before and no space after
+
+>> Move the cursor to the 'a' of the word annoying in the previous
+   paragraph
+
+>> Splice the word " very"; notice how the spacing is wrong.
+
+>> Repeat the splice command and see how the spacing gets fixed for you.
+
+Cutting away space can be done in hindsight. That is, you can cut a
+word, and then the space before (or after) such word. Emacs will
+automatically 'glue' adjacent cuts in the killring.
+
+With boon, cutting space can also be done in foresight, using the region
+combinator 't'.
+
+>> Move the cursor to a word you wish to cut
+>> type "ttf" to remove the word and surrounding spaces.
 
 * PARENS
 --------
@@ -311,24 +338,24 @@ Searching is bound to "f<key>" (search forward) and "w<key>" (search backward).
 
 The <key> stands for the kind of thing you want to search. For example
 "fe" moves to the next error. "f<spc>" does incremental search. "fs"
-searches the symbol at point. "F" finds the next occurence.  Use "f
+searches the symbol at point. "F" finds the next occurrence.  Use "f
 C-h" to see all the things you can search.
 
 
 * MULTIPLE REGIONS, MULTIPLE CURSORS
 ------------------------------------
 
-Boon provides a region operator to work on all occurences of a string
+Boon provides a region operator to work on all occurrences of a string
 in a region. This operator takes two arguments: 1. the string 2. the
 region where to match the string. The string itself is specified by a
-region containing it. For example, you can remove all occurences of
+region containing it. For example, you can remove all occurrences of
 boon in this paragraph.
 
 >> Move the cursor inside the word 'boon' in the above paragraph
 >> Type 't@sp'
 
 If you have the 'multiple-cursors' package installed, you can also
-replace such occurences.
+replace such occurrences.
 
 >> Undo the previous command
 >> Move the cursor inside the word 'boon' in the above paragraph
@@ -369,7 +396,7 @@ Other, less common uses for helm are bound to "g<key>".
 * SPECIAL BUFFERS
 -----------------
 
-Certain emacs mode already offer their "own" command system. Such
+Certain Emacs mode already offer their "own" command system. Such
 modes include 'dired', 'magit', and others. In such buffers, it makes
 little sense to have an 'insert mode', and most edit commands do not
 make sense either. Thus, boon switches to "special mode". In "special
@@ -379,7 +406,7 @@ mode", boon overrides just a few keys:
 - g (helm)
 - G (revert-buffer)
 
-You can get the original behaviour of x, g and G by prefixing them
+You can get the original behavior of x, g and G by prefixing them
 with a quote (').
 
 * COPYING
@@ -395,3 +422,8 @@ from the standard Emacs tutorial,
   Copyright (C) 1985, 1996, 1998, 2001-2013 Free Software Foundation,
   Inc.
 
+
+LocalWords:  colemak eval'ed modeline CMD eval powerline ESC o's n's
+LocalWords:  README bacK marK avy goto te spc keymap ss WHITESPACE tx
+LocalWords:  whitespace killring ttf PARENS aps parens RET sexp fe fs
+LocalWords:  dired magit Cracraft
