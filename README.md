@@ -1,20 +1,20 @@
 Boon: An Ergonomic Command Mode for Emacs
 ==========================================
 
-Boon is another package for modal editing.
+Boon is a complete package for modal editing, which is not Evil.
 
 Selling points:
 - Ergonomic: common commands are easy to type. (See below)
 - Lightweight: ~300 loc for its core.
-- Good emacs integration: takes advantage of, and leverages existing
-  emacs infrastructure instead of re-inventing the wheel.
+- Good Emacs integration: integrates with existing Emacs
+  infrastructure and takes advantage of it.
 
 
-Design
-------
+Ergonomic Design
+----------------
 
 It is largely accepted that modal edition is more ergonomic than using
-keychord.  Boon attempts to make modal editing as comfortable as
+key-chords.  Boon attempts to make modal editing as comfortable as
 possible, by adhering to the following design principles:
 
 - Spacial allocation first, mnemonics second: the allocation of keys
@@ -49,20 +49,53 @@ manipulation) are bound to the home row. The top row is (mainly) for
 searching. The bottom row gives access to regular Emacs stuff (C-x
 ...) (C-c ...) and registers.
 
+
+Emacs Integration: Reusable Modules
+-----------------------------------
+
+Boon is designed as a layer of modules, which are reusable and
+customizable, in full agreement with the Emacs spirit. This means that
+even if you disagree with the frontend choices made above, you may
+still want to use parts of Boon, as these are re-usable.
+
+1. boon-moves, boon-search: a set of move and search commands. These
+   work the same way as standard Emacs commands; they are merely
+   (maybe) more powerful. Frontends typically bind these commands (and
+   more) in boon-moves-map, which is active in 'command mode'.
+2. boon-arguments: a set of combinators to define regions. Combinators
+   include plain regions (words, lines, paragraphs, ...), but also
+   region transformers (think: exclude borders, just borders,
+   including spaces, foreach, etc.). Additionally every move command in
+   boon-moves-map can be used to define a region. The system supports
+   multiple cursors.
+3. boon-core: An infrastructure for modal editing, inspired from
+   evil-core.
+4. boon-main: A set of commands similar to standard Emacs commands,
+   but which uses the system of combinators. (Additionally some random
+   extra commands are thrown in for good measure.) These commands may
+   be used in combination with a modal system, or not. A few commands
+   also switch to insert mode.
+5. boon-keys, boon-colemak, boon-qwerty, ...: frontends. Those
+   'require all the above and provide a mapping of moves, combinators
+   and commands onto keys. They may also bind keys for other 'modes',
+   such as helm.
+
 Installation/Configuration
 --------------------------
 
 REQUIREMENTS
 - Emacs version >= 24.5
-- Colemak layout
+- Colemak layout (qwerty version exists but tutorial assumes colemak
+  layout)
 
 Install Boon (perhaps using
 [![MELPA](http://stable.melpa.org/packages/boon-badge.svg)](http://stable.melpa.org/#/boon)),
 and add the following to your configuration:
 
-    (require 'boon-colemak) ;; qwerty mode not implemented (contributions welcome)
-    (require 'boon-extras) ;; optional
-    (boon-mode) ;; enable boon everywhere (use turn-on-boon-mode) to try locally
+    (require 'boon-colemak)
+    ;; (require 'boon-qwerty) ;; for qwerty port (alpha quality)
+    (boon-powerline-theme) ;; if you want use powerline with Boon
+    (boon-mode) ;; to enable boon everywhere (use M-x turn-on-boon-mode) to try locally
 
 You can jump-start by reading the
 [cheat sheet](https://pdf.yt/d/hSKUThNNSxrNFXkQ) directly, but reading
@@ -81,13 +114,26 @@ As far as I know, none of the other modal mode care about ergonomics
 
   Evil is a (quite) complete vi emulation layer for Emacs.
 
-  In boon, quite a bit of Emacs structure and user experience is
-  retained. Examples: the x key gives the C-x prefix map.
-  Interactive arguments are used for text objects.
+  In Boon, quite a bit of Emacs structure and user experience is
+  retained. Examples: the x key gives the C-x prefix map.  The usual
+  Emacs (interactive) arguments are used for text objects. Thus most of
+  Boon remains usable even if one does not wish to use modal editing.
 
   Besides, Emacs is already customizable enough as it is: the core of
-  Boon is just 200 lines or so. Figuring out all the ins and outs of
-  Evil to do what I want would probably require more effort.
+  Boon is just 300 lines or so. Figuring out all the ins and outs of
+  Evil to do what I want would probably have required more effort than
+  implementing Boon.
+
+  Finally, evil use vi bindings (by default at least), which do not
+  feature the best ergonomics.
+
+- Fingers https://github.com/fgeller/fingers.el
+
+  Fingers borrows a few ideas from Boon, including the division of work
+  between left and right hand. fgeller gives a detailed account of the
+  particular differences with Boon. My opinion is that fingers is
+  compatible with Boon concepts and could be implemented as a Boon
+  'frontend'.
 
 - God-mode https://github.com/chrisdone/god-mode
 
@@ -98,10 +144,11 @@ As far as I know, none of the other modal mode care about ergonomics
 
 - Modal Mode http://retroj.net/modal-mode
 
-  Perhaps the work which is the closest to Boon in principle
-  (lightweight and integration with Emacs). However, as far as I can
-  see, there is no special attention to ergonomics.
+  Another modal layer for Emacs, which is also lightweight and aims to
+  integrate with Emacs. However, as far as I can see, there is no
+  special attention to ergonomics.
 
 - Modal Emacs https://github.com/joelmccracken/modal-emacs
 
   Modal Emacs does not appear to be complete.
+

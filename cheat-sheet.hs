@@ -1,5 +1,7 @@
 {-# OPTIONS_GHC -XTypeSynonymInstances -XOverloadedStrings -XRecursiveDo -pgmF marxup -F #-}
 {-# LANGUAGE TupleSections #-}
+module CC where
+
 import Data.Char (toUpper)
 import Prelude hiding (mapM,sequence,Num(..),(/))
 import MarXup
@@ -57,7 +59,6 @@ argColor a = case a of
   Bin _ _ -> "purple"
   _ -> "white"
 
-
 reserved :: (TeX,Argument)
 reserved = (italic "reserved",Reserved)
 
@@ -72,7 +73,7 @@ leftHandL = [[("escape",Char), ("search backward",SearchObject), ("search forwar
             ]
 
 leftHandR = [[("quotes (string)",None), ("word",None), ("word",None), ("paragraph",None), reserved]
-            ,[("enclosure",TextRegion), ("whole-line",None), ("symbol",None), reserved, ("document",None), ("previous-region",None)]
+            ,[("enclosure",TextRegion), ("whole-line",None), ("symbol",None), ("whitespace+",TextRegion), ("document",None), ("previous-region",None)]
             ,[("inclosure",TextRegion), ("s-expr",None), ("s-expr contents",None), reserved, reserved]
             ]
 

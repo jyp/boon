@@ -10,8 +10,12 @@
 
 ;;; Code:
 
-(require 'boon-colemak)
+(require 'boon-main)
+(require 'boon-keys)
+(require 'boon-search)
 (require 'boon-extras)
+(require 'boon-core)
+(require 'boon-moves)
 
 (provide 'boon)
 ;;; boon.el ends here

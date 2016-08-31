@@ -2,11 +2,20 @@
 
 ;;; Commentary:
 
- 
+;; This file defines functions which are intended to be used as
+;; 'interactive' specifications: boon-spec-region and
+;; boon-spec-enclosure.  These are used by boon commands, but can be
+;; used by any commands.
+;;
+;; In this module can also be found functions which are bound in
+;; boon-select-map.  Those functions return a no-argument lambda which
+;; returns a list of boon-regs.
+
 ;;; Code:
 
 (require 'boon-core)
 (require 'boon-regs)
+(require 'boon-utils)
 (require 'multiple-cursors)
 (require 'dash)
 
@@ -57,16 +66,6 @@ This item is either the symbol at point, or, if this fails, the sexp at point."
   (interactive)
   (lambda () (boon-regs-from-bounds (or (bounds-of-thing-at-point 'symbol)
                                         (bounds-of-thing-at-point 'sexp)))))
-
-(defun boon-jump-over-blanks-forward ()
-  "Jump over blanks, forward."
-  (interactive)
-  (skip-chars-forward "\n\t "))
-
-(defun boon-jump-over-blanks-backward ()
-  "Jump over blanks, backward."
-  (interactive)
-  (skip-chars-backward "\n\t "))
 
 (defun boon-select-org-table-cell ()
   "Return the region between pipes (|)."

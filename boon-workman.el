@@ -3,10 +3,7 @@
 ;;; Commentary:
 ;; fgeller's workman port (WIP, contributions welcome)
 ;;; Code:
-(require 'boon-core)
-(require 'boon-main)
-(require 'boon-search)
-(require 'boon-keys)
+(require 'boon)
 
 (define-key boon-select-map (kbd "g")  'boon-select-document)
 (define-key boon-select-map (kbd "w")  'boon-select-paragraph)
@@ -40,8 +37,8 @@
 (define-key boon-moves-map (kbd ".")  'boon-end-of-expression)
 (define-key boon-moves-map (kbd "e")  'backward-char)
 (define-key boon-moves-map (kbd "o")  'forward-char)
-(define-key boon-moves-map (kbd "<")  'boon-beginning-of-region)
-(define-key boon-moves-map (kbd ">")  'boon-end-of-region)
+(define-key boon-moves-map (kbd "<")  'beginning-of-buffer)
+(define-key boon-moves-map (kbd ">")  'end-of-buffer)
 (define-key boon-moves-map (kbd "C-,")      'beginning-of-buffer)
 (define-key boon-moves-map (kbd "C-.")      'end-of-buffer)
 

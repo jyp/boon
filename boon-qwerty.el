@@ -2,10 +2,7 @@
 
 ;;; Commentary:
 ;;; Code:
-(require 'boon-core)
-(require 'boon-main)
-(require 'boon-search)
-(require 'boon-keys)
+(require 'boon)
 
 (define-key boon-select-map "@"  'boon-select-occurences)
 

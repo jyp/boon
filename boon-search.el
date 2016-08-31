@@ -4,7 +4,7 @@
 
 ;;; Code:
 
-(require 'boon-main)
+(require 'boon-utils)
 
 (defvar-local boon-regexp nil "Current regexp search. Use boon-set-search-regexp to set this variable.")
 (defvar-local boon-search-success t "Last search was successful or non-existent.")

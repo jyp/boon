@@ -8,39 +8,6 @@
 ;;; Code:
 
 (require 'boon-core)
-(require 'boon-main)
-
-(defun boon-adjust-indent ()
- "Adjust indentation of the region or current line."
- (interactive)
- (unless (use-region-p)
-   (set-mark (line-beginning-position))
-   (end-of-line))
- (call-interactively 'indent-rigidly))
-
-(defun boon-query-replace ()
-  "Query replace; but if the region is active, replace its contents"
-  (interactive)
-  (if (and (use-region-p) (eq (- (line-number-at-pos (region-end)) (line-number-at-pos (region-beginning))) 0))
-      (let ((selection (buffer-substring-no-properties (region-beginning) (region-end))))
-      (perform-replace
-       selection
-       (read-string "Replace region with:")
-       t ; query
-       nil ; not a regexp
-       nil ; not delimited
-       nil ; no specific repeat count
-       nil ; default keymap 
-       (point-min-marker)
-       (point-max-marker) ; replace in the whole buffer
-       ))
-    (call-interactively 'query-replace)))
-
-(defun boon-toggle-comment (regs)
-  "Toggle comments in the regions REGS."
-  (interactive (list (boon-spec-region "toggle comment")))
-  (dolist (reg regs)
-    (comment-or-uncomment-region (boon-reg-begin reg)(boon-reg-end reg))))
 
 (define-key boon-x-map "rr" 'boon-query-replace) ; replace the region if it is selected
 (define-key boon-x-map "t" 'boon-toggle-comment) ; commenT
@@ -64,9 +31,8 @@
 (define-key boon-x-map "vv" 'magit-status)
 (define-key boon-x-map "x" 'helm-M-x)
 
-(eval-after-load 'flycheck
-  '(define-key boon-x-map "y" flycheck-command-map)
-)
+(with-eval-after-load 'flycheck
+  (define-key boon-x-map "y" flycheck-command-map))
 
 
 (provide 'boon-extras)

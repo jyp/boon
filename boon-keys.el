@@ -106,5 +106,34 @@
 (define-key boon-goto-map "t" 'helm-etags-select)
 (define-key boon-goto-map "y" 'helm-flycheck)
 
+(defun boon-god-control-swap (event)
+  "Swap the control 'bit' in EVENT, if that is a good choice."
+  (interactive (list (read-key)))
+  (cond
+   ((memq event '(9 13)) event)
+   ((<= event 27) (+ 96 event))
+   ((not (eq 0 (logand (lsh 1 26) event))) (logxor (lsh 1 26) event))
+   (t (list 'control event))))
+
+(defun boon-c-god ()
+  "Input a key sequence, prepend C- to each key, and run the command bound to that sequence."
+  (interactive)
+  (let ((keys '((control c)))
+        (binding (key-binding (kbd "C-c")))
+        (key-vector (kbd "C-c"))
+        (prompt "C-c-"))
+    (while (and binding (not (symbolp binding)))
+      (let ((key (read-key (format "%s" prompt))))
+        (if (eq key ?h) (describe-bindings key-vector)
+          (push (boon-god-control-swap key) keys)
+          (setq key-vector (vconcat (reverse keys)))
+          (setq prompt (key-description key-vector))
+          (setq binding (key-binding key-vector)))))
+    (setq this-command-keys key-vector)
+    (cond
+     ((not binding) (error "No command bound to %s" prompt))
+     ((commandp binding) (call-interactively binding))
+     (t (error "Key not bound to a command: %s" binding)))))
+
 (provide 'boon-keys)
 ;;; boon-keys.el ends here
