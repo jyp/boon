@@ -228,10 +228,8 @@ This is because no command mode is activated in the minibuffer."
   (setq mc--default-cmds-to-run-once
         (append mc--default-cmds-to-run-once
                 '(boon-adjust-indent
-                  boon-drop-cursor
                   boon-drop-mark
                   boon-enclose
-                  boon-move-cursor
                   boon-qsearch-next
                   boon-qsearch-next-at-point
                   boon-qsearch-previous

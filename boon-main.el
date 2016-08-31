@@ -71,30 +71,6 @@ If possible, prompt the symbol at point."
        ,body
        (progn (exchange-point-and-mark) ,body (exchange-point-and-mark))))
 
-(defun boon-drop-cursor ()
-  "Drop a new cursor at the first position given by REGS.
-NOTE: Do not run for every cursor."
-  (interactive)
-  (if multiple-cursors-mode
-      ;; attempt to deactivate mc without deleting the cursors
-      (let ((cursors (mapcar (lambda (o) (cons (overlay-get o 'point) (overlay-get o 'mark)))(mc/all-fake-cursors))))
-        ;; does not work because deactivating mc destroys the overlays
-        (multiple-cursors-mode 0)
-        (dolist (p (cdr cursors))
-          (goto-char (car p))
-          (set-marker (mark-marker) (cdr p))
-          (mc/create-fake-cursor-at-point)))
-    (when (and mark-active (> (point) (mark)))
-      (exchange-point-and-mark))
-    ;; so that searching for the region gives a similar position
-    (mc/create-fake-cursor-at-point)))
-
-(defun boon-move-cursor (regs)
-  "Move the cursor at the first position given by REGS.
-NOTE: Do not run for every cursor."
-  (interactive (list (boon-spec-region "cursor")))
-  (goto-char (boon-reg-point (car regs))))
-
 (defun boon-drop-or-extend-mark ()
   "Drop a mark; or extend the region to the next full line; or revert to original state."
   (interactive)
