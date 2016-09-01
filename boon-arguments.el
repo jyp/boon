@@ -188,7 +188,8 @@ This function is meant to be called interactively."
 (defun boon-bypass-mc ()
   "Should we bypass multiple cursors when gathering regions?"
   (and (bound-and-true-p multiple-cursors-mode)
-       (memq this-command mc/cmds-to-run-once)))
+       (or (memq this-command mc--default-cmds-to-run-once)
+           (memq this-command mc/cmds-to-run-once))))
 
 (defun boon-multiple-cursor-regs ()
   "Return all regions defined by multiple-cursors-mode, and outside."

@@ -126,12 +126,10 @@ Return nil if no changes are made."
 (defun boon-toggle-character-case ()
   "Toggle the case of the character at point."
   (interactive)
-  (let ((case-fold-search nil))
-    (if (looking-at "[[:upper:]]")
-        (progn
-          (downcase-region (point) (+ (point) 1)))
-      (progn
-        (upcase-region (point) (+ (point) 1))))))
+  (let* ((case-fold-search nil)
+         (action (if (looking-at "[[:upper:]]") 'downcase-region 'upcase-region)))
+    (dolist (p (mapcar (lambda (r) (boon-reg-point r)) (boon-multiple-cursor-regs)))
+      (funcall action p (1+ p)))))
 
 (defun boon-toggle-case ()
   "Toggle the case of the character at point, or cycle the case of the region if it is active."
@@ -142,8 +140,7 @@ Return nil if no changes are made."
 
 (defun boon-toggle-region-case (regs)
   "Cycle regions through 3 capitalizations: UPPER CASE, lower case, Title Case.
-Regions are given by  REGS.
-NOTE: Do not run for every cursor."
+Regions are given by  REGS."
   (interactive (list (boon-spec-region "toggle-case")))
   (let* ((deactivate-mark nil)
          (case-fold-search nil)
@@ -307,8 +304,7 @@ If there is more than one, use mc/create-fake-cursor-at-point."
     (hi-lock-unface-buffer (car (car hi-lock-interactive-patterns)))))
 
 (defun boon-quit ()
-  "Exit the current modes we're in until no special state is remaining.
-NOTE: do not run for every cursor."
+  "Exit the current modes we're in until no special state is remaining."
   (interactive)
   (cond
    ((and (boundp multiple-cursors-mode)

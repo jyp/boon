@@ -239,6 +239,7 @@ This is because no command mode is activated in the minibuffer."
                   boon-set-command-state
                   boon-substitute-region
                   boon-take-region
+                  boon-toggle-character-case
                   boon-toggle-case))))
 
 (provide 'boon-core)
