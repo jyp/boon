@@ -12,7 +12,7 @@
 
 (define-key boon-select-map "a"  'boon-select-borders) ;; Around
 (define-key boon-select-map "s"  'boon-select-wim) ;; symbol
-(define-key boon-select-map "t"  'boon-select-with-spaces)
+(define-key boon-select-map "v"  'boon-select-with-spaces)
 (define-key boon-select-map "d"  'boon-select-document)
 
 (define-key boon-select-map "C"  'boon-select-comment)

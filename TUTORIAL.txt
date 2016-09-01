@@ -316,7 +316,14 @@ It takes two arguments:
 >> Move the cursor inside a word and type 'aps' to
    enclose it in parens.
 
->> Inspect the kind of parentheses available by typing 'C-h v boon-enclosures <RET>'
+It's often useful to put parens around what has been just
+pasted. The just pasted region is accesible using the single quote
+(').
+
+>> kill a word (tw), then paste it (s). Put parens around it. (ap')
+
+>> Inspect the kind of parentheses available by typing 'C-h v
+   boon-enclosures <RET>'
 
 It is possible to remove parentheses by using the 'a' operator, which
 transforms a region argument to its enclosure.
@@ -328,7 +335,7 @@ transforms a region argument to its enclosure.
    parens.
 
 The 'a' operator is especially useful when applied to 'x' (sexp), 'n'
-and 'o' --- but works on any region.
+and 'o' --- but it works on any region.
 
 
 * SEARCHING

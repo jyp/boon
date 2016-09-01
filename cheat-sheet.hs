@@ -1,5 +1,5 @@
 {-# OPTIONS_GHC -XTypeSynonymInstances -XOverloadedStrings -XRecursiveDo -pgmF marxup -F #-}
-{-# LANGUAGE TupleSections #-}
+{-# LANGUAGE TupleSections, RecordWildCards #-}
 module CC where
 
 import Data.Char (toUpper)
@@ -30,17 +30,81 @@ preamble body = do
   usepackage "geometry" ["margin=1cm","paper=a4paper","landscape"]
   env "document" body
 
+data CheatSheet = CS
+  { leftHandK, rightHandK :: [[String]] -- keycaps
+  , leftHandM, rightHandM :: [[TeX]] -- mnemonics
+  , leftHandL, leftHandU, rightHandL, rightHandU :: [[(TeX,Argument)]] -- commands (lowercase, uppercase)
+  , leftHandR :: [[(TeX,Argument)]] -- region selectors
+  }
 
-leftHandK = [["q","w","f","p","g"]
-            ,["a","r","s","t","d"]
-            ,["z","x","c","v","b"]]
+colemakCS = CS {
+  leftHandK = [["q","w","f","p","g"]
+              ,["a","r","s","t","d"]
+              ,["z","x","c","v","b"]]
 
-rightHandK = [["j","l","u","y",";"," "]
-             ,["h","n","e","i","o","'"]
-             ,["k","m",",",".","/"," "]]
+ ,rightHandK = [["j","l","u","y",";"," "]
+               ,["h","n","e","i","o","'"]
+               ,["k","m",",",".","/"," "]]
+
+ ,rightHandM = [["Jump", "⇤", "↑", "↓", "⇥"]
+               ,["Hop", "⇠" , "←", "→", "⇢" , "'"]
+               ,["bacK to marK", "", "↜", "↝", ""]
+               ]
+ ,leftHandL = [[("escape",Char), ("search backward",SearchObject), ("search forward",SearchObject), ("helm-occur",None), ("helm-...",Prefix)]
+              ,[("enclose",Bin Enclosure TextRegion), ("kill+insert", TextRegion), ("yank", None), ("kill", TextRegion), ("replace char", Char)]
+              ,[reserved, ("C-x",Prefix), ("C-c C-...",Prefix), ("insert mode",None), ("yank register",Char)]
+              ]
+ ,leftHandM = [["Quote", "backWard", "Forward", "Pinpoint", "Gather"]
+              ,["Around", "Replace", "Splice", "Take", "Displace"]
+              ,["", "eXtended", "Command", "⋎ (insert mark)", "Bank"]
+              ]
+ ,leftHandU = [[reserved, ("re-search backward",None), ("re-search forward",None), ("Play-macro",None), reserved]
+              ,[reserved, ("Record macro", None), ("pop-yank", None), ("copy", TextRegion), reserved]
+              ,[reserved, reserved, reserved, ("open line",None), ("copy register",Char)]
+              ]
+ ,leftHandR = [[("quotes (string)",None), ("word",None), ("word",None), ("paragraph",None), reserved]
+              ,[("enclosure",TextRegion), ("whole-line",None), ("symbol",None), ("whitespace+",TextRegion), ("document",None), ("previous-region",None)]
+              ,[("inclosure",TextRegion), ("s-expr",None), ("s-expr contents",None), reserved, reserved]
+              ]
+ ,rightHandL = movesC
+  [["jump-to-def", "begin-of-line", "previous-line", "next-line", "end-of-line"]
+  ,["avy-jump", "smarter-left", "backward-char", "forward-char", "smarter-right", "toggle mark-active"]
+  ,["pop-mark", "", "begin-of-expr", "end-of-expr", ""]
+  ]
+
+ ,rightHandU = movesC
+  [["reserved", "", "previous-paragraph", "next-paragraph", ""]
+  ,["avy-jump-char", "", "smarter-up", "smarter-down", "", ""]
+  ,["pop-mark-quick", "", "begin-of-buffer", "end-of-buffer", ""]
+  ]
+}
+
+qwertyCS = colemakCS {
+  leftHandK = [["q","w","e","r","t"]
+              ,["a","s","d","f","g"]
+              ,["z","x","c","v","b"]]
+
+ ,rightHandK = [["y","u","i","o","p"," "]
+               ,["h","j","k","l",";","'"]
+               ,["n","m",",",".","/"," "]]
+
+ ,leftHandL = [[("escape",Char), ("search backward",SearchObject), ("search forward",SearchObject), ("helm-occur",None), ("replace char", Char)]
+              ,[("enclose",Bin Enclosure TextRegion), ("kill+insert", TextRegion), ("kill", TextRegion), ("yank", None), ("helm-...",Prefix)]
+              ,[reserved, ("C-x",Prefix), ("C-c C-...",Prefix), ("insert mode",None), ("yank register",Char)]
+              ]
+ ,leftHandM = [["Quote", "backWard", "Elsewhere?", "occurR", "Transform"]
+              ,["Around", "Substitute", "Delete", "Flush", "Gather"]
+              ,["", "eXtended", "Command", "⋎ (insert mark)", "Bank"]
+              ]
+ ,leftHandR = [[("quotes (string)",None), ("word",None), ("word",None), ("paragraph",None), reserved]
+              ,[("enclosure",TextRegion), ("symbol",None), ("document",None), reserved, ("paragraph",None), ("previous-region",None)]
+              ,[("inclosure",TextRegion), ("s-expr",None), ("s-expr contents",None),  ("whitespace+",TextRegion), ("blanks",TextRegion) ]
+              ]
+}
 
 upKey c = case [c] of
   "'" -> head "\""
+  ";" -> ':'
   "," -> '<'
   "." -> '>'
   "/" -> '?'
@@ -62,26 +126,6 @@ argColor a = case a of
 reserved :: (TeX,Argument)
 reserved = (italic "reserved",Reserved)
 
-leftHandM = [["Quote", "backWard", "Forward", "Pursue", "Gather"]
-           ,["Around", "Replace", "Splice", "Take", "Displace"]
-           ,["", "eXtended", "Command", "⋎ (insert mark)", "Bank"]
-           ]
-
-leftHandL = [[("escape",Char), ("search backward",SearchObject), ("search forward",SearchObject), ("helm-occur",None), ("helm-...",Prefix)]
-            ,[("enclose",Bin Enclosure TextRegion), ("kill+insert", TextRegion), ("yank", None), ("kill", TextRegion), ("replace char", Char)]
-            ,[reserved, ("C-x",Prefix), ("C-c C-...",Prefix), ("insert mode",None), ("yank register",Char)]
-            ]
-
-leftHandR = [[("quotes (string)",None), ("word",None), ("word",None), ("paragraph",None), reserved]
-            ,[("enclosure",TextRegion), ("whole-line",None), ("symbol",None), ("whitespace+",TextRegion), ("document",None), ("previous-region",None)]
-            ,[("inclosure",TextRegion), ("s-expr",None), ("s-expr contents",None), reserved, reserved]
-            ]
-
-
-leftHandU = [[reserved, ("re-search backward",None), ("re-search forward",None), ("Play-macro",None), reserved]
-            ,[reserved, ("Record macro", None), ("pop-yank", None), ("copy", TextRegion), reserved]
-            ,[reserved, reserved, reserved, ("open line",None), ("copy register",Char)]
-            ]
 
 moveC :: String -> (TeX,Argument)
 moveC "" = ("",Reserved)
@@ -89,24 +133,9 @@ moveC x | "avy" `isPrefixOf` x = (textual x,Char)
 moveC x | "region" `isSuffixOf` x = (textual x,TextRegion)
 moveC x = (textual x,None)
 movesC = map (map moveC)
-rightHandL = movesC
-             [["jump-to-def", "begin-of-line", "previous-line", "next-line", "end-of-line"]
-            ,["avy-jump", "smarter-left", "backward-char", "forward-char", "smarter-right", "toggle mark-active"]
-            ,["pop-mark", "", "begin-of-expr", "end-of-expr", ""]
-            ]
-
-rightHandU = movesC
-             [["reserved", "", "previous-paragraph", "next-paragraph", ""]
-             ,["avy-jump-char", "", "smarter-up", "smarter-down", "", ""]
-             ,["pop-mark-quick", "", "begin-of-buffer", "end-of-buffer", ""]
-            ]
 
 sm = cmd0 "shortmid"
 ma = ensureMath
-rightHandM = [["Jump", "⇤", "↑", "↓", "⇥"]
-            ,["Hop", "⇠" , "←", "→", "⇢" , "'"]
-            ,["bacK to marK", "", "↜", "↝", ""]
-            ]
 
 varwidth x body = env "varwidth" ((braces $ tex x) >> cmd0 "centering" >> body)
 
@@ -193,7 +222,7 @@ matrixDiag matrix = do
   alignMatrix $ map (map (# Center)) keys
   return $ reverse keys
 
-keyBDiag = do
+keyBDiag CS {..} = do
   keys <- matrixDiag (zzip4 keyDiagram (leftHandK +++ rightHandK) (leftHandM +++ rightHandM) (leftHandL +++ rightHandL) (leftHandU +++ rightHandU))
   esc <- keyFull keySize "esc" "back to normal mode" None
   esc # SW .=. (keys !! 0 !! 0) # NW + (Point zero (constant keyDist))
@@ -201,7 +230,7 @@ keyBDiag = do
   keys !! 2 !! 2 # SW .=. bar # NW  + (Point zero (constant keyDist))
   return ()
 
-regDiag = do
+regDiag CS {..} = do
   txt <- label "lhtrs" "Left-hand text region specifiers:"
   keys <- matrixDiag (zzipWith keyHalf leftHandK leftHandR)
   spread vdist (constant 7) [keys!!0!!0,txt]
@@ -211,18 +240,20 @@ regDiag = do
 x +++ y = zipWith (++) x y
 
 
-main = renderTex Plain "cheat-sheet" docu
+main = do
+  renderTex Plain "cheat-sheet" (docu colemakCS)
+  renderTex Plain "qwerty"      (docu qwertyCS)
 
-docu :: TeX
-docu = preamble «
+docu :: CheatSheet -> TeX
+docu csData = preamble «
 BOON cheat sheet. It is recommended to read the TUTORIAL to make sense of this. The color of a key indicates the type of argument it expects.
 
 Command mode bindings.
-@keyBDiag
+@keyBDiag(csData)
 
 @vspace"1em"
 
-@regDiag
+@regDiag(csData)
 @hfill
 @legend
 »
