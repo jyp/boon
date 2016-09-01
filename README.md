@@ -53,30 +53,32 @@ searching. The bottom row gives access to regular Emacs stuff (C-x
 Emacs Integration: Reusable Modules
 -----------------------------------
 
-Boon is designed as a layer of modules, which are reusable and
-customizable, in full agreement with the Emacs spirit. This means that
-even if you disagree with the frontend choices made above, you may
-still want to use parts of Boon, as these are re-usable.
+Boon is designed as a series of layer, which are customizable and
+provide reusable components, in full agreement with the Emacs
+spirit. This means that even if you disagree with the frontend choices
+made above, you may still want to use some parts of Boon. The
+structure of Boon is as follows:
 
 1. boon-moves, boon-search: a set of move and search commands. These
    work the same way as standard Emacs commands; they are merely
    (maybe) more powerful. Frontends typically bind these commands (and
    more) in boon-moves-map, which is active in 'command mode'.
-2. boon-arguments: a set of combinators to define regions. Combinators
-   include plain regions (words, lines, paragraphs, ...), but also
-   region transformers (think: exclude borders, just borders,
-   including spaces, foreach, etc.). Additionally every move command in
-   boon-moves-map can be used to define a region. The system supports
-   multiple cursors.
+2. boon-arguments: a set of selectors to define regions. (Equivalent
+   of vim 'text objects'.) Selectors include plain regions (words,
+   lines, paragraphs, ...), but also region transformers (think:
+   exclude borders, just borders, including spaces, foreach,
+   etc.). Additionally every move command in boon-moves-map can be
+   used as a selector. The system supports multiple
+   cursors. These selectors are regular interactive functions.
 3. boon-core: An infrastructure for modal editing, inspired from
    evil-core.
 4. boon-main: A set of commands similar to standard Emacs commands,
-   but which uses the system of combinators. (Additionally some random
+   but which uses the system of selectors. (Additionally some random
    extra commands are thrown in for good measure.) These commands may
    be used in combination with a modal system, or not. A few commands
    also switch to insert mode.
-5. boon-keys, boon-colemak, boon-qwerty, ...: frontends. Those
-   'require all the above and provide a mapping of moves, combinators
+5. boon-keys, boon-extras, boon-colemak, boon-qwerty, ...: frontends. Those
+   'require all the above and provide a mapping of moves, selectors
    and commands onto keys. They may also bind keys for other 'modes',
    such as helm.
 

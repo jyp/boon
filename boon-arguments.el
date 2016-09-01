@@ -116,20 +116,23 @@ This item is either the symbol at point, or, if this fails, the sexp at point."
 
 (defun boon-spec-string-lazy (prompt)
   "Read a string using the region selection functionality.
-Intented to be used as an argument to interactive.
-Display PROMPT in the echo area."
-  (let ((head (read-event)))
+Intented to be used as an argument to interactive.  Returns a
+lambda that returns a string.  Display PROMPT in the echo
+area.  Reads a selector and evaluate the selector to fetch a
+buffer substring to return.  If the character read is a space,
+then ask for the string interactively instead."
+  (let ((head (read-event prompt)))
     (if (equal head ? ) (let ((str (read-string (concat prompt ": ")))) (lambda () str))
       ; if space, read a literal string, otherwise use the region specifier.
       (setq unread-command-events (cons head unread-command-events))
-      (let ((regs (boon-spec-region-lazy prompt)))
+      (let ((regs (boon-spec-selector prompt)))
         (lambda ()
           (let ((reg (car (funcall regs))))
             (buffer-substring-no-properties (boon-reg-begin reg) (boon-reg-end reg))))))))
 
 (defun boon-select-occurences (what-fun where)
   "Return the occurences of WHAT-FUN as sub-regions of WHERE."
-  (interactive (list (boon-spec-string-lazy "occurences of what?") (boon-spec-region-lazy "where?")))
+  (interactive (list (boon-spec-string-lazy "occurences of what?") (boon-spec-selector "where?")))
   (lambda ()
     (let ((result nil)
           (what (funcall what-fun)))
@@ -147,7 +150,7 @@ Display PROMPT in the echo area."
   "Return a list of empty regions starting at the WHAT subregions of WHERE.
 Example: r#<spc>p places a cursor at every begining of line in
 the region, in insertion mode.  Subregions won't be overlapping."
-  (interactive (list (boon-spec-region-lazy "what?") (boon-spec-region-lazy "where?")))
+  (interactive (list (boon-spec-selector "what?") (boon-spec-selector "where?")))
   (lambda ()
     (let ((result nil))
       (save-excursion
@@ -167,19 +170,19 @@ the region, in insertion mode.  Subregions won't be overlapping."
 (defun boon-select-borders (how-much regs)
   "Return the bordering (of size HOW-MUCH) of a region list REGS.
 This function is meant to be called interactively."
-  (interactive (list (prefix-numeric-value current-prefix-arg) (boon-spec-region-lazy "select contents")))
+  (interactive (list (prefix-numeric-value current-prefix-arg) (boon-spec-selector "select contents")))
   (lambda ()(apply 'append (mapcar (lambda (reg) (boon-borders reg how-much)) (mapcar 'boon-normalize-reg (funcall regs))))))
 
 (defun boon-select-with-spaces (regs)
   "Return the regions REGS, including some surrounding spaces.
 This function is meant to be called interactively."
-  (interactive (list (boon-spec-region-lazy "select with spaces")))
+  (interactive (list (boon-spec-selector "select with spaces")))
   (lambda ()(mapcar (lambda (reg) (boon-include-surround-spaces reg)) (mapcar 'boon-normalize-reg (funcall regs)))))
 
 (defun boon-select-content (regs)
   "Return the contents (of size HOW-MUCH) of a region list REGS.
 This function is meant to be called interactively."
-  (interactive (list (boon-spec-region-lazy "select borders")))
+  (interactive (list (boon-spec-selector "select borders")))
   (lambda ()(mapcar 'boon-content (mapcar 'boon-normalize-reg (funcall regs)))))
 
 (defun boon-bypass-mc ()
@@ -203,7 +206,7 @@ BUT 'this-command' is executed just once (not once per
 cursor), you get a region for each cursor."
   (let ((orig-regs (boon-multiple-cursor-regs)))
     (if (use-region-p) orig-regs
-      (let ((selector (boon-spec-region-lazy msg)))
+      (let ((selector (boon-spec-selector msg)))
         (apply 'append
                (mapcar (lambda (in-reg)
                          (save-excursion
@@ -214,7 +217,7 @@ cursor), you get a region for each cursor."
                                    (funcall selector))))
                        orig-regs))))))
 
-(defun boon-spec-region-lazy (msg)
+(defun boon-spec-selector (msg)
   "Specify a region selector concisely using the keyboard.
 The prompt (as MSG) is displayed.  This function returns a
 non-interactive function which, when run, will return

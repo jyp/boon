@@ -53,8 +53,7 @@
 
 (defun boon-looking-at-comment (how-many)
   "Is the current point looking at HOW-MANY comments? (negative for backwards)?"
-  ;;   (declare (obsolete "emacs 24.5 electric pair mode is good enough" "20150527"))
-  ;; (obsolete) 20160901
+  (declare (obsolete "useless" "20160901"))
   (save-excursion
     (forward-comment how-many)))
 

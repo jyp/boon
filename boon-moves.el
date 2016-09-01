@@ -298,7 +298,7 @@ line."
 (defun boon-switch-mark-quick ()
   "Pop the mark ring until we find ourselves on a different line."
   (interactive)
-  ;; obsolete
+  (declare (obsolete "annoying" "20160901"))
   (let ((orig-line (line-number-at-pos)))
     (while (> 1 (abs (- orig-line (line-number-at-pos))))
       (goto-char (mark))
