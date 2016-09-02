@@ -317,7 +317,7 @@ It takes two arguments:
    enclose it in parens.
 
 It's often useful to put parens around what has been just
-pasted. The just pasted region is accesible using the single quote
+pasted. The just pasted region is accessible using the single quote
 (').
 
 >> kill a word (tw), then paste it (s). Put parens around it. (ap')
@@ -433,4 +433,4 @@ from the standard Emacs tutorial,
 LocalWords:  colemak eval'ed modeline CMD eval powerline ESC o's n's
 LocalWords:  README bacK marK avy goto te spc keymap ss WHITESPACE tx
 LocalWords:  whitespace killring ttf PARENS aps parens RET sexp fe fs
-LocalWords:  dired magit Cracraft
+LocalWords:  dired magit Cracraft tw ap
