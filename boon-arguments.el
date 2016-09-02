@@ -43,7 +43,7 @@
 
 (defun boon-spec-enclosure ()
   "Specify an enclosure style.  To be used as an argument to interactive."
-  (let* ((c (read-event "Specify the enclosure")) ;; read-char is badly advised by mc
+  (let* ((c (read-char "Specify the enclosure"))
          (s (make-string 1 c))
          (choice (assoc c boon-enclosures)))
     (if choice (cdr choice) (list s s))))
@@ -56,7 +56,6 @@
   "Return a region list with a single item: the region selected after calling SELECT-FUN (interactively)."
   (lambda ()
     (save-excursion
-      ;; FIXME: deactivate mark
       (call-interactively select-fun)
       (boon-regs-from-bounds (cons (region-beginning) (region-end))))))
 
@@ -243,12 +242,15 @@ see boon-regs.el."
     ;; The command is ready; we now execute it (once per cursor if applicable).
     (if (or kms kmv)
         (if (commandp kms)
-          ;; we have a 'selection'. These commands may take prefix
-          ;; args, which they parse right away, and return a
-          ;; continuation constructing the region.
+          ;; we have a 'selector'. These commands may take prefix
+          ;; args, which they input right away, and return a
+          ;; continuation constructing the region depending on the
+          ;; point/mark.
             (let ((current-prefix-arg my-prefix-arg))
               (call-interactively kms))
-          ;; we have a 'move'. These commands do not take non-universal arguments. So just run it.
+          ;; we have a 'move'. These commands do not take
+          ;; non-universal arguments. So just run it in the
+          ;; continuation.
             (lambda ()
               (save-excursion
                 (let ((orig (point))

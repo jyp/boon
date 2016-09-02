@@ -280,7 +280,8 @@ If there is more than one, use mc/create-fake-cursor-at-point."
     (boon-set-insert-state)))
 
 (defun boon-replace-by-character (replacement)
-  "Replace the character at point, or the region if it is active, by the REPLACEMENT character."
+  "Replace the character at point, or the region if it is active,
+by the REPLACEMENT character."
   (interactive (list (read-char)))
   (if (use-region-p)
       (delete-region (region-beginning) (region-end))
@@ -294,7 +295,7 @@ If there is more than one, use mc/create-fake-cursor-at-point."
          (or (and (current-local-map) (lookup-key (current-local-map) (vector char)))
              (lookup-key (current-global-map) (vector char)))))
     (setq last-command-event char)
-    (message (format "Executing the command bound to %c" char))
+    (message "Executing the command bound to %c" char)
     (call-interactively cmd nil [char])))
 
 (defun boon-unhighlight ()
@@ -311,6 +312,7 @@ If there is more than one, use mc/create-fake-cursor-at-point."
          (not multiple-cursors-mode)
          (> (mc/num-cursors) 1))
     (multiple-cursors-mode 1)
+    ;; this branch is obsolete as 20160902: to cursor should be laid without activating mc's
     (message "Activated multiple cursors. Repeat this command to deactivate."))
    ((use-region-p)
     (boon-deactivate-mark)
