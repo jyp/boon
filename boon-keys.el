@@ -94,15 +94,18 @@
   (define-key helm-map [(shift backspace)] 'helm-unmark-all)
   (define-helm-key (kbd "f")               'helm-follow-mode))
 
-(define-key boon-goto-map "r" 'helm-register)
 (define-key boon-goto-map "a" 'helm-apropos)
 (define-key boon-goto-map "b" 'helm-buffers-list)
+(define-key boon-goto-map "e" 'helm-projectile-ag)
+(define-key boon-goto-map "f" 'helm-projectile-find-file)
 (define-key boon-goto-map "g" 'helm-resume)
 (define-key boon-goto-map "i" 'helm-git-grep)
 (define-key boon-goto-map "k" 'helm-show-kill-ring)
 (define-key boon-goto-map "l" 'goto-line) ;; no helm version of this
 (define-key boon-goto-map "m" 'helm-all-mark-ring)
 (define-key boon-goto-map "o" 'helm-multi-occur)
+(define-key boon-goto-map "p" 'helm-projectile)
+(define-key boon-goto-map "r" 'helm-register)
 (define-key boon-goto-map "t" 'helm-etags-select)
 (define-key boon-goto-map "y" 'helm-flycheck)
 

@@ -95,7 +95,8 @@
   (define-helm-key (kbd "y") 'helm-next-line)
   (define-helm-key (kbd ",") 'helm-previous-page)
   (define-helm-key (kbd ".") 'helm-next-page)
-  (define-helm-key (kbd "t") 'helm-execute-persistent-action)
+  (define-helm-key (kbd "n") 'helm-execute-persistent-action)
+  (define-helm-key (kbd "e") 'helm-select-action)
 )
 
 
