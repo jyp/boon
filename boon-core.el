@@ -14,12 +14,25 @@
 (defvar boon-x-map (make-sparse-keymap) "Keymap bound to x.")
 (set-keymap-parent boon-x-map ctl-x-map)
 
-(defvar boon-command-map (make-sparse-keymap) "Keymap used in Boon command mode.")
+(defvar boon-command-map (make-sparse-keymap)
+  "Keymap used in Boon command mode.
+
+\\{boon-command-map}
+")
 (suppress-keymap boon-command-map 't)  ; so that typing is disabled altogether in command mode
-(defvar boon-moves-map (make-sparse-keymap) "Keymap for moves (subset of command mode).")
+(defvar boon-moves-map (make-sparse-keymap)
+  "Keymap for moves (subset of command mode).
+
+\\{boon-moves-map}
+  ")
 (set-keymap-parent boon-command-map boon-moves-map)
 (defvar boon-select-map (make-sparse-keymap)
-  "Keymap for selection of text regions.  Any move is also a valid text region.")
+  "Keymap for text regions selectors.
+\\{boon-select-map}
+
+Any move is also a valid region selector.
+\\{boon-moves-map}
+")
 (defvar boon-off-map (make-sparse-keymap))
 (make-obsolete-variable 'boon-off-map nil "20160713")
 (defvar boon-insert-map (make-sparse-keymap))
@@ -76,7 +89,7 @@ those. See 'boon-special-map' for exceptinons.")
   (force-mode-line-update))
 
 (defun boon-set-insert-like-state ()
-  "Switch to sepcial or insert state, depending on mode."
+  "Switch to special or insert state, depending on mode."
   (interactive)
   (if (boon-special-mode-p)
       (boon-set-special-state)
@@ -109,11 +122,11 @@ those. See 'boon-special-map' for exceptinons.")
     mu4e-headers-mode
     mu4e-view-mode
     )
-    "A List of modes which should use boon-special-mode."
+    "A List of modes which should use `boon-special-state'."
     :group 'boon)
 
 (defun boon-special-mode-p ()
-  "Should the mode use boon-special-mode?"
+  "Should the mode use `boon-special-state'?"
   (or
    (and (eq (get major-mode 'mode-class) 'special)
         (not (derived-mode-p 'comint-mode 'eshell-mode)))
@@ -179,7 +192,7 @@ This is because no command mode is activated in the minibuffer."
 
 ;;;###autoload (autoload 'boon-mode "boon" "Toggle boon in all buffers" t)
 (define-globalized-minor-mode boon-mode
-  boon-local-mode boon-initialize)
+  boon-local-mode boon-initialize :group boon)
 
 ;;;###autoload
 (defun turn-on-boon-mode ()

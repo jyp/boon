@@ -77,13 +77,13 @@ structure of Boon is as follows:
    extra commands are thrown in for good measure.) These commands may
    be used in combination with a modal system, or not. A few commands
    also switch to insert mode.
-5. boon-keys, boon-extras, boon-colemak, boon-qwerty, ...: frontends. Those
-   'require all the above and provide a mapping of moves, selectors
-   and commands onto keys. They may also bind keys for other 'modes',
-   such as helm.
+5. boon-keys, boon-extras, boon-colemak, boon-qwerty, ...:
+   frontends. Those require all the above and provide a mapping of
+   moves, selectors and commands onto keys. They may also bind keys
+   for other 'modes', such as helm.
 
-Installation/Configuration
---------------------------
+Installation
+------------
 
 REQUIREMENTS
 - Emacs version >= 24.5
@@ -97,14 +97,37 @@ and add the following to your configuration:
     (require 'boon-colemak)
     ;; (require 'boon-qwerty) ;; for qwerty port (alpha quality)
     (boon-powerline-theme) ;; if you want use powerline with Boon
-    (boon-mode) ;; to enable boon everywhere (use M-x turn-on-boon-mode) to try locally
+
+Then
+
+    (boon-mode) ;; to enable boon everywhere
+
+If you just eval'ed the above (or just did not want to enable boon
+everywhere just just), Boon may not be active in the current
+buffer. If it is not activated, activate it by
+
+    M-x turn-on-boon-mode
+
+to try locally
+
+Usage
+-----
 
 You can jump-start by reading the
 [cheat sheet](https://pdf.yt/d/hSKUThNNSxrNFXkQ) directly, but reading
-through this modified (and shortened) version of the Emacs tutorial is
-recommended:
+through the tutorial is highly recommended:
 
-[TUTORIAL.txt](TUTORIAL.txt)
+    M-x boon-tutorial
+
+(You'll get the version of the tutorial adapted to the frontend you
+selected, qwerty or colemak.)
+
+Configuration
+-------------
+
+The main variables to configure are:
+
+boon-select-map, boon-moves-map, boon-command-map, boon-enclosures
 
 Comparison with other modal layers for Emacs
 ---------------------------------------------
