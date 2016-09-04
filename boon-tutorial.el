@@ -29,7 +29,7 @@ This tutorial assumes that you know Emacs already.
 Make sure that Boon is active in this buffer. Call
 \\[turn-on-boon-mode] if necessary.
 
-Boon has (at least two states: command state and insert state)
+Boon has two states: command state and insert state. Boon
 indicates the difference between command state and insert state
 in several ways:
 
@@ -38,13 +38,13 @@ in several ways:
 - The cursor is a box in command state, and a bar in insert state.
 
 - If you invoke `(boon-powerline-theme)' and have powerline
-  installed then the state text will shown using various
+  installed then the state text will be shown using various
   colors. This is useful to find out what state you're in without
-  having to read text.
+  having to read any text.
 
 You can switch from command to insert mode by typing
 \\[boon-set-insert-like-state] (colemak mnemonic: v looks like an
-insert mark) and back to command mode by typing <ESC>. 
+insert mark). Go back to command mode by typing <ESC>.
 
 >> Switch to command mode now (type <ESC>)
 
@@ -87,17 +87,19 @@ this:
 
 >> Move the cursor to the line in the middle of that diagram.
 
-You'll find it easy to remember these letters by their location on the
-keyboard. In fact, most of the time you'll forget what you're typing
-exactly, and just know intuitively what you're doing.  Note that,
-when you navigate within a line your hand stays on the home row.
-Navigating lines happens on the top row. Soon you will forget the
-letters that your hand is typing when moving the cursor.  You will be
-using these basic cursor positioning commands a lot, but there are
-faster ways to go about moving the cursor.
+You'll find it easy to remember these letters by their location
+on the keyboard.  Note that, when you navigate within a line your
+hand stays on the home row.  Navigating between lines happens on
+the top row. Very soon you will forget the letters that your hand
+is typing when moving the cursor, you'll know intuitively what
+you're doing, as when using arrow keys.
 
-If moving by characters is too slow, you can move by words. The key \\[boon-smarter-forward]
-moves forward a word and \\[boon-smarter-backward] moves back a word.
+You will be using these basic cursor positioning commands a lot,
+but there are even faster ways to go about moving the cursor.
+
+If moving on character at a time is too slow, you can move by
+words. The '\\[boon-smarter-forward]' key moves forward a word and
+'\\[boon-smarter-backward]' moves back a word.
 
 >> Type a few \\[boon-smarter-forward]'s and \\[boon-smarter-backward]'s.
 
@@ -116,12 +118,14 @@ they will skip over parentheses when it makes sense.
 Notice that you can quickly move in the expression while staying
 comfortably on the home row.
 
-You can move to the beginning or end of a line by typing \\[boon-beginning-of-line] or \\[boon-end-of-line].
-As \\[previous-line] and \\[next-line], these line-based commands are on the top row.  Emacs tries
-to manage the cursor position inside a line intelligently.  This often
-works, but one sometimes need to quickly move to the beginning or end
-of line after moving up or down. You can do all this by staying on the
-top row.
+You can move to the beginning or end of a line by typing
+\\[boon-beginning-of-line] or \\[boon-end-of-line].  As
+\\[previous-line] and \\[next-line], these line-based commands
+are on the top row.  When moving up and down, Emacs tries to
+manage the cursor position inside a line intelligently.  This
+often works, but one sometimes need to quickly move to the
+beginning or end of line after moving up or down. You can do all
+this by staying on the top row.
 
 If you want to speed up moving up and down, use the shift key: \\[backward-paragraph] and
 \\[forward-paragraph] move by whole paragraphs.
@@ -141,7 +145,7 @@ whole text, and '\\[end-of-buffer]', which moves to the end of the whole text.
 >> Try \\[beginning-of-buffer] now, to move to the beginning of the tutorial.
    Then use \\[forward-paragraph] repeatedly to move back here.
 
-You can type a prefix argument by typing the numbers before the
+You can type a prefix argument by typing a number before the
 command.
 
 >> Move forward by seven words.
@@ -213,13 +217,14 @@ right-hand move command (in `boon-moves-map'), such as '\\[backward-char]'.
 
 >> Type '\\[boon-take-region] \\[backward-char]' to delete the character before the cursor
 
-In the above \\[backward-char] is the argument to the \\[boon-take-region] command.
+In the above, \\[backward-char] is the argument to the \\[boon-take-region] command.
 
 
 >> Type '\\[boon-take-region] \\[boon-smarter-backward]' to delete backwards, up to the beginning of a word
 
 You can also use a left-hand _region specifier_ as an argument to
-`boon-take-region'. Such arguments include '\\<boon-select-map>\\[boon-select-wim]\\<boon-command-map> ': the symbol at point.
+`boon-take-region'. One of such arguments is '\\<boon-select-map>\\[boon-select-wim]\\<boon-command-map>', which refers to the symbol
+(or sexp) at point.
 
 >> Type \\[boon-take-region] \\<boon-select-map>\\[boon-select-wim]\\<boon-command-map> to delete the symbol where the cursor is (even if in the
    middle of the symbol)
@@ -230,7 +235,7 @@ current line.
 >> Type \\[boon-take-region] \\<boon-select-map>\\[boon-select-line]\\<boon-command-map> to delete the current line.
 
 The region specifiers are defined in the `boon-select-map' keymap. (Type
-\\[describe-variable] boon-select-map to inspect it)
+'\\[describe-variable] boon-select-map <return>' to inspect it)
 
 
 Region arguments can be given a repeat count.
@@ -239,7 +244,7 @@ Region arguments can be given a repeat count.
 
 
 You can also kill a segment of text by selecting it first, then
-use the kill command. Move to one end of that part, and type
+use the kill command. Move to one end of the region you want to kill, and type
 \\[boon-drop-mark].  Next, move the cursor to the other end of
 the text you intend to kill.  As you do this, Emacs highlights
 the text between the cursor and the position where you typed
@@ -280,14 +285,19 @@ The command for yanking is '\\[boon-splice]'. (mnemonic: splice)
 
 >> Try it; type \\[boon-splice] to yank the text back.
 
+The universal argument to `boon-splice' is the number of times
+that you want to yank the text.
+
 (Shifted \\[yank-pop] does `yank-pop'.)
 
 * WHITESPACE
 ------------
 
-Using standard Emacs commands, it is sometimes annoying to manage whitespace;
-yanking a word may leave extra space here and lack a space there. In
-boon, repeating the `boon-splice' command attempts to automatically fix spaces.
+Using standard Emacs commands, it is sometimes annoying to manage
+whitespace. Indeed, yanking a word may leave extra space here and
+lack a space there. In Boon, repeating the `boon-splice' command
+automatically fixes spaces, using a heuristic based on the
+syntax-table.
 
 >> Copy the word \" very\" in this sentence to the kill ring, including
    a space before and no space after
@@ -299,17 +309,18 @@ boon, repeating the `boon-splice' command attempts to automatically fix spaces.
 
 >> Repeat the `boon-splice' command and see how the spacing gets fixed for you.
 
-Cutting away space can be done in hindsight. That is, you can cut a
-word, and then the space before (or after) such word. Emacs will
-automatically 'glue' adjacent cuts in the killring.
+In emacs, killing extra spaces between words can be done in
+hindsight. That is, you can cut a word, and then the space
+before (or after) such word. Emacs will automatically 'glue'
+adjacent cuts in the killring.
 
-With boon, cutting space can also be done in foresight, using the
-region selector tranformer `boon-select-with-spaces', which adds
-the spaces following the region (if such do not exist, it adds
-the spaces before).
+With boon, cutting space can also be done in foresight even in
+the middle of a word, by using the region selector tranformer
+`boon-select-with-spaces', which adds the spaces following the
+region (if such do not exist, it adds the spaces before).
 
 >> Move the cursor to a word you wish to cut
->> type '\\[boon-take-region] \\<boon-select-map>\\[boon-select-with-spaces] \\[boon-select-word]\\<boon-command-map>' to remove the word and surrounding spaces.
+>> type '\\[boon-take-region] \\<boon-select-map>\\[boon-select-with-spaces] \\[boon-select-word]\\<boon-command-map>' to remove the word and convenient surrounding spaces.
 
 
 * PARENS
@@ -375,6 +386,8 @@ Backward searches use another prefix:
 \\[boon-qsearch-previous-at-point] --> `boon-qsearch-previous-at-point'
 \\[boon-qsearch-previous] --> `boon-qsearch-previous'
 
+\\<boon-command-map>
+
 
 Check `boon-moves-map` for a complete list, or type the prefix
 followed by C-h.
@@ -397,6 +410,8 @@ replace such occurrences.
 >> Undo the previous command
 >> Move the cursor inside the word 'boon' in the above paragraph
 >> Type '\\[boon-substitute-region] \\<boon-select-map>\\[boon-select-occurences] \\[boon-select-wim] \\[boon-select-paragraph]\\<boon-command-map>'
+>> Type replacement text
+>> Exit multiple-cursors by typing <esc> repeatedly
 
 Boon has special support for multiple cursors, which means that all
 commands described in this tutorial should work out of the box with multiple
@@ -454,7 +469,7 @@ make sense either. Thus, boon switches to \"special mode\". In \"special
 mode\", Boon overrides just the x key, which is bound to `boon-x-map'.
 
 You can get the original behavior of x keys by prefixing it
-with \\<boon-special-map> \\[boon-quote-character].
+with (\\<boon-special-map>\\[boon-quote-character]).
 
 
 * COPYING

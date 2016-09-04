@@ -28,8 +28,11 @@ possible, by adhering to the following design principles:
 
 - Easy navigation: many commands are bound to navigation. This
   facilitates moving around. Because movements double up as
-  region-definitions, it makes manipulation commands (operators) more
-  powerful.
+  region-definitions, this design also makes manipulation commands
+  more powerful.
+
+- Prefer several two easy keystrokes to one hard-to-reach
+  key. hard-to-reach keys are left for rarely used commands.
 
 In command mode, movement keys are bound to the right hand, while text
 manipulation is bound to the left hand.
@@ -40,7 +43,8 @@ Right-hand.
 The leftwards (and upwards) movements are bound to the leftmost
 fingers (index and middle finger), while rightwards (and downwards)
 movements are bound to the rightmost fingers (ring finger and pinky.)
-Additional movements are bound to the middle column.
+Additional, unpaired, movements are bound to the middle column
+(extended index reach).
 
 Left-hand.
 
@@ -53,42 +57,42 @@ searching. The bottom row gives access to regular Emacs stuff (C-x
 Emacs Integration: Reusable Modules
 -----------------------------------
 
-Boon is designed as a series of layer, which are customizable and
+Boon is designed as a stack of layers. Each layer is customizable and
 provide reusable components, in full agreement with the Emacs
-spirit. This means that even if you disagree with the frontend choices
-made above, you may still want to use some parts of Boon. The
+spirit. This means that even if you disagree with the designed choices
+explained above, you may still want to use some parts of Boon. The
 structure of Boon is as follows:
 
 1. boon-moves, boon-search: a set of move and search commands. These
-   work the same way as standard Emacs commands; they are merely
-   (maybe) more powerful. Frontends typically bind these commands (and
-   more) in boon-moves-map, which is active in 'command mode'.
+   work the same way as standard Emacs commands --- they are merely
+   (sometimes) more powerful. Frontends typically bind these commands
+   (and more) in boon-moves-map, which is active in 'command mode'.
 2. boon-arguments: a set of selectors to define regions. (Equivalent
    of vim 'text objects'.) Selectors include plain regions (words,
    lines, paragraphs, ...), but also region transformers (think:
    exclude borders, just borders, including spaces, foreach,
    etc.). Additionally every move command in boon-moves-map can be
-   used as a selector. The system supports multiple
-   cursors. These selectors are regular interactive functions.
-3. boon-core: An infrastructure for modal editing, inspired from
-   evil-core.
-4. boon-main: A set of commands similar to standard Emacs commands,
-   but which uses the system of selectors. (Additionally some random
-   extra commands are thrown in for good measure.) These commands may
-   be used in combination with a modal system, or not. A few commands
-   also switch to insert mode.
+   used as a selector. The system supports multiple-cursors. The
+   selectors are regular interactive functions, which means that they
+   are easily customized.
+3. boon-core: An infrastructure for modal editing. The implementation
+   is very much inspired from evil-core, but heavily simplified.
+4. boon-main: A set of commands. These are similar to standard Emacs
+   commands, but they use the system of selectors described
+   above. (For good measure, some random extra commands are thrown
+   in.) These commands may be used in combination with a modal system,
+   or not. A few commands also switch to insert mode.
 5. boon-keys, boon-extras, boon-colemak, boon-qwerty, ...:
    frontends. Those require all the above and provide a mapping of
    moves, selectors and commands onto keys. They may also bind keys
-   for other 'modes', such as helm.
+   for other modes, such as helm.
 
 Installation
 ------------
 
 REQUIREMENTS
 - Emacs version >= 24.5
-- Colemak layout (qwerty version exists but tutorial assumes colemak
-  layout)
+- Qwerty or Colemak layout (workman version partially implemented).
 
 Install Boon (perhaps using
 [![MELPA](http://stable.melpa.org/packages/boon-badge.svg)](http://stable.melpa.org/#/boon)),
@@ -103,12 +107,10 @@ Then
     (boon-mode) ;; to enable boon everywhere
 
 If you just eval'ed the above (or just did not want to enable boon
-everywhere just just), Boon may not be active in the current
-buffer. If it is not activated, activate it by
+everywhere), Boon may not be active in the current buffer. If it is
+not activated and you want to try it locally, activate it by
 
     M-x turn-on-boon-mode
-
-to try locally
 
 Usage
 -----
