@@ -99,7 +99,8 @@ When repeated, fix the spacing if necessary."
   "Fix the text to have the right amout of spacing at the point.
 Return nil if no changes are made, t otherwise."
   (interactive)
-  (cond ((looking-at " ")
+  (cond ((bolp) nil) ;; inserted at least one full line.
+        ((looking-at " ")
          (when (or (bolp) (looking-back "\\s-\\|\\s("))
            (delete-char 1)
            t))
@@ -281,8 +282,8 @@ If there is more than one, use mc/create-fake-cursor-at-point."
     (boon-set-insert-state)))
 
 (defun boon-replace-by-character (replacement)
-  "Replace the character at point, or the region if it is active,
-by the REPLACEMENT character."
+  "Replace the character at point by the REPLACEMENT character.
+Replace the region if it is active."
   (interactive (list (read-char)))
   (if (use-region-p)
       (delete-region (region-beginning) (region-end))
