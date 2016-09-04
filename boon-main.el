@@ -91,21 +91,22 @@ When repeated, fix the spacing if necessary."
 
 (defun boon-need-space ()
   "Is it necessary to insert a space here to separate words or expressions?"
-  (and (not (or (eolp) (looking-at "\\s-")))
-       (not (or (bolp) (looking-back "\\s-")))
-       (or (and (looking-back "\\sw\\|\\s_") (looking-at "\\sw\\|\\s_"))
-           ;; this isn't quite ideal for haskell mode, because special
-           ;; characters are defined as punctuations, but there should
-           ;; be spaces between operators and identifiers
-           (and (looking-back "\\s)") (not (looking-at "\\s)")))
-           (and (not (looking-back "\\s(")) (looking-at "\\s(")))))
+  (and (not (or (eolp) (looking-at "\\s-") (looking-at "\\s)")))
+       (not (or (bolp) (looking-back "\\s-") (looking-back "\\s(")))
+       (or (and (looking-back "\\sw\\|\\s_\\|\\s.\\|\\s)") (looking-at "\\sw\\|\\s_\\|\\s(")))))
 
 (defun boon-fix-a-space ()
-  "Fix the text to have exactly one space at the point.
+  "Fix the text to have the right amout of spacing at the point.
 Return nil if no changes are made, t otherwise."
-  (cond ((and (looking-at " ") (looking-back " "))
-         (delete-char 1)
-         t)
+  (interactive)
+  (cond ((looking-at " ")
+         (when (or (bolp) (looking-back "\\s-\\|\\s("))
+           (delete-char 1)
+           t))
+        ((looking-back " ")
+         (when (or (eolp) (looking-at "\\s-\\|\\s)\\|\\s."))
+           (delete-char -1)
+           t))
         ((boon-need-space)
          (insert " ")
          t)
