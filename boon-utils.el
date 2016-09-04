@@ -7,8 +7,6 @@
 
 ;;; Code:
 
-(require 'subr-x)
-
 (defmacro boon-with-ordered-region (body)
   "Run the BODY, ensuring that the point is before the mark."
   (declare (obsolete "Used only by obsolete code" "20160904"))
@@ -31,7 +29,6 @@
 
 (defun boon-line-prefix ()
   "Return the text between beginning of line and point."
-  (declare (obsolete "use boon-col-relative-to-indent instead" "20160903"))
   (buffer-substring-no-properties
    (line-beginning-position)
    (point)))
