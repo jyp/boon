@@ -106,12 +106,31 @@ This item is either the symbol at point, or, if this fails, the sexp at point."
 (defun boon-select-blanks ()
   (interactive)
   (lambda ()(boon-regs-from-bounds (cons
-                 (save-excursion
-                   (boon-jump-over-blanks-backward)
-                   (point))
-                 (save-excursion
-                   (boon-jump-over-blanks-forward)
-                   (point))))))
+                                    (save-excursion
+                                      (boon-jump-over-blanks-backward)
+                                      (point))
+                                    (save-excursion
+                                      (boon-jump-over-blanks-forward)
+                                      (point))))))
+(defun boon-select-block ()
+  (interactive)
+  (lambda ()
+    (boon-regs-from-bounds
+     (save-excursion
+       (back-to-indentation)
+       (setq temporary-goal-column (current-column))
+       (cons
+        (save-excursion
+          (while (and (not (bolp)) (<= (boon-col-relative-to-indent) 0))
+            (previous-logical-line))
+          (next-logical-line)
+          (beginning-of-line)
+          (point))
+        (save-excursion
+          (while (and (not (bolp)) (<= (boon-col-relative-to-indent) 0))
+            (next-logical-line))
+          (beginning-of-line)
+          (point)))))))
 
 (defun boon-spec-string-lazy (prompt)
   "Read a string using the region selection functionality.

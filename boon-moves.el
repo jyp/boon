@@ -95,19 +95,21 @@ If possible, prompt the symbol at point."
   (boon-edge-of-expression nil))
 
 (defun boon-smarter-upward (count)
-  "Move upward, to a line with the same level of indentation, or less, COUNT times."
+  "Move upward, to a line with the same level of indentation or less, COUNT times."
   (interactive "p")
+  (back-to-indentation)
   (dotimes (_number count)
     (previous-logical-line)
-    (while (boon-at-indent-or-more-p) (previous-logical-line)))
+    (while (< (boon-col-relative-to-indent) 0) (previous-logical-line)))
   (back-to-indentation))
 
 (defun boon-smarter-downward (count)
-  "Move downward, to a line with the same level of indentation, or less COUNT times."
+  "Move downward, to a line with the same level of indentation or less, COUNT times."
   (interactive "p")
+  (back-to-indentation)
   (dotimes (_number count)
     (next-logical-line)
-    (while (boon-at-indent-or-more-p) (next-logical-line)))
+    (while (< (boon-col-relative-to-indent) 0) (next-logical-line)))
   (back-to-indentation))
 
 (defun boon-smarter-backward (count)

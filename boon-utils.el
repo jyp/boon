@@ -11,6 +11,7 @@
 
 (defmacro boon-with-ordered-region (body)
   "Run the BODY, ensuring that the point is before the mark."
+  (declare (obsolete "Used only by obsolete code" "20160904"))
   `(if (< (point) (mark))
        ,body
        (progn (exchange-point-and-mark) ,body (exchange-point-and-mark))))
@@ -28,9 +29,9 @@
     (back-to-indentation)
     (current-column)))
 
-
 (defun boon-line-prefix ()
   "Return the text between beginning of line and point."
+  (declare (obsolete "use boon-col-relative-to-indent instead" "20160903"))
   (buffer-substring-no-properties
    (line-beginning-position)
    (point)))
@@ -41,15 +42,10 @@
    (line-end-position)
    (point)))
 
-(defun boon-at-indent-or-more-p ()
-  "Return non-nil if the point is at the current line indentation; or to the right."
-  (or (eolp)
-      (and (not (boon-at-indent-p))
-           (string-blank-p (boon-line-prefix)))))
-
-(defun boon-at-indent-p ()
-  "Return non-nil if the point is at the current line indentation."
-(eq (save-excursion (back-to-indentation) (point)) (point)))
+(defun boon-col-relative-to-indent ()
+  "Return the position of the cursor relative to indentation.
+Can be negative."
+  (- (point) (save-excursion (back-to-indentation) (point))))
 
 (defun boon-looking-at-comment (how-many)
   "Is the current point looking at HOW-MANY comments? (negative for backwards)?"
@@ -76,7 +72,6 @@ If no such text exists, throw an error."
       (buffer-substring-no-properties (region-beginning) (region-end))
       (or (thing-at-point 'symbol)
           (error "Nothing relevant at point; move to a symbol or select a region"))))
-
 
 (defun boon-jump-over-blanks-forward ()
   "Jump over blanks, forward."

@@ -15,6 +15,7 @@
 (define-key boon-select-map "s"  'boon-select-wim) ;; symbol
 (define-key boon-select-map "t"  'boon-select-with-spaces)
 (define-key boon-select-map "d"  'boon-select-document)
+(define-key boon-select-map "b"  'boon-select-block)
 
 (define-key boon-select-map "C"  'boon-select-comment)
 (define-key boon-select-map "x"  'boon-select-outside-pairs) ;; eXpression
