@@ -50,10 +50,6 @@
          (choice (assoc c boon-enclosures)))
     (if choice (cdr choice) (list s s))))
 
-(defun boon-select-thing-at-point (thing)
-  "Return a region list with a single item pointing to the THING at point."
-  (lambda ()(boon-regs-from-bounds (bounds-of-thing-at-point thing))))
-
 (defun boon-select-from-region (select-fun)
   "Return a region list with a single item: the region selected after calling SELECT-FUN (interactively)."
   (lambda ()
@@ -85,22 +81,24 @@ This item is either the symbol at point, or, if this fails, the sexp at point."
   "Return a selector of COUNT visual lines."
   (interactive "p")
   (setq temporary-goal-column 0)
-  (boon-select-n count 'forward-visible-line))
+  (boon-select-n count 'visible-line))
 
-(defun boon-select-n (count forward-n)
-  "Return a selector of COUNT objects defined by FORWARD-N."
-  (lambda()(save-excursion
-    (funcall forward-n 1) (funcall forward-n -1) ;; has the effect of going to the beginning of the unit
-    (boon-regs-from-bounds (cons (point) (progn (funcall forward-n count) (point)))))))
+(defun boon-select-n (count thing)
+  "Return a region of COUNT THING's"
+  (lambda() (save-excursion
+              (let ((bnds (bounds-of-thing-at-point thing)))
+                (goto-char (cdr bnds))
+                (forward-thing thing (1- count))
+                (list (boon-mk-reg (car bnds) (point)))))))
 
 (defun boon-select-document () (interactive) (lambda () (boon-regs-from-bounds (cons (point-min) (point-max)))))
-(defun boon-select-paragraph      (count) (interactive "p") (boon-select-n count 'forward-paragraph))
-(defun boon-select-word           (count) (interactive "p") (boon-select-n count 'forward-word))
-(defun boon-select-sentence       (count) (interactive "p") (boon-select-n count 'forward-sentence))
-(defun boon-select-symbol         (count) (interactive "p") (boon-select-n count 'forward-symbol))
-(defun boon-select-list           (count) (interactive "p") (boon-select-n count 'forward-list))
-(defun boon-select-sexp           () (interactive) (boon-select-thing-at-point 'sexp))
-(defun boon-select-whitespace     () (interactive) (boon-select-thing-at-point 'whitespace))
+(defun boon-select-paragraph      (count) (interactive "p") (boon-select-n count 'paragraph))
+(defun boon-select-word           (count) (interactive "p") (boon-select-n count 'word))
+(defun boon-select-sentence       (count) (interactive "p") (boon-select-n count 'sentence))
+(defun boon-select-symbol         (count) (interactive "p") (boon-select-n count 'symbol))
+(defun boon-select-list           (count) (interactive "p") (boon-select-n count 'list))
+(defun boon-select-sexp           (count) (interactive "p") (boon-select-n count 'sexp))
+(defun boon-select-whitespace     (count) (interactive "p") (boon-select-n count 'whitespace))
 (defun boon-select-outside-pairs  () (interactive) (boon-select-from-region 'er/mark-outside-pairs))
 (defun boon-select-comment        () (interactive) (boon-select-from-region 'er/mark-comment))
 (defun boon-select-inside-pairs   () (interactive) (boon-select-from-region 'er/mark-inside-pairs))
