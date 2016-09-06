@@ -17,22 +17,19 @@
 (defvar boon-command-map (make-sparse-keymap)
   "Keymap used in Boon command mode.
 
-\\{boon-command-map}
-")
+\\{boon-command-map}")
 (suppress-keymap boon-command-map 't)  ; so that typing is disabled altogether in command mode
 (defvar boon-moves-map (make-sparse-keymap)
   "Keymap for moves (subset of command mode).
 
-\\{boon-moves-map}
-  ")
+\\{boon-moves-map}")
 (set-keymap-parent boon-command-map boon-moves-map)
 (defvar boon-select-map (make-sparse-keymap)
   "Keymap for text regions selectors.
 \\{boon-select-map}
 
 Any move is also a valid region selector.
-\\{boon-moves-map}
-")
+\\{boon-moves-map}")
 (defvar boon-off-map (make-sparse-keymap))
 (make-obsolete-variable 'boon-off-map nil "20160713")
 (defvar boon-insert-map (make-sparse-keymap))
@@ -192,7 +189,7 @@ This is because no command mode is activated in the minibuffer."
 
 ;;;###autoload (autoload 'boon-mode "boon" "Toggle boon in all buffers" t)
 (define-globalized-minor-mode boon-mode
-  boon-local-mode boon-initialize :group boon)
+  boon-local-mode boon-initialize)
 
 ;;;###autoload
 (defun turn-on-boon-mode ()
