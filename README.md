@@ -154,6 +154,14 @@ As far as I know, none of the other modal mode care about ergonomics
   Finally, evil use vi bindings (by default at least), which do not
   feature the best ergonomics.
 
+- Xah Fly Keys http://ergoemacs.org/misc/ergoemacs_vi_mode.html
+
+  Like boon, Xah Fly Keys aims at providing a layout whose design is
+  ergonomic. As far as I understand it follows the spirit of Xah's
+  ErgoEmacs package. As I understand it ErgoEmacs makes most design
+  decisions differently from boon. I have not made an in-depth
+  comparison of ergonomics yet.
+
 - Fingers https://github.com/fgeller/fingers.el
 
   Fingers borrows a few ideas from Boon, including the division of work
