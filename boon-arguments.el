@@ -29,16 +29,14 @@
         (?D . ("``" "''")) ;; Double quotes
         (?f . ("«" "»")) ;; french quotes
         (?h . ("#" "#")) ;; hash
-        (?m . ("`" "'"))
+        (?m . ("`" "'")) ;; mixed
+        (?o . ("⟦" "⟧")) ;; oxford brackets
         (?p . ("(" ")"))
         (?q . ("'" "'"))
-        (?q . ("'" "'"))
-        (?Q . ("`" "'"))
-        (?r . ("{" "}"))
-        (?o . ("⟦" "⟧")) ;; oxford brackets
+        (?r . ("{" "}")) ;; bRaces
         (?t . ("~" "~")) ;; tilda
         )
-        "Enclosures to use with the boon-enclose command."
+        "Enclosures to use with the `boon-enclose' command."
         :type '(alist :key-type character :value-type (list string))
         :group 'boon
         )
