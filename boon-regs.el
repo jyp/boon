@@ -6,15 +6,15 @@
 ;;; Code:
 
 (defun boon-mk-reg (mrk pnt &optional cursor)
+  "Make a region with MRK PNT and CURSOR."
   (list mrk pnt cursor))
 
 (defun boon-reg-nil (reg)
+  "Return t if either the point or the mark of REG is nil."
   (not (or (boon-reg-point reg) (boon-reg-mark reg))))
 
-(defun boon-reg-from-bounds (bnds)
-  (boon-mk-reg (car bnds) (cdr bnds) nil))
-
 (defun boon-regs-from-bounds (bnds)
+  "Convert BNDS as (mark . point) in to a list of boon regions."
   (when bnds
     (list (boon-mk-reg (car bnds) (cdr bnds) nil))))
 
@@ -53,12 +53,11 @@ directed forward, or or before, if the region is backwards."
     (let* ((mk (boon-reg-mark  reg))
            (pt (boon-reg-point reg))
            (fwd (> pt mk))
-           (skip-pt (if fwd 'skip-syntax-forward 'skip-syntax-backward)))
-      (boon-mk-reg mk
-                   (progn
-                     (goto-char pt)
-                     (funcall skip-pt "-")
-                     (point))
+           (skip-pt (if fwd 'skip-syntax-forward 'skip-syntax-backward))
+           (skip-mk (if fwd 'skip-syntax-backward 'skip-syntax-forward))
+           (pt-ext (progn (goto-char pt) (funcall skip-pt "-") (point))))
+      (boon-mk-reg (if (equal pt-ext pt) (progn (goto-char mk) (funcall skip-mk "-") (point)) mk)
+                   pt-ext
                    (boon-reg-cursor reg)))))
 
 (defun boon-reg-begin (reg)

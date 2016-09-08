@@ -38,9 +38,6 @@
 (define-key boon-special-map "'" 'boon-quote-character)
 (define-key boon-special-map "x" boon-x-map)
 
-;; insert mode rebinds
-(define-key boon-insert-map [(escape)] 'boon-set-command-state)
-
 ;; Off mode rebinds
 (define-key boon-off-map [(escape)] 'boon-set-command-state)
 

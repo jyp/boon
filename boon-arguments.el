@@ -84,7 +84,7 @@ This item is either the symbol at point, or, if this fails, the sexp at point."
   (boon-select-n count 'visible-line))
 
 (defun boon-select-n (count thing)
-  "Return a region of COUNT THING's"
+  "Return a region of COUNT THING's."
   (lambda() (save-excursion
               (let ((bnds (bounds-of-thing-at-point thing)))
                 (goto-char (cdr bnds))
@@ -104,6 +104,7 @@ This item is either the symbol at point, or, if this fails, the sexp at point."
 (defun boon-select-inside-pairs   () (interactive) (boon-select-from-region 'er/mark-inside-pairs))
 (defun boon-select-outside-quotes () (interactive) (boon-select-from-region 'er/mark-outside-quotes))
 (defun boon-select-blanks ()
+  "Select the blanks around the point, including newlines and tabs."
   (interactive)
   (lambda ()(boon-regs-from-bounds (cons
                                     (save-excursion
@@ -113,6 +114,7 @@ This item is either the symbol at point, or, if this fails, the sexp at point."
                                       (boon-jump-over-blanks-forward)
                                       (point))))))
 (defun boon-select-block ()
+  "Select the lines contiguous with the current line and have same indentation or more."
   (interactive)
   (lambda ()
     (boon-regs-from-bounds
@@ -186,20 +188,17 @@ the region, in insertion mode.  Subregions won't be overlapping."
         result))))
 
 (defun boon-select-borders (how-much regs)
-  "Return the bordering (of size HOW-MUCH) of a region list REGS.
-This function is meant to be called interactively."
+  "Return the bordering (of size HOW-MUCH) of a region list REGS."
   (interactive (list (prefix-numeric-value current-prefix-arg) (boon-spec-selector "select contents")))
   (lambda ()(apply 'append (mapcar (lambda (reg) (boon-borders reg how-much)) (mapcar 'boon-normalize-reg (funcall regs))))))
 
 (defun boon-select-with-spaces (regs)
-  "Return the regions REGS, including some surrounding spaces.
-This function is meant to be called interactively."
+  "Return the regions REGS, including some surrounding spaces on one side."
   (interactive (list (boon-spec-selector "select with spaces")))
-  (lambda ()(mapcar (lambda (reg) (boon-include-surround-spaces reg)) (mapcar 'boon-normalize-reg (funcall regs)))))
+  (lambda ()(mapcar (lambda (reg) (boon-include-surround-spaces reg)) (funcall regs))))
 
 (defun boon-select-content (regs)
-  "Return the contents (of size HOW-MUCH) of a region list REGS.
-This function is meant to be called interactively."
+  "Return the contents (of size HOW-MUCH) of a region list REGS."
   (interactive (list (boon-spec-selector "select borders")))
   (lambda ()(mapcar 'boon-content (mapcar 'boon-normalize-reg (funcall regs)))))
 

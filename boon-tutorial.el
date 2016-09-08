@@ -1,5 +1,6 @@
 
 ;; utilities to create the tutorial
+;;;###autoload
 (defun boon-gen-key (key)
   (interactive (list (read-key-sequence-vector "key?")))
   (insert "\\\\")
@@ -7,6 +8,7 @@
   (insert (symbol-name (lookup-key boon-command-map key)))
   (insert "]"))
 
+;;;###autoload
 (defun boon-gen-sel-key (key)
   (interactive (list (read-key "key?")))
   (insert "\\\\<boon-select-map>\\\\")

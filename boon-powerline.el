@@ -20,7 +20,7 @@
    (boon-command-state 'boon-modeline-cmd)
    (boon-insert-state 'boon-modeline-ins)
    (boon-special-state 'boon-modeline-spc)
-   (boon-off-state 'boon-modeline-off)))
+   (t 'boon-modeline-off)))
 
 (defun boon-powerline-theme ()
   "Set up a powerline based on powerline-default-theme which also displays boon-state."
