@@ -190,7 +190,7 @@ the region, in insertion mode.  Subregions won't be overlapping."
 (defun boon-select-borders (how-much regs)
   "Return the bordering (of size HOW-MUCH) of a region list REGS."
   (interactive (list (prefix-numeric-value current-prefix-arg) (boon-spec-selector "select contents")))
-  (lambda ()(apply 'append (mapcar (lambda (reg) (boon-borders reg how-much)) (mapcar 'boon-normalize-reg (funcall regs))))))
+  (lambda ()(apply 'append (mapcar (lambda (reg) (boon-borders reg how-much)) (funcall regs)))))
 
 (defun boon-select-with-spaces (regs)
   "Return the regions REGS, including some surrounding spaces on one side."
@@ -200,7 +200,7 @@ the region, in insertion mode.  Subregions won't be overlapping."
 (defun boon-select-content (regs)
   "Return the contents (of size HOW-MUCH) of a region list REGS."
   (interactive (list (boon-spec-selector "select borders")))
-  (lambda ()(mapcar 'boon-content (mapcar 'boon-normalize-reg (funcall regs)))))
+  (lambda ()(mapcar 'boon-content (funcall regs))))
 
 (defun boon-bypass-mc ()
   "Should we bypass multiple cursors when gathering regions?"

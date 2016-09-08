@@ -27,15 +27,12 @@
 (defun boon-reg-cursor (reg)
   (caddr reg))
 
-(defun boon-normalize-reg (reg)
-  "Normalize the region REG by making sure that mark < point."
-  (boon-mk-reg (boon-reg-begin reg) (boon-reg-end reg) (boon-reg-cursor reg)))
-
 (defun boon-reg-to-markers (reg)
   "Put copy the markers defining REG borders, and return that."
   (boon-mk-reg (copy-marker (boon-reg-mark reg)) (copy-marker (boon-reg-point reg)) (boon-reg-cursor reg)))
 
 (defun boon-reg-from-markers (reg)
+  "Put convert markers to numbers in REG."
   (boon-mk-reg (marker-position (boon-reg-mark reg)) (marker-position (boon-reg-point reg)) (boon-reg-cursor reg)))
 
 (defun boon-borders (reg how-much)
