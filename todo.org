@@ -1,3 +1,5 @@
+* expunge helm from boon?
+* explain what g and x maps are for
 * swap-region
 * Fully Support Fundamental buffers (see evil code?)
 * Repeat "last command" (bind on return?)
