@@ -37,6 +37,7 @@
 (define-key boon-special-map "`" 'boon-quote-character)
 (define-key boon-special-map "'" 'boon-quote-character)
 (define-key boon-special-map "x" boon-x-map)
+(define-key boon-x-map "x" 'execute-extended-command)
 
 ;; Off mode rebinds
 (define-key boon-off-map [(escape)] 'boon-set-command-state)

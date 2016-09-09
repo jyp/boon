@@ -191,7 +191,7 @@ Instead of the C-x prefix; you may just type 'x'
 >> Type \\[split-window-below] to split this window
 >> Type \\[delete-other-windows] to close the other windows
 
-Additionally, the `helm-M-x' command is bound to '\\[helm-M-x]'
+Additionally, the `execute-extended-command' command is bound to '\\[execute-extended-command]'
 
 * C-c prefix
 ------------
