@@ -82,7 +82,7 @@ structure of Boon is as follows:
    above. (For good measure, some random extra commands are thrown
    in.) These commands may be used in combination with a modal system,
    or not. A few commands also switch to insert mode.
-5. boon-keys, boon-extras, boon-colemak, boon-qwerty, ...:
+5. boon-keys, boon-colemak, boon-qwerty, ...:
    frontends. Those require all the above and provide a mapping of
    moves, selectors and commands onto keys. They may also bind keys
    for other modes, such as helm.

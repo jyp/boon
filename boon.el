@@ -13,7 +13,6 @@
 (require 'boon-main)
 (require 'boon-keys)
 (require 'boon-search)
-(require 'boon-extras)
 (require 'boon-core)
 (require 'boon-moves)
 
