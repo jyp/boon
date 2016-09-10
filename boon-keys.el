@@ -8,9 +8,14 @@
 ;;; Code:
 
 (require 'boon-core)
-(require 'boon-main)
 
 (defvar boon-goto-map (make-sparse-keymap))
+(set-keymap-parent boon-goto-map goto-map)
+
+(define-key boon-goto-map "l" 'goto-line)
+(define-key boon-goto-map "." 'find-tag)
+
+(define-key boon-x-map "x" 'execute-extended-command)
 
 (define-key boon-select-map "@"  'boon-select-occurences)
 (define-key boon-select-map "#"  'boon-select-all)
@@ -37,7 +42,6 @@
 (define-key boon-special-map "`" 'boon-quote-character)
 (define-key boon-special-map "'" 'boon-quote-character)
 (define-key boon-special-map "x" boon-x-map)
-(define-key boon-x-map "x" 'execute-extended-command)
 
 ;; Off mode rebinds
 (define-key boon-off-map [(escape)] 'boon-set-command-state)
