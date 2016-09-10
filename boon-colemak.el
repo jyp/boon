@@ -51,60 +51,6 @@
 (define-key boon-moves-map "h"  'avy-goto-word-1)
 (define-key boon-moves-map "H"  'avy-goto-char)
 
-
-(with-eval-after-load 'ivy
-  (define-key ivy-minibuffer-map (kbd "RET") 'ivy-done)
-  (define-key ivy-minibuffer-map (kbd "<C-return>") 'ivy-call)
-  ;; (define-key ivy-minibuffer-map (kbd "C-j") 'ivy-alt-done)
-  ;; (define-key ivy-minibuffer-map (kbd "C-M-j") 'ivy-immediate-done)
-  (define-key ivy-minibuffer-map (kbd "C-n") 'ivy-partial)
-  (define-key ivy-minibuffer-map (kbd "C-y") 'ivy-next-line)
-  (define-key ivy-minibuffer-map (kbd "C-u") 'ivy-previous-line)
-  (define-key ivy-minibuffer-map (kbd "<down>") 'ivy-next-line)
-  (define-key ivy-minibuffer-map (kbd "<up>") 'ivy-previous-line)
-  ;; (define-key ivy-minibuffer-map (kbd "C-s") 'ivy-next-line-or-history)
-  ;; (define-key ivy-minibuffer-map (kbd "C-r") 'ivy-reverse-i-search)
-  (define-key ivy-minibuffer-map (kbd "SPC") 'boon-completer-space)
-  (define-key ivy-minibuffer-map (kbd "DEL") 'ivy-backward-delete-char)
-  (define-key ivy-minibuffer-map (kbd "C-w") 'ivy-backward-kill-word)
-  (define-key ivy-minibuffer-map (kbd "C-d") 'ivy-delete-char)
-  (define-key ivy-minibuffer-map (kbd "C-f") 'ivy-forward-char)
-  ;; (define-key ivy-minibuffer-map (kbd "M-<") 'ivy-beginning-of-buffer)
-  ;; (define-key ivy-minibuffer-map (kbd "M->") 'ivy-end-of-buffer)
-  (define-key ivy-minibuffer-map (kbd "C-.") 'ivy-next-history-element)
-  (define-key ivy-minibuffer-map (kbd "C-,") 'ivy-previous-history-element)
-  (define-key ivy-minibuffer-map (kbd "<escape>") 'minibuffer-keyboard-quit)
-  ;; (define-key ivy-minibuffer-map (kbd "C-v") 'ivy-scroll-up-command)
-  ;; (define-key ivy-minibuffer-map (kbd "M-v") 'ivy-scroll-down-command)
-  ;; (define-key ivy-minibuffer-map (kbd "C-M-n") 'ivy-next-line-and-call)
-  ;; (define-key ivy-minibuffer-map (kbd "C-M-p") 'ivy-previous-line-and-call)
-  (define-key ivy-minibuffer-map (kbd "C-q") 'ivy-toggle-regexp-quote)
-  ;; (define-key ivy-minibuffer-map (kbd "M-j") 'ivy-yank-word)
-  (define-key ivy-minibuffer-map (kbd "C-v") 'ivy-insert-current)
-  (define-key ivy-minibuffer-map (kbd "TAB") 'ivy-partial) ;; for counsel-find-file
-  (define-key ivy-minibuffer-map (kbd "C-TAB") 'ivy-dispatching-call)
-  (define-key ivy-minibuffer-map (kbd "C-k") 'ivy-kill-line)
-  (define-key ivy-minibuffer-map (kbd "S-SPC") 'ivy-restrict-to-matches)
-  (define-key ivy-minibuffer-map (kbd "C-t") 'ivy-kill-ring-save)
-  ;; (define-key ivy-minibuffer-map (kbd "C-h") 'ivy-avy)
-  ;; (define-key ivy-minibuffer-map (kbd "C-M-a") 'ivy-read-action)
-  (define-key ivy-minibuffer-map (kbd "C-o") 'ivy-occur)
-  )
-
-(with-eval-after-load 'helm
-  (define-helm-key (kbd "u") 'helm-previous-line)
-  (define-helm-key (kbd "y") 'helm-next-line)
-  (define-helm-key (kbd ",") 'helm-previous-page)
-  (define-helm-key (kbd ".") 'helm-next-page)
-  (define-helm-key (kbd "n") 'helm-execute-persistent-action)
-  (define-helm-key (kbd "e") 'helm-select-action)
-)
-
-
-(define-key isearch-mode-map [(control p)] 'helm-occur-from-isearch)
-(define-key isearch-mode-map [(control w)] 'isearch-repeat-backward)
-(define-key isearch-mode-map [(control f)] 'isearch-repeat-forward)
-
 ;; Special keys
 
 ;; LEFT HAND
@@ -141,7 +87,7 @@
 
 ;; p
 ;; Pinpoint Place
-(define-key boon-command-map "p" 'helm-occur)
+(define-key boon-command-map "p" 'occur)
 
 ;; Misc crap
 (define-key boon-command-map "P" 'kmacro-end-or-call-macro) ; Play

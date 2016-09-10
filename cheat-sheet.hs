@@ -50,11 +50,11 @@ colemakCS = CS {
                ,["Hop", "⇠" , "←", "→", "⇢" , "'"]
                ,["bacK to marK", "", "↜", "↝", ""]
                ]
- ,leftHandL = [[("escape",Char), ("search backward",SearchObject), ("search forward",SearchObject), ("helm-occur",None), ("helm-...",Prefix)]
+ ,leftHandL = [[("escape",Char), ("search backward",SearchObject), ("search forward",SearchObject), ("occur",None), ("goto-...",Prefix)]
               ,[("enclose",Bin Enclosure TextRegion), ("kill+insert", TextRegion), ("yank", None), ("kill", TextRegion), ("replace char", Char)]
               ,[reserved, ("C-x",Prefix), ("C-c C-...",Prefix), ("insert mode",None), ("yank register",Char)]
               ]
- ,leftHandM = [["Quote", "backWard", "Forward", "Pinpoint", "Gather"]
+ ,leftHandM = [["Quote", "backWard", "Forward", "Pinpoint", "Goto"]
               ,["Around", "Replace", "Splice", "Take", "Displace"]
               ,["", "eXtended", "Command", "⋎ (insert mark)", "Bank"]
               ]
@@ -88,8 +88,8 @@ qwertyCS = colemakCS {
                ,["h","j","k","l",";","'"]
                ,["n","m",",",".","/"," "]]
 
- ,leftHandL = [[("escape",Char), ("search backward",SearchObject), ("search forward",SearchObject), ("helm-occur",None), ("replace char", Char)]
-              ,[("enclose",Bin Enclosure TextRegion), ("kill+insert", TextRegion), ("kill", TextRegion), ("yank", None), ("helm-...",Prefix)]
+ ,leftHandL = [[("escape",Char), ("search backward",SearchObject), ("search forward",SearchObject), ("occur",None), ("replace char", Char)]
+              ,[("enclose",Bin Enclosure TextRegion), ("kill+insert", TextRegion), ("kill", TextRegion), ("yank", None), ("goto-...",Prefix)]
               ,[reserved, ("C-x",Prefix), ("C-c C-...",Prefix), ("insert mode",None), ("yank register",Char)]
               ]
  ,leftHandU = [[reserved, ("re-search backward",None), ("re-search forward",None), ("Record macro", None), reserved]
@@ -97,7 +97,7 @@ qwertyCS = colemakCS {
               ,[reserved, reserved, reserved, ("open line",None), ("copy register",Char)]
               ]
  ,leftHandM = [["Quote", "backWard", "Elsewhere?", "occurR", "Transform"]
-              ,["Around", "Substitute", "Delete", "Flush", "Gather"]
+              ,["Around", "Substitute", "Delete", "Flush", "Goto"]
               ,["", "eXtended", "Command", "⋎ (insert mark)", "Bank"]
               ]
  ,leftHandR = [[("quotes (string)",None), ("word",None), ("word",None), ("paragraph",None), reserved]
@@ -106,7 +106,7 @@ qwertyCS = colemakCS {
               ]
 }
 
-upKey c = case [c] of
+upKey c = case [c] 
   "'" -> head "\""
   ";" -> ':'
   "," -> '<'

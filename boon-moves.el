@@ -24,7 +24,7 @@ Search preferentially for a function, then a variable."
     (cond
      ((fboundp symb) (find-function-do-it symb nil 'switch-to-buffer))
      ((boundp  symb) (find-function-do-it symb 'defvar 'switch-to-buffer))
-     (t (call-interactively 'helm-apropos)))))
+     (t (error "Unknown symbol")))))
 
 (defun boon-find-tag-at-point ()
   "Find the symbol at point in the current tags table."

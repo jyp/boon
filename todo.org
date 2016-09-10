@@ -1,4 +1,47 @@
-* expunge helm from boon?
+* Helm/Ivy/?
+
+Here is the section from the tutorial
+ HELM
+-------
+
+Helm is a very useful package. Boon provides special support for it.
+
+>> If you have not done it yet, install helm now: (package-install 'helm)
+
+The command '\\[helm-occur]' starts `helm-occur'; which does a quick search for all
+occurrences of a pattern in the current buffer.
+
+>> Type '\\[helm-occur]' now
+
+>> Within the helm prompt area, type 'helm <return>' to jump to
+   the beginning of this section.
+
+You can search for the current symbol by typing SPC in an empty
+helm mini-buffer.
+
+>> Move the cursor to an occurrence of the helm word, and type '\\[helm-occur] SPC'.
+
+\\<boon-helm-command-map>
+>> Use C-\\[helm-previous-line] and C-\\[helm-next-line] to select an occurrence, then type <return> to jump to
+   the currently selected occurrence
+
+Note: after typing \\<helm-map>\\[helm-previous-line], it
+suffices to type \\<helm-map>\\[helm-previous-line] to perform
+`helm-previous-line'.
+The keys which do not require repeating the C- prefix are:
+\\{boon-helm-command-map}
+\\<boon-command-map>
+
+
+Besides `helm-occur', a few other helm commands are bound to keys starting with the same prefix:
+
+\\[helm-apropos] --> `helm-apropos'
+\\[helm-resume] --> `helm-resume'
+\\[helm-show-kill-ring] --> `helm-show-kill-ring'
+
+The full list of key bound to that prefix is:
+\\{boon-goto-map}
+
 * explain what g and x maps are for
 * swap-region
 * Fully Support Fundamental buffers (see evil code?)

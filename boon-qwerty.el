@@ -49,19 +49,6 @@
 (define-key boon-moves-map "H"  'avy-goto-char)
 
 
-(eval-after-load 'helm
-  '(progn
-     (define-helm-key (kbd "i") 'helm-previous-line)
-     (define-helm-key (kbd "o") 'helm-next-line)
-     (define-helm-key (kbd ",") 'helm-previous-page)
-     (define-helm-key (kbd ".") 'helm-next-page)
-     ))
-
-;; top row
-(define-key boon-helm-command-map (kbd "f")   'helm-follow-mode)
-(define-key boon-helm-command-map (kbd "y")   'helm-next-line)
-(define-key boon-helm-command-map (kbd "u")   'helm-previous-line)
-
 
 ;; Special keys
 
@@ -98,7 +85,7 @@
 (define-key boon-moves-map "wu"  'mc/cycle-backward)
 
 ;; r
-(define-key boon-command-map "p" 'helm-occur) ;; occuR
+(define-key boon-command-map "p" 'occur) ;; occuR
 
 ;; Misc crap
 (define-key boon-command-map "P" 'kmacro-end-or-call-macro) ; Play
