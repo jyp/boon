@@ -12,6 +12,7 @@
 (require 'er-basic-expansions)
 (require 'find-func)
 (require 'boon-utils)
+(require 'subr-x)
 
 
 ;;; Jumping to definitions (at point):

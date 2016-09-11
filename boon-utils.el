@@ -46,9 +46,7 @@ Can be negative."
 
 (defun boon-looking-at-comment (how-many)
   "Is the current point looking at HOW-MANY comments? (negative for backwards)?"
-  (declare (obsolete "useless" "20160901"))
-  (save-excursion
-    (forward-comment how-many)))
+  (save-excursion (forward-comment how-many)))
 
 (defun boon-in-string-p ()
   "Determine if the point is inside a string."
