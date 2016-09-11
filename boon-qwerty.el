@@ -80,7 +80,7 @@
 (define-key boon-moves-map "wk"  'flycheck-previous-error)
 (define-key boon-moves-map "ek"  'flycheck-next-error)
 (define-key boon-moves-map "wb"  'previous-buffer)
-(define-key boon-moves-map "yb"  'next-buffer)
+(define-key boon-moves-map "eb"  'next-buffer)
 (define-key boon-moves-map "eu"  'mc/cycle-forward)
 (define-key boon-moves-map "wu"  'mc/cycle-backward)
 
@@ -138,7 +138,7 @@
 (define-key indent-rigidly-map "l" 'indent-rigidly-left)
 
 
-(provide 'boon-colemak)
-;;; boon-colemak.el ends here
+(provide 'boon-qwerty)
+;;; boon-qwerty.el ends here
 
 
