@@ -233,6 +233,11 @@ cursor), you get a region for each cursor."
                                    (funcall selector))))
                        orig-regs))))))
 
+(defvar boon-selected-by-move nil
+  "Indicate whether lasts election was made by a move.
+When killing, if a selection is made by a move, it make sense to
+aggregated the region in the killring, but not so if it was made
+by a 'true' selector.")
 (defun boon-spec-selector (msg)
   "Specify a region selector concisely using the keyboard.
 The prompt (as MSG) is displayed.  This function returns a
@@ -257,7 +262,8 @@ see boon-regs.el."
     (when (eq my-prefix-arg 0) (setq my-prefix-arg nil))
     ;; The command is ready; we now execute it (once per cursor if applicable).
     (if (or kms kmv)
-        (if (commandp kms)
+        (prog1
+            (if (commandp kms)
           ;; we have a 'selector'. These commands may take prefix
           ;; args, which they input right away, and return a
           ;; continuation constructing the region depending on the
@@ -273,6 +279,7 @@ see boon-regs.el."
                       (current-prefix-arg my-prefix-arg)) ;; dynamic bindig so env remains clean
                   (call-interactively kmv)
                   (list (boon-mk-reg orig (point) nil))))))
+          (setq boon-selected-by-move (not (commandp kms))))
       (error "Unknown selector"))))
 
 (provide 'boon-arguments)

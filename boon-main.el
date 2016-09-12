@@ -253,6 +253,7 @@ If there is more than one, use mc/create-fake-cursor-at-point."
   (interactive (list (boon-spec-region "take")))
   ;; convert to markers, so that deleting text does not mess with
   ;; positions
+  (unless boon-selected-by-move (setq last-command 'not-a-kill))
   (dolist (reg-group (-partition-by 'boon-reg-cursor (mapcar 'boon-reg-to-markers regs)))
     (boon-execute-for-cursor (boon-reg-cursor (car reg-group))
      (lambda ()
