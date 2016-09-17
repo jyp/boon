@@ -234,20 +234,21 @@ cursor), you get a region for each cursor."
                        orig-regs))))))
 
 (defvar boon-selected-by-move nil
-  "Indicate whether lasts election was made by a move.
+  "Non nil if the last selection was made by a move, nil otherwise.
 When killing, if a selection is made by a move, it make sense to
-aggregated the region in the killring, but not so if it was made
+aggregate the region in the killring, but not so if it was made
 by a 'true' selector.")
+
 (defun boon-spec-selector (msg)
   "Specify a region selector concisely using the keyboard.
 The prompt (as MSG) is displayed.  This function returns a
 non-interactive function which, when run, will return
 bounds.  This allows to run the function in question multiple
-times (describing the region just once with the keyboard).  This
+times, but describe the region just once with the keyboard.  This
 can be useful when having multiple cursors, or just using
-descriptors referring to several disjoint subregions.  The bounds
-that are eventually returned are in the form of a list of regs,
-see boon-regs.el."
+descriptors referring to several subregions.  The bounds
+that are eventually returned are in the form of a list of regs.
+See boon-regs.el."
   (let ((my-prefix-arg 0)
         (kmv boon-moves-map)
         (kms boon-select-map))
