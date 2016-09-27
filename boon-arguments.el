@@ -51,7 +51,7 @@
 (defun boon-select-from-region (select-fun)
   "Return a region list with a single item: the region selected after calling SELECT-FUN (interactively)."
   (lambda ()
-    (save-excursion
+    (save-mark-and-excursion
       (call-interactively select-fun)
       (boon-regs-from-bounds (cons (region-beginning) (region-end))))))
 
