@@ -14,50 +14,6 @@
 (require 'boon-utils)
 (require 'subr-x)
 
-
-;;; Jumping to definitions (at point):
-
-(defun boon-find-elisp-thing-at-point ()
-  "Find an elisp thing at point.
-Search preferentially for a function, then a variable."
-  (interactive)
-  (let ((symb (symbol-at-point)))
-    (cond
-     ((fboundp symb) (find-function-do-it symb nil 'switch-to-buffer))
-     ((boundp  symb) (find-function-do-it symb 'defvar 'switch-to-buffer))
-     (t (error "Unknown symbol")))))
-
-(defun boon-find-tag-at-point ()
-  "Find the symbol at point in the current tags table."
-  (interactive)
-  (let ((symb (thing-at-point 'symbol)))
-    (cond (symb
-           (find-tag symb (when (and current-prefix-arg (bound-and-true-p last-tag))
-                            (if (< (prefix-numeric-value current-prefix-arg) 0)
-                                '-
-                              t))))
-          (t (call-interactively 'find-tag)))))
-
-(defcustom boon-find-definition-dispatch '()
-  "An alist mapping major modes to finding the symbol at point."
-  :group 'boon
-  :type '(alist :key-type symbol :value-type function))
-(setq boon-find-definition-dispatch
-      '((c-mode . boon-find-tag-at-point)
-        (emacs-lisp-mode . boon-find-elisp-thing-at-point)
-        (lisp-interaction-mode . boon-find-elisp-thing-at-point)
-        (haskell-mode . (lambda () (interactive) (if intero-mode (intero-goto-definition) (haskell-mode-jump-to-def-or-tag))))))
-
-(defun boon-find-definition ()
-  "Find a definition, in a way which is adapted to the 'major-mode'.
-If possible, prompt the symbol at point."
-  (interactive)
-  ;; TODO (ring-insert find-tag-marker-ring (point-marker))
-  (let ((mode-fap (assoc major-mode boon-find-definition-dispatch)))
-    (if mode-fap (call-interactively (cdr mode-fap))
-      (error "Finding definitions is not defined for %s.  Update the variable 'boon-find-definition-dispatch'"
-             major-mode))))
-
 (defun boon-find-char-backward (char)
   "Move the cursor backwards, until finding an occurence of the character CHAR."
   (interactive "cType the character to find")

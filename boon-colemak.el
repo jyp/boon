@@ -26,10 +26,10 @@
 (define-key boon-select-map "k"  'boon-select-blanks) ;; blanKs
 
 (define-key boon-moves-map "k" 'boon-switch-mark) ; bacK to marK
-(define-key boon-moves-map "K" 'pop-tag-mark)
+(define-key boon-moves-map "K" 'xref-pop-marker-stack)
 
-(define-key boon-moves-map "j"  'boon-find-definition)
-(define-key boon-moves-map "J"  'find-function)
+(define-key boon-moves-map "j"  'xref-find-definitions)
+(define-key boon-moves-map "J"  'xref-find-references)
 (define-key boon-moves-map "u"  'previous-line)
 (define-key boon-moves-map "y"  'next-line)
 (define-key boon-moves-map "U"  'backward-paragraph)

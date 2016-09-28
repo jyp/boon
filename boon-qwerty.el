@@ -25,10 +25,10 @@
 
 
 (define-key boon-moves-map "n" 'boon-switch-mark) ; nope
-(define-key boon-moves-map "N" 'pop-tag-mark)
+(define-key boon-moves-map "N" 'xref-pop-marker-stack)
 
-(define-key boon-moves-map "y"  'boon-find-definition) ; yak ?
-(define-key boon-moves-map "Y"  'find-function)
+(define-key boon-moves-map "y"  'xref-find-definitions) ; fYnd
+(define-key boon-moves-map "Y"  'xref-find-references)
 (define-key boon-moves-map "i"  'previous-line)
 (define-key boon-moves-map "o"  'next-line)
 (define-key boon-moves-map "I"  'backward-paragraph)

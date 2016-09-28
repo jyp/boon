@@ -167,8 +167,7 @@ There are two other movement commands, bound to \\[avy-goto-word-1] and \\[boon-
 
 - \\[avy-goto-word-1] (mnemonic: hop) activates avy-goto-word-1 (if installed)
 
-- Additionally, \\[boon-find-definition] is bound to `boon-find-definition' which is
-  mode-dependent.
+- Additionally, \\[xref-find-definitions] is bound to `xref-find-definitions'.
 
 * IF EMACS STOPS RESPONDING
 ---------------------------
