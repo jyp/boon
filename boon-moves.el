@@ -31,7 +31,7 @@
   (interactive "P")
   (let ((orig-point (point)))
     (goto-char
-     (save-excursion
+     (save-mark-and-excursion
        (deactivate-mark)
        (if (boon-in-string-p)
            (er/mark-inside-quotes) (er/mark-inside-pairs))
