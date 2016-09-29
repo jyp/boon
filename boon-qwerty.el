@@ -4,7 +4,6 @@
 ;;; Code:
 (require 'boon)
 
-(define-key boon-select-map "@"  'boon-select-occurences)
 
 (define-key boon-select-map "q"  'boon-select-outside-quotes)
 (define-key boon-select-map "w"  'boon-select-word)
