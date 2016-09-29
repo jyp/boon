@@ -52,8 +52,8 @@
   "Return a region list with a single item: the region selected after calling SELECT-FUN (interactively)."
   (lambda ()
     (save-mark-and-excursion
-      (call-interactively select-fun)
-      (boon-regs-from-bounds (cons (region-beginning) (region-end))))))
+     (call-interactively select-fun)
+     (boon-regs-from-bounds (cons (region-beginning) (region-end))))))
 
 (defun boon-select-wim () ;; what i mean
   "Return a region list with a single item.
