@@ -84,7 +84,7 @@
 (define-key boon-moves-map "wu"  'mc/cycle-backward)
 
 ;; r
-(define-key boon-command-map "p" 'occur) ;; occuR
+(define-key boon-command-map "r" 'occur) ;; occuR
 
 ;; Misc crap
 (define-key boon-command-map "P" 'kmacro-end-or-call-macro) ; Play
