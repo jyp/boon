@@ -105,6 +105,7 @@ and add the following to your configuration:
 
     (require 'boon-colemak)
     ;; (require 'boon-qwerty) ;; for qwerty port (alpha quality)
+        (require 'boon-powerline)
     (boon-powerline-theme) ;; if you want use powerline with Boon
 
 Then
