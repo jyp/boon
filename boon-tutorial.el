@@ -358,7 +358,7 @@ pasted. The just pasted region is accessible using (\\[boon-toggle-mark]).
 >> kill a word, then paste it.
 >> Put parens around the just pasted word. (\\[boon-enclose] p \\[boon-toggle-mark])
 
->> Inspect the kind of parentheses available by typing '\\[describe-variable]
+>> Inspect the kind of parentheses available by typing '\\[customize-variable]
    boon-enclosures <RET>'
 
 It is possible to remove parentheses by using the '\\<boon-select-map>\\[boon-select-borders]\\<boon-command-map>' operator, which

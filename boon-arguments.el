@@ -37,9 +37,8 @@
         (?t . ("~" "~")) ;; tilda
         )
         "Enclosures to use with the `boon-enclose' command."
-        :type '(alist :key-type character :value-type (list string))
-        :group 'boon
-        )
+        :type '(alist :key-type character :value-type (group (string :tag "Open ") (string :tag "Close")))
+        :group 'boon)
 
 (defun boon-spec-enclosure ()
   "Specify an enclosure style.  To be used as an argument to interactive."
