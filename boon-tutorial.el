@@ -2,6 +2,7 @@
 ;; utilities to create the tutorial
 ;;;###autoload
 (defun boon-gen-key (key)
+  "Generate a suitable tutorial string to refer to command KEY"
   (interactive (list (read-key-sequence-vector "key?")))
   (insert "\\\\")
   (insert "[")
@@ -10,6 +11,7 @@
 
 ;;;###autoload
 (defun boon-gen-sel-key (key)
+  "Generate a suitable tutorial string to refer to selection KEY"
   (interactive (list (read-key "key?")))
   (insert "\\\\<boon-select-map>\\\\")
   (insert "[")
@@ -24,12 +26,20 @@
   (switch-to-buffer (generate-new-buffer "BOON-TUTORIAL"))
   (turn-on-boon-mode)
   (insert (substitute-command-keys
+
 "Boon tutorial.   See end for copying conditions.
 \\<boon-command-map>
 This tutorial assumes that you know Emacs already.
 
 Make sure that Boon is active in this buffer. Call
 \\[turn-on-boon-mode] if necessary.
+
+Note on the tutorial: sometimes the tutorial will mention a
+mnemonic for a key. A mnemonic should be a (small) story linking
+the key to type to the action that it does. You may reuse the
+standard mnemonics, but it is best to invent your own. The
+mnemonics written in the tutorial come from the colemak frontend,
+they may make no sense for other frontends.
 
 Boon has two states: command state and insert state. Boon
 indicates the difference between command state and insert state
@@ -45,7 +55,7 @@ in several ways:
   having to read any text.
 
 You can switch from command to insert mode by typing
-\\[boon-set-insert-like-state] (colemak mnemonic: v looks like an
+\\[boon-set-insert-like-state] (mnemonic: v looks like an
 insert mark). Go back to command mode by typing <ESC>.
 
 >> Switch to command mode now (type <ESC>)
@@ -153,7 +163,7 @@ command.
 >> Move forward by seven words.
 
 To insert a character several times, you can use the escaping
-command '\\[boon-quote-character]' (colemak mnemonic: quote).
+command '\\[boon-quote-character]' (mnemonic: quote).
 
 >> Try that now -- type '8\\[boon-quote-character]*' to insert ********.
 
@@ -286,7 +296,7 @@ The command for yanking is '\\[boon-splice]'. (mnemonic: splice)
 
 >> Try it; type \\[boon-splice] to yank the text back.
 
-The universal argument to `boon-splice' is the number of times
+The universal argument to \\[boon-splice] is the number of times
 that you want to yank the text.
 
 (Shifted \\[yank-pop] does `yank-pop'.)
@@ -296,7 +306,7 @@ that you want to yank the text.
 
 Using standard Emacs commands, it is sometimes annoying to manage
 whitespace. Indeed, yanking a word may leave extra space here and
-lack a space there. In Boon, repeating the `boon-splice' command
+lack a space there. In Boon, repeating the \\[boon-splice] command
 automatically fixes spaces, using a heuristic based on the
 syntax-table.
 
@@ -308,7 +318,7 @@ syntax-table.
 
 >> Splice the word \" very\", and notice how the spacing is wrong.
 
->> Repeat the `boon-splice' command and see how the spacing gets fixed for you.
+>> Repeat the \\[boon-splice] command and see how the spacing gets fixed for you.
 
 In emacs, killing extra spaces between words can be done in
 hindsight. That is, you can cut a word, and then the space
@@ -366,7 +376,7 @@ and '\\[boon-smarter-forward]' --- but it works on any region.
 * UNDO
 ------
 
-Undo is bound to '\\[undo]' ; while redo is bound to '\\[redo]'.
+Undo is bound to '\\[undo]'.
 
 * SEARCHING
 -----------
