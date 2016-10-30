@@ -384,7 +384,6 @@ Undo is bound to '\\[undo]'.
 Various searching functions are bound to the same prefix. Examples:
 \\<boon-moves-map>
 
-\\[swiper] --> `swiper'
 \\[isearch-forward] --> `isearch-forward'
 \\[next-error] --> `next-error'
 \\[boon-qsearch-next-at-point] --> `boon-qsearch-next-at-point'
