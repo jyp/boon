@@ -9,10 +9,10 @@
 (require 'powerline)
 (require 'boon-core)
 
-(defface boon-modeline-cmd '((t (:background "blue"))) "Face for modeline indicator of boon command state" :group 'boon)
-(defface boon-modeline-ins '((t (:background "red"))) "Face for modeline indicator of boon insert state" :group 'boon)
+(defface boon-modeline-cmd '((((background light)) :background "dodger blue") (((background dark)) :background "blue")) "Face for modeline indicator of boon command state" :group 'boon)
+(defface boon-modeline-ins '((((background light)) :background "indian red") (((background dark)) :background "red")) "Face for modeline indicator of boon insert state" :group 'boon)
 (defface boon-modeline-off '((t (:background "orange"))) "Face for modeline indicator of boon off state" :group 'boon)
-(defface boon-modeline-spc '((t (:background "dark green"))) "Face for modeline indicator of boon special state" :group 'boon)
+(defface boon-modeline-spc '((((background light)) :background "spring green") (((background dark)) :background "dark green")) "Face for modeline indicator of boon special state" :group 'boon)
 
 (defun boon-state-face ()
   "Return a face appropriate for a powerline-style entry in the modeline."
