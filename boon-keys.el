@@ -65,7 +65,7 @@
   "Swap the control 'bit' in EVENT, if that is a good choice."
   (interactive (list (read-key)))
   (cond
-   ((memq event '(9 13 ?] ?[)) event)
+   ((memq event '(9 13 ?[ ?] ?$)) event)
    ((<= event 27) (+ 96 event))
    ((not (eq 0 (logand (lsh 1 26) event))) (logxor (lsh 1 26) event))
    (t (list 'control event))))
