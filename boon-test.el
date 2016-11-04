@@ -1,7 +1,7 @@
 (package-initialize t)
-(package-activate 'multiple-cursors)
-(package-activate 'dash)
-(package-activate 'expand-region)
+(package-install 'multiple-cursors)
+(package-install 'dash)
+(package-install 'expand-region)
 
 (add-to-list 'load-path default-directory)
 
