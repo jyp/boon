@@ -1,3 +1,5 @@
+[![MELPA-Stable](http://stable.melpa.org/packages/boon-badge.svg)](http://stable.melpa.org/#/boon) [![Travis](https://travis-ci.org/jyp/boon.svg?branch=master)(https://travis-ci.org/jyp/boon)]
+
 Boon: An Ergonomic Command Mode for Emacs
 ==========================================
 
