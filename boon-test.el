@@ -1,5 +1,5 @@
-(package-initialize t)
 (setq package-archives '(("melpa-stable" . "http://stable.melpa.org/packages/")))
+(package-initialize)
 
 (list-packages)
 (package-install 'multiple-cursors)
