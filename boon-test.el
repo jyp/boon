@@ -1,8 +1,23 @@
 (package-initialize t)
+  (setq
+   package-archives '(("gnu"       . "http://elpa.gnu.org/packages/")
+                      ;; ("melpa-stable" . "http://stable.melpa.org/packages/")
+                      ;; ("melpa"     . "http://melpa.org/packages/")
+                      )
+  )
+
 (list-packages)
 (package-install 'multiple-cursors)
 (package-install 'dash)
 (package-install 'expand-region)
+
+(package-activate 'multiple-cursors)
+(package-activate 'dash)
+(package-activate 'expand-region)
+
+;; (load "multiple-cursors.el")
+;; (load "dash.el")
+;; (load "expand-region.el")
 
 (add-to-list 'load-path default-directory)
 
