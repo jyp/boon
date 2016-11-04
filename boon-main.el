@@ -183,9 +183,10 @@ Regions are given by  REGS."
 (defun boon-open-next-line-and-insert ()
   "Open the line after the current one."
   (interactive)
-  (save-excursion (when (eq (forward-line) 1)
-                    (end-of-line)
-                    (insert "\n")))
+  (save-excursion
+    (end-of-line)
+    (when (eq (point) (point-max))
+      (insert "\n")))
   (forward-line)
   (boon-open-line-and-insert))
 
@@ -396,3 +397,4 @@ Replace the region if it is active."
 
 (provide 'boon-main)
 ;;; boon-main.el ends here
+
