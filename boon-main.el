@@ -179,10 +179,14 @@ Regions are given by  REGS."
       (open-line 1)
       (insert (make-string indent-lvl 32))
       (boon-set-insert-state)))
+
 (defun boon-open-next-line-and-insert ()
   "Open the line after the current one."
   (interactive)
-  (next-logical-line)
+  (save-excursion (when (eq (forward-line) 1)
+                    (end-of-line)
+                    (insert "\n")))
+  (forward-line)
   (boon-open-line-and-insert))
 
 ;; alternative:
@@ -392,4 +396,3 @@ Replace the region if it is active."
 
 (provide 'boon-main)
 ;;; boon-main.el ends here
-
