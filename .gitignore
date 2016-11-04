@@ -1,3 +1,5 @@
+TAGS
+
 *~
 *.aux
 *.boxes
@@ -7,3 +9,6 @@
 /cheat-sheet.hi
 /cheat-sheet.o
 /cheat-sheet.tex
+
+/.stack-work
+/boon.elc
