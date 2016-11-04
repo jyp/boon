@@ -1,4 +1,5 @@
 (package-initialize t)
+(list-packages)
 (package-install 'multiple-cursors)
 (package-install 'dash)
 (package-install 'expand-region)
