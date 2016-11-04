@@ -1,7 +1,8 @@
-(setq package-archives '(("melpa-stable" . "http://stable.melpa.org/packages/")))
 (package-initialize)
+(setq package-archives '(("melpa-stable" . "http://stable.melpa.org/packages/")))
 
-(list-packages)
+(package-refresh-contents)
+
 (package-install 'multiple-cursors)
 (package-install 'dash)
 (package-install 'expand-region)
