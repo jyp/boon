@@ -5,6 +5,8 @@
 Boon: An Ergonomic Command Mode for Emacs
 ==========================================
 
+[![Join the chat at https://gitter.im/boon-mode/Lobby](https://badges.gitter.im/boon-mode/Lobby.svg)](https://gitter.im/boon-mode/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Boon is a complete package for modal editing, which is not Evil.
 
 Selling points:
