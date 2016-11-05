@@ -1,3 +1,4 @@
+[![Join the chat at https://gitter.im/boon-mode/Lobby](https://badges.gitter.im/boon-mode/Lobby.svg)](https://gitter.im/boon-mode/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Travis](https://travis-ci.org/jyp/boon.svg?branch=master)](https://travis-ci.org/jyp/boon)
 [![MELPA](https://melpa.org/packages/boon-badge.svg)](https://melpa.org/#/boon)
 [![MELPA-Stable](http://stable.melpa.org/packages/boon-badge.svg)](http://stable.melpa.org/#/boon)
@@ -5,7 +6,6 @@
 Boon: An Ergonomic Command Mode for Emacs
 ==========================================
 
-[![Join the chat at https://gitter.im/boon-mode/Lobby](https://badges.gitter.im/boon-mode/Lobby.svg)](https://gitter.im/boon-mode/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 Boon is a complete package for modal editing, which is not Evil.
 
