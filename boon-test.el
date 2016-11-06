@@ -11,13 +11,13 @@
 
 (package-refresh-contents)
 
-(package-install 'multiple-cursors)
-(package-install 'dash)
-(package-install 'expand-region)
-
-(package-activate 'multiple-cursors)
-(package-activate 'dash)
-(package-activate 'expand-region)
+(dolist (pkg '(multiple-cursors
+               dash
+               expand-region
+               powerline ;; only for boon-powerline
+               ))
+  (package-install pkg)
+  (package-activate pkg))
 
 (add-to-list 'load-path default-directory)
 
