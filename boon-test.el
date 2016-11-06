@@ -40,7 +40,7 @@
 
 (require 'dash)
 
-(and
+(unless
  (-all? #'byte-compile-file
         '("boon.el"
           "boon-arguments.el"
@@ -57,6 +57,8 @@
           "boon-tutorial.el"
           "boon-utils.el"
           "boon-workman.el"))
- (ert-run-tests-batch-and-exit))
+ (kill-emacs 1))
+
+(ert-run-tests-batch-and-exit)
 
 ;;; boon-test.el ends here
