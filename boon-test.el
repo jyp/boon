@@ -1,3 +1,11 @@
+;;; boon-test.el --- An Ergonomic Command Mode  -*- lexical-binding: t -*-
+
+;;; Commentary:
+
+;; This module tests boon.
+
+;;; Code:
+
 (package-initialize)
 (setq package-archives '(("melpa-stable" . "http://stable.melpa.org/packages/")))
 
@@ -13,6 +21,8 @@
 
 (add-to-list 'load-path default-directory)
 
+(require 'boon)
+
 (ert-deftest boon-open-next-line-and-insert-at-buffer-end ()
   (should (string=
            "first-line\n\n"
@@ -26,5 +36,6 @@
 
 (and
  (byte-compile-file "boon.el")
- (require 'boon)
  (ert-run-tests-batch-and-exit))
+
+;;; boon-test.el ends here
