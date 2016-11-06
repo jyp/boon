@@ -35,7 +35,7 @@
 (setq byte-compile-error-on-warn t)
 
 (and
- (byte-compile-file "boon.el")
+ (and (mapcar #'byte-compile-file '("boon.el" "boon-main.el")))
  (ert-run-tests-batch-and-exit))
 
 ;;; boon-test.el ends here

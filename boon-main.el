@@ -15,31 +15,6 @@
 (require 'subr-x)
 (require 'dash)
 
-
-(defun boon-drop-or-extend-mark ()
-  "Drop a mark; or extend the region to the next full line; or revert to original state."
-  (interactive)
-  (declare (obsolete "Use boon-drop-mark instead" "20151020"))
-  (if mark-active
-      (if (and (bolp)
-               (save-excursion (goto-char (mark)) (bolp))
-               (not (eq (point) (mark))))
-          (progn ;; here we have a number of full lines selected, and that number is more than 0
-            (pop-mark) ;; load the saved position into the mark
-            (goto-char (mark));; jump there
-            (deactivate-mark))
-      (boon-with-ordered-region
-       (progn ;; here we have at least one non-full line selected. Extend to the full lines.
-         (beginning-of-line)
-         (exchange-point-and-mark)
-         (end-of-line)
-         (forward-char)
-         (exchange-point-and-mark))))
-    (progn
-      (set-mark (point))
-      (push-mark) ;; Save the starting position, so we can go back to it.
-      (call-interactively 'boon-mark-region))))
-
 (defun boon-deactivate-mark ()
   "Deactivate the mark robustly."
   (mc/execute-command-for-all-fake-cursors (lambda () (interactive) (deactivate-mark)))
@@ -91,27 +66,29 @@ When repeated, fix the spacing if necessary."
 
 (defun boon-need-space ()
   "Is it necessary to insert a space here to separate words or expressions?"
+  (let ((back-limit (1- (point))))
   (and (not (or (eolp) (looking-at "\\s-") (looking-at "\\s)")))
-       (not (or (bolp) (looking-back "\\s-") (looking-back "\\s(")))
-       (or (and (looking-back "\\sw\\|\\s_\\|\\s.\\|\\s)") (looking-at "\\sw\\|\\s_\\|\\s(")))))
+       (not (or (bolp) (looking-back "\\s-" back-limit) (looking-back "\\s(" back-limit)))
+       (or (and (looking-back "\\sw\\|\\s_\\|\\s.\\|\\s)" back-limit) (looking-at "\\sw\\|\\s_\\|\\s("))))))
 
 (defun boon-fix-a-space ()
   "Fix the text to have the right amout of spacing at the point.
 Return nil if no changes are made, t otherwise."
   (interactive)
+  (let ((back-limit (1- (point))))
   (cond ((bolp) nil) ;; inserted at least one full line.
         ((looking-at " ")
-         (when (or (bolp) (looking-back "\\s-\\|\\s("))
+         (when (or (bolp) (looking-back "\\s-\\|\\s(" back-limit))
            (delete-char 1)
            t))
-        ((looking-back " ")
+        ((looking-back " " back-limit)
          (when (or (eolp) (looking-at "\\s-\\|\\s)\\|\\s."))
            (delete-char -1)
            t))
         ((boon-need-space)
          (insert " ")
          t)
-        (t nil)))
+        (t nil))))
 
 (defun boon-splice-fix-spaces ()
   "Yank, replacing the region if it is active.
@@ -357,7 +334,6 @@ Replace the region if it is active."
           (setq key-vector (vconcat (reverse keys)))
           (setq prompt (key-description key-vector))
           (setq binding (key-binding key-vector)))))
-    (setq this-command-keys key-vector)
     (cond
      ((not binding) (error "No command bound to %s" prompt))
      ((commandp binding) (call-interactively binding))
