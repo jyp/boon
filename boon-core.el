@@ -177,7 +177,6 @@ those. See 'boon-special-map' for exceptinons.")
 This is because no command mode is activated in the minibuffer."
   (setq cursor-type 'bar))
 
-
 ;; The function `boon-initialize' should only be used to initialize
 ;; `boon-local-mode' from the globalized minor-mode `boon-mode'. It is
 ;; called whenever boon is enabled in a buffer for the first time or
@@ -217,6 +216,8 @@ This is because no command mode is activated in the minibuffer."
    (t "???")))
 
 (with-eval-after-load 'multiple-cursors
+  (defvar mc--default-cmds-to-run-for-all)
+  (defvar mc--default-cmds-to-run-once)
   (setq mc--default-cmds-to-run-for-all
         (append '(boon-beginning-of-expression
                   boon-beginning-of-line
