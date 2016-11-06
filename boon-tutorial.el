@@ -1,8 +1,17 @@
+;;; boon-tutorial.el --- An Ergonomic Command Mode  -*- lexical-binding: t -*-
+
+;;; Commentary:
+
+;; This file contains the tutorial for boon.
+
+;;; Code:
+
+(require 'boon-core)
 
 ;; utilities to create the tutorial
 ;;;###autoload
 (defun boon-gen-key (key)
-  "Generate a suitable tutorial string to refer to command KEY"
+  "Generate a suitable tutorial string to refer to command KEY."
   (interactive (list (read-key-sequence-vector "key?")))
   (insert "\\\\")
   (insert "[")
@@ -11,7 +20,7 @@
 
 ;;;###autoload
 (defun boon-gen-sel-key (key)
-  "Generate a suitable tutorial string to refer to selection KEY"
+  "Generate a suitable tutorial string to refer to selection KEY."
   (interactive (list (read-key "key?")))
   (insert "\\\\<boon-select-map>\\\\")
   (insert "[")
@@ -22,6 +31,7 @@
 
 ;;;###autoload
 (defun boon-tutorial ()
+  "Open a buffer with boon tutorial."
   (interactive)
   (switch-to-buffer (generate-new-buffer "BOON-TUTORIAL"))
   (turn-on-boon-mode)
@@ -454,4 +464,6 @@ from the standard Emacs tutorial,
   Copyright (C) 1985, 1996, 1998, 2001-2013 Free Software Foundation,
   Inc.
 "))
-(beginning-of-buffer))
+(goto-char 1))
+
+;;; boon-tutorial.el ends here

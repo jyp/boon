@@ -39,19 +39,16 @@
   (define-key boon-command-map number 'digit-argument))
 
 (define-key boon-command-map " " 'boon-drop-mark)
-(define-key boon-command-map [(escape)] 'boon-quit)
+(define-key boon-command-map [escape] 'boon-quit)
 
 ;; Special mode rebinds
 (define-key boon-special-map "`" 'boon-quote-character)
 (define-key boon-special-map "'" 'boon-quote-character)
 (define-key boon-special-map "x" boon-x-map)
 
-;; Off mode rebinds
-(define-key boon-off-map [(escape)] 'boon-set-command-state)
-
 ;;  Insert mode rebinds
 (define-key boon-insert-map [remap newline] 'boon-newline-dwim)
-(define-key boon-insert-map [(escape)] 'boon-set-command-state)
+(define-key boon-insert-map [escape] 'boon-set-command-state)
 
 ;; Global rebinds
 (define-key global-map [escape] 'keyboard-quit)
@@ -65,13 +62,13 @@
   "Swap the control 'bit' in EVENT, if that is a good choice."
   (interactive (list (read-key)))
   (cond
-   ((memq event '(9 13 ?[ ?] ?$)) event)
+   ((memq event '(9 13 ?{ ?} ?[ ?] ?$ ?< ?> ?: ?\;)) event)
    ((<= event 27) (+ 96 event))
    ((not (eq 0 (logand (lsh 1 26) event))) (logxor (lsh 1 26) event))
    (t (list 'control event))))
 
 (defun boon-c-god ()
-  "Input a key sequence, prepend C- to each key, and run the command bound to that sequence."
+  "Input a key sequence, prepend C- if that is a good choice, and run the command bound to that sequence."
   (interactive)
   (let ((keys '((control c)))
         (binding (key-binding (kbd "C-c")))
@@ -84,7 +81,6 @@
           (setq key-vector (vconcat (reverse keys)))
           (setq prompt (key-description key-vector))
           (setq binding (key-binding key-vector)))))
-    (setq this-command-keys key-vector)
     (cond
      ((not binding) (error "No command bound to %s" prompt))
      ((commandp binding) (call-interactively binding))

@@ -72,28 +72,29 @@
 (defun boon-smarter-backward (count)
   "Move backward, over COUNT whole syntactic units."
   (interactive "p")
+  (let ((back-limit (- (point) 5))) ;; looking back at comment delimiter
   (dotimes (_number count)
     (boon-jump-over-blanks-backward)
     (cond
      ((boon-looking-at-comment -1)
       (forward-comment -1))
-     ((looking-back "\\s\"")
+     ((looking-back "\\s\"" back-limit)
       (backward-char)
       (er--move-point-backward-out-of-string))
-     ((looking-back "\\s)")
+     ((looking-back "\\s)" back-limit)
       (backward-list))
-     ((looking-back "\\s_")  ;; symbol
+     ((looking-back "\\s_" back-limit)  ;; symbol
       (skip-syntax-backward "_"))
-     ((looking-back "\\s(")
+     ((looking-back "\\s(" back-limit)
       (backward-char))
-     ((looking-back "\\s!")  ;; generic comment delimiter
+     ((looking-back "\\s!" back-limit)  ;; generic comment delimiter
       (skip-syntax-backward "!"))
-     ((looking-back "\\sw")
+     ((looking-back "\\sw" back-limit)
       (if (not (looking-at "\\(\\s-\\|\\s(\\|\\s)\\)"))
           (skip-syntax-backward "w")
         (skip-syntax-backward "w_")))
      (t
-      (backward-char)))))
+      (backward-char))))))
 
 (defun boon-smarter-forward (count)
   "Move forward, over COUNT whole syntactic unit."
@@ -118,88 +119,11 @@
      ((looking-at "\\s!")  ;; generic comment delimiter
       (skip-syntax-forward "!"))
      ((looking-at "\\sw")
-      (if (not (looking-back "\\(\\s-\\|\\s(\\|\\s)\\)"))
+      (if (not (looking-back "\\(\\s-\\|\\s(\\|\\s)\\)" (1- (point))))
           (skip-syntax-forward "w")
         (skip-syntax-forward "w_")))
      (t
       (forward-char)))))
-
-(defun boon-smarter-forward-spaces (count)
-  "Move forward, over COUNT whole syntactic unit.
-Handle spaces cleverly."
-  (interactive "p")
-  (declare (obsolete "does not seem very useful" "20151120"))
-  (dotimes (_number count)
-    (let ((spaces-skipped (not (equal (boon-jump-over-blanks-forward) 0)))
-          (in-middle nil)
-          (at-bol (string-blank-p (boon-line-prefix))))
-      (cond
-       ((boon-looking-at-line-comment-start-p)
-        (end-of-line)
-        (forward-char))
-       ((boon-looking-at-comment 1);;
-        (forward-comment 1))
-       ((looking-at "\\s\"")
-        (forward-char)
-        (er--move-point-forward-out-of-string))
-       ((looking-at "\\s(")
-        (forward-list))
-       ((looking-at "\\s_") ;; symbol
-        (skip-syntax-forward "_"))
-       ((looking-at "\\s)")
-        (forward-char)
-        (setq in-middle 't))
-       ((looking-at "\\s!")  ;; generic comment delimiter
-        (skip-syntax-forward "!"))
-       ((looking-at "\\sw")
-        (setq in-middle 't)
-        (if (not (looking-back "\\(\\s-\\|\\s(\\|\\s)\\)"))
-            (skip-syntax-forward "w")
-          (skip-syntax-forward "w_")))
-       (t
-        (forward-char)
-        (setq in-middle 't)))
-      (unless (or spaces-skipped in-middle)
-        (if at-bol
-            (skip-chars-forward "\t\n ")
-          (skip-chars-forward "\t "))))))
-
-(defun boon-smarter-backward-spaces (count)
-  "Move backward, over COUNT whole syntactic unit.
-Handles spaces smartly."
-  (interactive "p")
-  (declare (obsolete "does not seem very useful" "20151120"))
-  (dotimes (_number count)
-    (let ((spaces-skipped (not (equal (boon-jump-over-blanks-backward) 0)))
-          (in-middle nil)
-          (at-eol (string-blank-p (boon-line-suffix))))
-      (cond
-       ((boon-looking-at-comment -1)
-        (forward-comment -1))
-       ((looking-back "\\s\"")
-        (backward-char)
-        (er--move-point-backward-out-of-string))
-       ((looking-back "\\s)")
-        (backward-list))
-       ((looking-back "\\s_")  ;; symbol
-        (skip-syntax-backward "_"))
-       ((looking-back "\\s(")
-        (backward-char)
-        (setq in-middle 't))
-       ((looking-back "\\s!")  ;; generic comment delimiter
-        (skip-syntax-backward "!"))
-       ((looking-back "\\sw")
-        (setq in-middle 't)
-        (if (not (looking-at "\\(\\s-\\|\\s(\\|\\s)\\)"))
-            (skip-syntax-backward "w")
-          (skip-syntax-backward "w_")))
-       (t
-        (backward-char)
-        (setq in-middle 't)))
-      (unless (or spaces-skipped in-middle)
-        (if at-eol
-            (skip-chars-backward "\t\n ")
-          (skip-chars-backward "\t "))))))
 
 (defun boon-visible-beginning-of-line ()
   "Move point leftwards to the first visible beginning of line."

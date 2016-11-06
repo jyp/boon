@@ -34,8 +34,29 @@
 
 (setq byte-compile-error-on-warn t)
 
+
+;; Untested:
+;; "boon-core.el"
+
+(require 'dash)
+
 (and
- (and (mapcar #'byte-compile-file '("boon.el" "boon-main.el")))
+ (-all? #'byte-compile-file
+        '("boon.el"
+          "boon-arguments.el"
+          "boon-colemak.el"
+          "boon-keys.el"
+          "boon-main.el"
+          "boon-moves.el"
+          "boon-pkg.el"
+          "boon-powerline.el"
+          "boon-qwerty.el"
+          "boon-regs.el"
+          "boon-search.el"
+          "boon-test.el"
+          "boon-tutorial.el"
+          "boon-utils.el"
+          "boon-workman.el"))
  (ert-run-tests-batch-and-exit))
 
 ;;; boon-test.el ends here

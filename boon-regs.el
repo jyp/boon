@@ -18,14 +18,11 @@
   (when bnds
     (list (boon-mk-reg (car bnds) (cdr bnds) nil))))
 
-(defun boon-reg-mark (reg)
-  (car reg))
+(defun boon-reg-mark (reg) (nth 0 reg))
 
-(defun boon-reg-point (reg)
-  (cadr reg))
+(defun boon-reg-point (reg) (nth 1 reg))
 
-(defun boon-reg-cursor (reg)
-  (caddr reg))
+(defun boon-reg-cursor (reg) (nth 2 reg))
 
 (defun boon-reg-to-markers (reg)
   "Put copy the markers defining REG borders, and return that."

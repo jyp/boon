@@ -113,7 +113,7 @@
 ;; x
 (define-key boon-command-map (kbd "x") boon-x-map)
 ;; c
-(define-key boon-command-map (kbd "m") boon-c-map)
+(define-key boon-command-map (kbd "m") 'boon-c-god)
 ;; v
 (define-key boon-command-map (kbd "C-c") 'boon-open-line-and-insert)
 (define-key boon-command-map (kbd "C") 'boon-open-next-line-and-insert)
@@ -130,5 +130,5 @@
 (define-key boon-command-map (kbd "Y") 'ace-jump-char-mode) ; Hop
 (define-key boon-command-map (kbd "'") 'boon-toggle-mark)
 
-(provide 'boon-colemak)
-;;; boon-colemak.el ends here
+(provide 'boon-workman)
+;;; boon-workman.el ends here
