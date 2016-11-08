@@ -255,7 +255,7 @@ See boon-regs.el."
     (while (and (or kmv kms) (not (commandp kms)) (not (commandp kmv)))
       (let ((last-char (read-event (format "%s %s" msg my-prefix-arg))))
         ;; read-event, because mc badly advises read-char
-        (if (and (>= last-char ?0) (<= last-char ?9))
+        (if (and (integerp last-char) (>= last-char ?0) (<= last-char ?9))
             (setq my-prefix-arg (+ (- last-char ?0) (* 10 my-prefix-arg )))
           (if kms (setq kms (lookup-key kms (vector last-char))))
           (if kmv (setq kmv (lookup-key kmv (vector last-char)))))))
