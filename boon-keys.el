@@ -45,6 +45,7 @@
 (define-key boon-special-map "`" 'boon-quote-character)
 (define-key boon-special-map "'" 'boon-quote-character)
 (define-key boon-special-map "x" boon-x-map)
+(define-key boon-special-map [escape] 'boon-set-command-state)
 
 ;;  Insert mode rebinds
 (define-key boon-insert-map [remap newline] 'boon-newline-dwim)
