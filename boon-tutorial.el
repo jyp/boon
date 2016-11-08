@@ -7,6 +7,44 @@
 ;;; Code:
 
 (require 'boon-core)
+(require 'boon-keys)
+(require 'dash)
+
+(defun boon-dump-map (map)
+  "Dump the MAP in a format usable to generate a cheat sheet.
+Currently unused."
+   (apply 'concat
+    (--map (format "('%c',\"%S\"):" it
+                   (let ((b (lookup-key map (make-vector 1 it))))
+                     (cond ((symbolp b) b)
+                           ((eq b boon-x-map) 'x-map)
+                           ((eq b boon-goto-map) 'goto-map))
+                     ))
+           (-concat
+            (-iterate '1+ ?A 26)
+            (-iterate '1+ ?a 26)
+            '(?\; ?: ?- ?' ?, ?. ?< ?>)
+            ))))
+
+(defun boon-keymap-rev-look (sub map)
+  "Return an event yielding SUB from the keymap MAP."
+  (let (res)
+    (map-keymap (lambda (event b)
+                  (when (and (consp b) (stringp (car b))) (setq b (cdr b)))
+                  (when (eq b sub) (setq res event)))
+                map)
+    (key-description (vector res))))
+
+(defun boon-mnemonic (sub &optional map)
+  "Return the mnemonic for SUB from the keymap MAP."
+  (let (res)
+    (map-keymap (lambda (_event b) (when (and (consp b)
+                                              (stringp (car b))
+                                              (eq (cdr b) sub))
+                                     (setq res (car b))))
+                (or map boon-command-map))
+    (format "(mnemonic: %s)" res)))
+
 
 ;; utilities to create the tutorial
 ;;;###autoload
@@ -18,16 +56,15 @@
   (insert (symbol-name (lookup-key boon-command-map key)))
   (insert "]"))
 
+;; (global-set-key (kbd "C-'") 'boon-gen-key)
+
 ;;;###autoload
 (defun boon-gen-sel-key (key)
   "Generate a suitable tutorial string to refer to selection KEY."
   (interactive (list (read-key "key?")))
-  (insert "\\\\<boon-select-map>\\\\")
-  (insert "[")
-  (insert (symbol-name (lookup-key boon-select-map (vconcat (list key)))))
-  (insert "]\\\\<boon-command-map> "))
+  (insert (concat "\" (selector '" (symbol-name (lookup-key boon-select-map (vconcat (list key)))) ") \"")))
 
-;; (global-set-key (kbd "C-'") 'boon-gen-key)
+;; (global-set-key (kbd "C-'") 'boon-gen-sel-key)
 
 ;;;###autoload
 (defun boon-tutorial ()
@@ -35,21 +72,24 @@
   (interactive)
   (switch-to-buffer (generate-new-buffer "BOON-TUTORIAL"))
   (turn-on-boon-mode)
-  (insert (substitute-command-keys
+  (let ((x-key (boon-keymap-rev-look boon-x-map boon-command-map)))
+    (cl-flet ((selector (sel) (boon-keymap-rev-look sel boon-select-map)))
+  (insert (substitute-command-keys (concat
 
 "Boon tutorial.   See end for copying conditions.
 \\<boon-command-map>
 This tutorial assumes that you know Emacs already.
 
+Note on the tutorial: sometimes the tutorial will mention a
+mnemonic for a key. A mnemonic is a story linking the key to type
+to the action that it does. This story is often small, maybe just
+a word. You may use the mnemonics provided by the tutorial, but
+it is best to invent your own. If the tutorial says 'mnemonic:
+nil', this means that the frontend that you have activated has
+not defined a mnemonic for that command.
+
 Make sure that Boon is active in this buffer. Call
 \\[turn-on-boon-mode] if necessary.
-
-Note on the tutorial: sometimes the tutorial will mention a
-mnemonic for a key. A mnemonic should be a (small) story linking
-the key to type to the action that it does. You may reuse the
-standard mnemonics, but it is best to invent your own. The
-mnemonics written in the tutorial come from the colemak frontend,
-they may make no sense for other frontends.
 
 Boon has two states: command state and insert state. Boon
 indicates the difference between command state and insert state
@@ -65,8 +105,9 @@ in several ways:
   having to read any text.
 
 You can switch from command to insert mode by typing
-\\[boon-set-insert-like-state] (mnemonic: v looks like an
-insert mark). Go back to command mode by typing <ESC>.
+\\[boon-set-insert-like-state] " (boon-mnemonic
+'boon-set-insert-like-state)". Go back to command mode by typing
+<ESC>.
 
 >> Switch to command mode now (type <ESC>)
 
@@ -173,7 +214,7 @@ command.
 >> Move forward by seven words.
 
 To insert a character several times, you can use the escaping
-command '\\[boon-quote-character]' (mnemonic: quote).
+command '\\[boon-quote-character]' " (boon-mnemonic 'boon-quote-character) "
 
 >> Try that now -- type '8\\[boon-quote-character]*' to insert ********.
 
@@ -183,9 +224,9 @@ command '\\[boon-quote-character]' (mnemonic: quote).
 
 There are two other movement commands, bound to \\[avy-goto-word-1] and \\[boon-switch-mark].
 
-- \\[boon-switch-mark] (mnemonic: bacK to marK) jumps pops a mark and jumps to it. (If a region is active, exchange point and mark)
+- \\[boon-switch-mark] " (boon-mnemonic 'boon-switch-mark) " jumps pops a mark and jumps to it. (If a region is active, exchange point and mark)
 
-- \\[avy-goto-word-1] (mnemonic: hop) activates avy-goto-word-1 (if installed)
+- \\[avy-goto-word-1] " (boon-mnemonic 'avy-goto-word-1) " activates avy-goto-word-1 (if installed)
 
 - Additionally, \\[xref-find-definitions] is bound to `xref-find-definitions'.
 
@@ -196,8 +237,8 @@ If Emacs stops responding to your commands, you can stop it safely by
 typing C-g.  You can use C-g to stop a command which is taking too
 long to execute.
 
-You can also use C-g to discard a numeric argument or the beginning of
-a command that you do not want to finish.
+You can also use C-g to discard an argument or the beginning of a
+command that you do not want to finish.
 
 <ESC> is an alternative which works in many contexts.
 
@@ -205,20 +246,24 @@ a command that you do not want to finish.
 * C-x prefix
 -------------
 
-Instead of the C-x prefix; you may just type 'x'
+Instead of the C-x prefix; you may just type " x-key "
 
 >> Type \\[split-window-below] to split this window
 >> Type \\[delete-other-windows] to close the other windows
 
-Additionally, the `execute-extended-command' command is bound to '\\[execute-extended-command]'
+Additionally, the `execute-extended-command' command is bound to
+'\\[execute-extended-command]'. It is a good idea to bind your
+own favourite commands in `boon-x-map', so you can access them
+via " x-key ". (Standard commands are always available under C-x)
 
 * C-c prefix
 ------------
 
-Mode-specific commands have often the form 'C-c C-<key>'. These are
-accessible by typing simply '\\[boon-c-god]<key>' from command mode. Unfortunately
-there is no such binding in text mode by default --- so you cannot
-test this right away.
+Mode-specific commands have often the form 'C-c
+C-<letter>'. These are accessible by typing simply
+'\\[boon-c-god]<letter>' from command mode. Unfortunately there
+is no such binding in text mode by default --- so you cannot test
+this right away.
 
 
 * INSERTING AND DELETING
@@ -232,7 +277,7 @@ In insert mode, regular Emacs editing commands can be used.
 
 >> Type \\[boon-set-insert-like-state] to insert some text; then <ESC> to go back to command mode.
 
-Deleting text is mostly done with the '\\[boon-take-region]' key (mnemonic: take).
+Deleting text is mostly done with the '\\[boon-take-region]' key " (boon-mnemonic 'boon-take-region) ".
 The take command expects an argument. This argument can be any
 right-hand move command (in `boon-moves-map'), such as '\\[backward-char]'.
 
@@ -244,10 +289,10 @@ In the above, \\[backward-char] is the argument to the \\[boon-take-region] comm
 >> Type '\\[boon-take-region] \\[boon-smarter-backward]' to delete backwards, up to the beginning of a word
 
 You can also use a left-hand _region specifier_ as an argument to
-`boon-take-region'. One of such arguments is '\\<boon-select-map>\\[boon-select-wim]\\<boon-command-map>', which refers to the symbol
+`boon-take-region'. One of such arguments is '" (selector 'boon-select-wim) "', which refers to the symbol
 (or sexp) at point.
 
->> Type \\[boon-take-region] \\<boon-select-map>\\[boon-select-wim]\\<boon-command-map> to delete the symbol where the cursor is (even if in the
+>> Type \\[boon-take-region] " (selector 'boon-select-wim) " to delete the symbol where the cursor is (even if in the
    middle of the symbol)
 
 One of the most useful region specifier is \\<boon-select-map>\\[boon-select-line]\\<boon-command-map>, which specifies the
@@ -290,19 +335,19 @@ left-hand ones.
 
 >> Type \\[boon-drop-mark] again to undo the selection
 
-In particular, the region specifier `boon-select-line' (\\<boon-select-map>\\[boon-select-line]\\<boon-command-map>) can be
+In particular, the region specifier `boon-select-line' (" (selector 'boon-select-line) ") can be
 given to the marking command (\\[boon-drop-mark]).
 
->> Type \\[boon-drop-mark] \\<boon-select-map>\\[boon-select-line]\\<boon-command-map> to select the current line
+>> Type \\[boon-drop-mark] " (selector 'boon-select-line) " to select the current line
 >> Type \\[next-line] a few times to select some lines
 >> Type \\[boon-take-region] to delete all these lines
 
 You can kill and switch to insert mode in a single command, bound to
-'\\[boon-substitute-region]' (mnemonic: replace).
+'\\[boon-substitute-region]' " (boon-mnemonic 'boon-substitute-region) ".
 
->> Try typing '\\[boon-substitute-region] \\<boon-select-map>\\[boon-select-wim]\\<boon-command-map>' to replace the symbol at point.
+>> Try typing \\[boon-substitute-region] " (selector 'boon-select-wim) " to replace the symbol at point.
 
-The command for yanking is '\\[boon-splice]'. (mnemonic: splice)
+The command for yanking is '\\[boon-splice]'. " (boon-mnemonic `boon-splice) "
 
 >> Try it; type \\[boon-splice] to yank the text back.
 
@@ -349,11 +394,11 @@ region (if such do not exist, it adds the spaces before).
 
 Boon provides help to manipulate parentheses.
 
-The command '\\[boon-enclose]' (mnemonic: around) adds parentheses around a region.
+The command '\\[boon-enclose]' " (boon-mnemonic 'boon-enclose) " adds parentheses around a region.
 It takes two arguments:
 
 
-1. the kind of parentheses to use ('p' for regular parentheses)
+1. the kind of parentheses to use (by defaut 'p' for regular parentheses)
 
 2. the region to surround. This region is specified by the same
    language as the arguments to \\[boon-take-region] or \\[boon-drop-mark] commands.
@@ -362,7 +407,7 @@ It takes two arguments:
    enclose it in parens.
 
 
-It's often useful to put parens around what has been just
+It is often useful to put parens around what has been just
 pasted. The just pasted region is accessible using (\\[boon-toggle-mark]).
 
 >> kill a word, then paste it.
@@ -463,7 +508,7 @@ from the standard Emacs tutorial,
 
   Copyright (C) 1985, 1996, 1998, 2001-2013 Free Software Foundation,
   Inc.
-"))
+")))))
 (goto-char 1))
 
 ;;; boon-tutorial.el ends here
