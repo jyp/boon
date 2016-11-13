@@ -11,11 +11,12 @@
 (require 'dash)
 
 (defun boon-dump-map (map)
-  "Dump the MAP in a format usable to generate a cheat sheet.
-Currently unused."
-   (apply 'concat
-    (--map (format "('%c',\"%S\"):" it
-                   (let ((b (lookup-key map (make-vector 1 it))))
+  "Dump the MAP in a format usable to generate a cheat sheet."
+   (apply
+    'concat
+    (--map (let* ((b (lookup-key map (make-vector 1 it)))
+                  (mn (boon-mnemonic-noformat b map)))
+             (format "(%d,%S,\"%S\"):" it mn
                      (cond ((symbolp b) b)
                            ((eq b boon-x-map) 'x-map)
                            ((eq b boon-goto-map) 'goto-map))
@@ -26,6 +27,20 @@ Currently unused."
             '(?\; ?: ?- ?' ?, ?. ?< ?>)
             ))))
 
+(defun boon-dump-cheatsheet (flavour)
+  "Dump cheatcheat info for FLAVOUR."
+  (let ((module (capitalize flavour))
+        (el (concat "boon-" flavour ".el")))
+    (require 'boon)
+    (load el)
+    (with-temp-buffer
+      (insert (format "module %s where \n " module))
+      (insert (format "nil = \"\"\n"))
+      (insert (format "commandMap = %s:[]\n" (boon-dump-map boon-command-map)))
+      (insert (format "movesMap   = %s:[]\n" (boon-dump-map boon-moves-map)))
+      (insert (format "selectMap  = %s:[]\n" (boon-dump-map boon-select-map)))
+      (write-region nil nil (concat module ".hs")))))
+
 (defun boon-keymap-rev-look (sub map)
   "Return an event yielding SUB from the keymap MAP."
   (let (res)
@@ -35,7 +50,7 @@ Currently unused."
                 map)
     (key-description (vector res))))
 
-(defun boon-mnemonic (sub &optional map)
+(defun boon-mnemonic-noformat (sub &optional map)
   "Return the mnemonic for SUB from the keymap MAP."
   (let (res)
     (map-keymap (lambda (_event b) (when (and (consp b)
@@ -43,7 +58,12 @@ Currently unused."
                                               (eq (cdr b) sub))
                                      (setq res (car b))))
                 (or map boon-command-map))
-    (format "(mnemonic: %s)" res)))
+    res))
+
+
+(defun boon-mnemonic (sub &optional map)
+  "Return the formatted mnemonic for SUB from the keymap MAP."
+  (format "(mnemonic: %s)" (boon-mnemonic-noformat sub map)))
 
 
 ;; utilities to create the tutorial
