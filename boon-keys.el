@@ -9,6 +9,28 @@
 
 (require 'boon-core)
 
+(define-prefix-command 'boon-backward-search-map)
+(define-prefix-command 'boon-forward-search-map)
+
+(define-key boon-forward-search-map " "  'isearch-forward)
+(define-key boon-forward-search-map "t"  'boon-qsearch-next-at-point)
+(define-key boon-forward-search-map "s"  'boon-qsearch-next-at-point)
+(define-key boon-forward-search-map "p"  'boon-qsearch-next)
+(define-key boon-forward-search-map "e"  'next-error)
+(define-key boon-forward-search-map "k"  'flycheck-next-error)
+(define-key boon-forward-search-map "b"  'next-buffer)
+(define-key boon-forward-search-map "u"  'mc/cycle-forward)
+
+(define-key boon-backward-search-map " "  'isearch-backward)
+(define-key boon-backward-search-map "t"  'boon-qsearch-previous-at-point)
+(define-key boon-backward-search-map "s"  'boon-qsearch-previous-at-point)
+(define-key boon-backward-search-map "p"  'boon-qsearch-previous)
+(define-key boon-backward-search-map "e"  'previous-error)
+(define-key boon-backward-search-map "k"  'flycheck-previous-error)
+(define-key boon-backward-search-map "b"  'previous-buffer)
+(define-key boon-backward-search-map "u"  'mc/cycle-backward)
+
+
 (defvar boon-goto-map (make-sparse-keymap))
 (set-keymap-parent boon-goto-map goto-map)
 

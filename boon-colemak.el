@@ -61,29 +61,14 @@
 
 ;; w,f
 ;; where is? find?
-(define-key boon-moves-map "w "  'isearch-backward)
-(define-key boon-moves-map "f "  'isearch-forward)
-
-(define-key boon-moves-map "wt"  'boon-qsearch-previous-at-point)
-(define-key boon-moves-map "ft"  'boon-qsearch-next-at-point)
-(define-key boon-moves-map "ws"  'boon-qsearch-previous-at-point)
-(define-key boon-moves-map "fs"  'boon-qsearch-next-at-point)
+(define-key boon-moves-map "w" '("where was?" . boon-backward-search-map))
+(define-key boon-moves-map "f" '("find" . boon-forward-search-map))
 
 (define-key boon-moves-map "ww"  'boon-qsearch-previous)
 (define-key boon-moves-map "ff"  'boon-qsearch-next)
 
 (define-key boon-moves-map "W"  'boon-qsearch-previous)
 (define-key boon-moves-map "F"  'boon-qsearch-next)
-(define-key boon-moves-map "wp"  'boon-qsearch-previous)
-(define-key boon-moves-map "fp"  'boon-qsearch-next)
-(define-key boon-moves-map "we"  'previous-error)
-(define-key boon-moves-map "fe"  'next-error)
-(define-key boon-moves-map "wk"  'flycheck-previous-error)
-(define-key boon-moves-map "fk"  'flycheck-next-error)
-(define-key boon-moves-map "wb"  'previous-buffer)
-(define-key boon-moves-map "fb"  'next-buffer)
-(define-key boon-moves-map "fu"  'mc/cycle-forward)
-(define-key boon-moves-map "wu"  'mc/cycle-backward)
 
 ;; p
 ;; Pinpoint Place
