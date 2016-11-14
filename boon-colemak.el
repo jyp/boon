@@ -12,7 +12,7 @@
 
 (define-key boon-select-map "a"  'boon-select-borders) ;; Around
 (define-key boon-select-map "r"  'boon-select-justline) ;; Row
-(define-key boon-select-map "s"  'boon-select-wim) ;; symbol
+(define-key boon-select-map "s"  '("symbol" . boon-select-wim)) ;; symbol
 (define-key boon-select-map "t"  'boon-select-with-spaces)
 (define-key boon-select-map "d"  'boon-select-document)
 (define-key boon-select-map "b"  'boon-select-block)
@@ -25,7 +25,7 @@
 
 (define-key boon-select-map "k"  'boon-select-blanks) ;; blanKs
 
-(define-key boon-moves-map "k" 'boon-switch-mark) ; bacK to marK
+(define-key boon-moves-map "k" '("bacK to marK" . boon-switch-mark)) ; bacK to marK
 (define-key boon-moves-map "K" 'xref-pop-marker-stack)
 
 (define-key boon-moves-map "j"  '("jump" . xref-find-definitions))
@@ -57,33 +57,18 @@
 
 ;; Top row
 ;; q
-(define-key boon-command-map "q" 'boon-quote-character)
+(define-key boon-command-map "q" '("quote" . boon-quote-character))
 
 ;; w,f
 ;; where is? find?
-(define-key boon-moves-map "w "  'isearch-backward)
-(define-key boon-moves-map "f "  'isearch-forward)
-
-(define-key boon-moves-map "wt"  'boon-qsearch-previous-at-point)
-(define-key boon-moves-map "ft"  'boon-qsearch-next-at-point)
-(define-key boon-moves-map "ws"  'boon-qsearch-previous-at-point)
-(define-key boon-moves-map "fs"  'boon-qsearch-next-at-point)
+(define-key boon-moves-map "w" '("where was?" . boon-backward-search-map))
+(define-key boon-moves-map "f" '("find" . boon-forward-search-map))
 
 (define-key boon-moves-map "ww"  'boon-qsearch-previous)
 (define-key boon-moves-map "ff"  'boon-qsearch-next)
 
 (define-key boon-moves-map "W"  'boon-qsearch-previous)
 (define-key boon-moves-map "F"  'boon-qsearch-next)
-(define-key boon-moves-map "wp"  'boon-qsearch-previous)
-(define-key boon-moves-map "fp"  'boon-qsearch-next)
-(define-key boon-moves-map "we"  'previous-error)
-(define-key boon-moves-map "fe"  'next-error)
-(define-key boon-moves-map "wk"  'flycheck-previous-error)
-(define-key boon-moves-map "fk"  'flycheck-next-error)
-(define-key boon-moves-map "wb"  'previous-buffer)
-(define-key boon-moves-map "fb"  'next-buffer)
-(define-key boon-moves-map "fu"  'mc/cycle-forward)
-(define-key boon-moves-map "wu"  'mc/cycle-backward)
 
 ;; p
 ;; Pinpoint Place
@@ -91,25 +76,24 @@
 
 ;; Misc crap
 (define-key boon-command-map "P" 'kmacro-end-or-call-macro) ; Play
-(define-key boon-command-map "X" 'boon-highlight-regexp)
 
-;; g Gather/Go To
-(define-key boon-command-map "g" boon-goto-map)
+;; g
+(define-key boon-command-map "g" (cons "goto" boon-goto-map))
 
 ;; home row
 ;; a
-(define-key boon-command-map "a" 'boon-enclose) ; around
+(define-key boon-command-map "a" '("around" . boon-enclose))
 
 ;; r
-(define-key boon-command-map "r" 'boon-substitute-region) ; replace
-(define-key boon-command-map "R" 'kmacro-start-macro) ; Record
+(define-key boon-command-map "r" '("replace" . boon-substitute-region))
+(define-key boon-command-map "R" '("Record" . kmacro-start-macro))
 
 ;; s
-(define-key boon-command-map "s" 'boon-splice) ; splice
+(define-key boon-command-map "s" '("splice" . boon-splice))
 (define-key boon-command-map "S" 'yank-pop)
 
 ;; t
-(define-key boon-command-map "t" 'boon-take-region) ; "take"
+(define-key boon-command-map "t" '("take" . boon-take-region))
 (define-key boon-command-map "T" 'boon-treasure-region) ; "treasure"
 
 ;; d
@@ -120,12 +104,14 @@
 ;; reserved (repeat?)
 ;; x
 (define-key boon-command-map "x" boon-x-map)
+(define-key boon-command-map "X" 'boon-highlight-regexp)
 ;; c
 (define-key boon-command-map "c" 'boon-c-god)
 ;; v
 (define-key boon-command-map (kbd "C-v") 'boon-open-line-and-insert)
 (define-key boon-command-map "V" 'boon-open-next-line-and-insert)
-(define-key boon-command-map "v" 'boon-set-insert-like-state) ; 'v' looks like an insertion mark
+(define-key boon-command-map "v" '("v looks like an insert mark" . boon-set-insert-like-state))
+
 ;; b
 (define-key boon-command-map "B" 'boon-copy-to-register)
 (define-key boon-command-map "b" 'insert-register)

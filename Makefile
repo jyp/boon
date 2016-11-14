@@ -11,6 +11,13 @@ cheat.pdf: cheat-sheet.hs
 test:
 	$(emacs) -batch --script boon-test.el
 
+Colemak.hs:
+	$(emacs) -batch \
+          --eval "(add-to-list 'load-path (expand-file-name \".\"))" \
+          --eval "(package-initialize)" \
+          -l boon-tutorial.el \
+          --eval '(boon-dump-cheatsheet "colemak")'
+
 clean:
 	rm -f *.elc
 

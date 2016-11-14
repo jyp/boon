@@ -173,10 +173,9 @@ line."
   (interactive)
   (if mark-active
       (exchange-point-and-mark)
-    (if (mark)
-        (progn
-          (goto-char (mark))
-          (pop-mark)))))
+    (when (mark)
+      (goto-char (mark))
+      (pop-mark))))
 
 (defun boon-switch-mark-quick ()
   "Pop the mark ring until we find ourselves on a different line."

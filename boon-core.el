@@ -120,7 +120,8 @@ those. See 'boon-special-map' for exceptinons.")
     mu4e-view-mode
     )
     "A List of modes which should use `boon-special-state'."
-    :group 'boon)
+    :group 'boon
+    :type '(repeat symbol))
 
 (defun boon-special-mode-p ()
   "Should the mode use `boon-special-state'?"
