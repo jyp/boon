@@ -31,17 +31,16 @@
 
 (defun boon-dump-cheatsheet (flavour)
   "Dump cheatcheat info for FLAVOUR."
-  (let ((module (capitalize flavour))
-        (el (concat "boon-" flavour ".el")))
+  (let ((el (concat "boon-" flavour ".el")))
     (require 'boon)
     (load el)
     (with-temp-buffer
-      (insert (format "module %s where \n" module))
+      (insert "module Layout where\n")
       (insert (format "nil = \"\"\n"))
       (insert (format "commandMap = %s\n" (boon-dump-map boon-command-map)))
       (insert (format "movesMap   = %s\n" (boon-dump-map boon-moves-map)))
       (insert (format "selectMap  = %s\n" (boon-dump-map boon-select-map)))
-      (write-region nil nil (concat module ".hs")))))
+      (write-region nil nil (concat flavour ".hs")))))
 
 (defun boon-keymap-rev-look (sub map)
   "Return an event yielding SUB from the keymap MAP."

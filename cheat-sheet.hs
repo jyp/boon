@@ -14,7 +14,8 @@ import Control.Lens (set)
 import Data.Traversable
 import Data.List (isSuffixOf,isPrefixOf)
 import Algebra.Classes
-import qualified Colemak
+import Layout
+import System.Environment
 
 preamble body = do
   documentClass "article" ["10pt"]
@@ -30,7 +31,7 @@ preamble body = do
 
 data CheatSheet = CS
   { leftHandK, rightHandK :: [[String]] -- keycap glyphs
-  , commandsInfo, selectorsInfo :: [(Integer,(String,String))]
+  , commandsInfo, selectorsInfo :: [(String, (TeX,Argument,TeX))]
   }
 
 commandArgument :: String -> Argument
@@ -43,29 +44,6 @@ commandArgument "selectContent" = TextRegion
 commandArgument "" = Reserved
 commandArgument _  = None
 
-
-colemakCS :: CheatSheet
-colemakCS = CS {
-  leftHandK = [["q","w","f","p","g"]
-              ,["a","r","s","t","d"]
-              ,["z","x","c","v","b"]]
-
- ,rightHandK = [["j","l","u","y",";"," "]
-               ,["h","n","e","i","o","'"]
-               ,["k","m",",",".","/"," "]]
- ,commandsInfo = Colemak.commandMap ++ Colemak.movesMap
- ,selectorsInfo = Colemak.selectMap
-}
-
-qwertyCS = CS {
-  leftHandK = [["q","w","e","r","t"]
-              ,["a","s","d","f","g"]
-              ,["z","x","c","v","b"]]
-
- ,rightHandK = [["y","u","i","o","p"," "]
-               ,["h","j","k","l",";","'"]
-               ,["n","m",",",".","/"," "]]
-}
 
 
 upKey :: Char -> Char
@@ -187,7 +165,7 @@ matrixDiag matrix = do
 
 keyBDiag :: CheatSheet -> TexDiagram ()
 keyBDiag CS {..} = do
-  keys <- matrixDiag (map (map (keyDiagram (map massageInfo commandsInfo))) (leftHandK +++ rightHandK))
+  keys <- matrixDiag (map (map (keyDiagram commandsInfo)) (leftHandK +++ rightHandK))
   esc <- keyFull keySize "esc" "back to normal mode" None
   esc # SW .=. (keys !! 0 !! 0) # NW + (Point zero (constant keyDist))
   bar <- keyFull (keySize * 6 + keyDist * 5) "space" "select region" TextRegion
@@ -197,7 +175,7 @@ keyBDiag CS {..} = do
 regDiag :: CheatSheet -> TexDiagram ()
 regDiag CS {..} = do
   txt <- label "lhtrs" "Left-hand text region specifiers:"
-  keys <- matrixDiag (map (map (keyHalf (map massageInfo selectorsInfo))) leftHandK)
+  keys <- matrixDiag (map (map (keyHalf selectorsInfo)) leftHandK)
   spread vdist (constant 7) [keys!!0!!0,txt]
   return ()
 
@@ -207,8 +185,29 @@ x +++ y = zipWith (++) x y
 
 main :: IO ()
 main = do
-  renderTex Plain "cheat-sheet" (docu colemakCS)
-  -- renderTex Plain "qwerty"      (docu qwertyCS)
+  [flavor] <- getArgs
+  let cs = CS {leftHandK = [], rightHandK = []
+              ,commandsInfo = ("",(mempty,Reserved,mempty)):
+                              map massageInfo (Layout.commandMap ++ Layout.movesMap)
+              ,selectorsInfo = map massageInfo Layout.selectMap
+              }
+  let cs' = case flavor of
+         "colemak" -> cs {
+           leftHandK = [["q","w","f","p","g"]
+                       ,["a","r","s","t","d"]
+                       ,["z","x","c","v","b"]]
+           ,rightHandK = [["j","l","u","y",";",""]
+                         ,["h","n","e","i","o","'"]
+                         ,["k","m",",",".","/",""]]}
+         "qwerty" -> cs
+               {leftHandK = [["q","w","e","r","t"]
+                   ,["a","s","d","f","g"]
+                   ,["z","x","c","v","b"]]
+
+               ,rightHandK = [["y","u","i","o","p",""]
+                    ,["h","j","k","l",";","'"]
+                    ,["n","m",",",".","/",""]]}
+  renderTex Plain flavor (docu cs')
 
 docu :: CheatSheet -> TeX
 docu csData = preamble «

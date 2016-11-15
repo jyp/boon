@@ -16,3 +16,8 @@ TAGS
 /problem.smt2
 /result.smt2
 /dist
+/Layout.hs
+/colemak.pdf
+/colemak.tex
+/qwerty.pdf
+/qwerty.tex

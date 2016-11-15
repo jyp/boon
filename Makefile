@@ -1,21 +1,25 @@
 emacs ?= emacs
 
-cheat.pdf: cheat-sheet.hs Colemak.hs
+sheets: colemak.pdf qwerty.pdf
+
+%.pdf: cheat-sheet.hs %.hs
+	cp $*.hs Layout.hs
 	nix-shell --run "cabal build"
-	nix-shell --run dist/build/boonCS/boonCS
-	nix-shell latex.nix --run "xelatex cheat-sheet.tex"
-	nix-shell --run dist/build/boonCS/boonCS
-	nix-shell latex.nix --run "xelatex cheat-sheet.tex"
+	nix-shell --run "dist/build/boonCS/boonCS $*"
+	nix-shell latex.nix --run "xelatex $*.tex"
+	nix-shell --run "dist/build/boonCS/boonCS $*"
+	nix-shell latex.nix --run "xelatex $*.tex"
 
 test:
 	$(emacs) -batch --script boon-test.el
 
-Colemak.hs: boon-tutorial.el boon-colemak.el boon-keys.el
-	$(emacs) -batch \
+BOON_ENV = -batch \
           --eval "(add-to-list 'load-path (expand-file-name \".\"))" \
           --eval "(package-initialize)" \
-          -l boon-tutorial.el \
-          --eval '(boon-dump-cheatsheet "colemak")'
+
+%.hs:  boon-tutorial.el boon-%.el boon-keys.el
+	$(emacs) $(BOON_ENV) -l boon-tutorial.el \
+          --eval "(boon-dump-cheatsheet \"$*\")"
 
 clean:
 	rm -f *.elc
