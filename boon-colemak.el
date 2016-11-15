@@ -23,27 +23,27 @@
 
 (define-key boon-select-map "z"  'boon-select-content) ;; inZide
 
-(define-key boon-select-map "k"  'boon-select-blanks) ;; blanKs
+(define-key boon-select-map "k"  '("blanks" . boon-select-blanks))
 
 (define-key boon-moves-map "k" '("bacK to marK" . boon-switch-mark)) ; bacK to marK
 (define-key boon-moves-map "K" 'xref-pop-marker-stack)
 
-(define-key boon-moves-map "j"  'xref-find-definitions)
+(define-key boon-moves-map "j"  '("jump" . xref-find-definitions))
 (define-key boon-moves-map "J"  'xref-find-references)
-(define-key boon-moves-map "u"  'previous-line)
-(define-key boon-moves-map "y"  'next-line)
+(define-key boon-moves-map "u"  '("↑" . previous-line))
+(define-key boon-moves-map "y"  '("↓" . next-line))
 (define-key boon-moves-map "U"  'backward-paragraph)
 (define-key boon-moves-map "Y"  'forward-paragraph)
-(define-key boon-moves-map "l"  'boon-beginning-of-line)
-(define-key boon-moves-map ";"  'boon-end-of-line)
-(define-key boon-moves-map "n"  'boon-smarter-backward)
-(define-key boon-moves-map "o"  'boon-smarter-forward)
+(define-key boon-moves-map "l"  '("⇤" . boon-beginning-of-line))
+(define-key boon-moves-map ";"  '("⇥" . boon-end-of-line))
+(define-key boon-moves-map "n"  '("⇠" . boon-smarter-backward))
+(define-key boon-moves-map "o"  '("⇢" . boon-smarter-forward))
 (define-key boon-moves-map "E"  'boon-smarter-upward)
 (define-key boon-moves-map "I"  'boon-smarter-downward)
-(define-key boon-moves-map ","  'boon-beginning-of-expression)
-(define-key boon-moves-map "."  'boon-end-of-expression)
-(define-key boon-moves-map "e"  'backward-char)
-(define-key boon-moves-map "i"  'forward-char)
+(define-key boon-moves-map ","  '("↜" . boon-beginning-of-expression))
+(define-key boon-moves-map "."  '("↝" . boon-end-of-expression))
+(define-key boon-moves-map "e"  '("←" . backward-char))
+(define-key boon-moves-map "i"  '("→" . forward-char))
 (define-key boon-moves-map "<"  'beginning-of-buffer)
 (define-key boon-moves-map ">"  'end-of-buffer)
 (define-key boon-moves-map "m"  'boon-qsearch-previous-at-point)
@@ -72,7 +72,7 @@
 
 ;; p
 ;; Pinpoint Place
-(define-key boon-command-map "p" 'occur)
+(define-key boon-command-map "p" '("pinpoint" . occur))
 
 ;; Misc crap
 (define-key boon-command-map "P" 'kmacro-end-or-call-macro) ; Play
@@ -97,7 +97,7 @@
 (define-key boon-command-map "T" 'boon-treasure-region) ; "treasure"
 
 ;; d
-(define-key boon-command-map "d" 'boon-replace-by-character) ; "displace"
+(define-key boon-command-map "d" '("displace" . boon-replace-by-character))
 
 ;; Bottom row
 ;; z
@@ -114,10 +114,12 @@
 
 ;; b
 (define-key boon-command-map "B" 'boon-copy-to-register)
-(define-key boon-command-map "b" 'insert-register)
+(define-key boon-command-map "b" '("bank" . insert-register))
 
 ;; RIGHT HAND: movement and marking commands.
-;; Most of these are actually in the boon-moves-map; however some don't quite work there; so they end up here.
+
+;; Most of the moves are in boon-moves-map. Yet some moves do not work
+;; as selectors, so they are put in the boon-command-map instead.
 (define-key boon-command-map (kbd "C-u") 'scroll-down-line)
 (define-key boon-command-map (kbd "C-y") 'scroll-up-line)
 
