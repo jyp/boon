@@ -1,28 +1,26 @@
-{-# OPTIONS_GHC -XTypeSynonymInstances -XOverloadedStrings -XRecursiveDo -pgmF marxup -F #-}
-{-# LANGUAGE TupleSections, RecordWildCards #-}
-module CC where
+{-# LANGUAGE RankNTypes #-}
+{-# OPTIONS_GHC -pgmF marxup -F #-}
+{-# LANGUAGE TupleSections, RecordWildCards, RecursiveDo, OverloadedStrings #-}
+module Main (main) where
 
-import Data.Char (toUpper)
+import Data.Char (toUpper,chr)
 import Prelude hiding (mapM,sequence,Num(..),(/))
 import MarXup
 import MarXup.Latex
 import MarXup.Tex hiding (label)
-import Control.Applicative
-import Data.Monoid
-import Control.Monad (unless)
 import Graphics.Diagrams
 import MarXup.Diagram
-import MarXup.Latex.Math (ensureMath)
 import Control.Lens (set)
--- import Data.String
 import Data.Traversable
-import Data.List (zip4,zipWith4,isSuffixOf,isPrefixOf)
+import Data.List (isSuffixOf,isPrefixOf)
 import Algebra.Classes
+import qualified Colemak
+
 preamble body = do
   documentClass "article" ["10pt"]
   usepackage "fontspec" []
   cmd "setsansfont" (tex "DejaVu Sans")
-  cmd "setmainfont" (tex "DejaVu Serif")
+  -- cmd "setmainfont" (tex "DejaVu Serif")
   usepackage "tikz" []
   usepackage "graphicx" []
   usepackage "amssymb" []
@@ -31,12 +29,22 @@ preamble body = do
   env "document" body
 
 data CheatSheet = CS
-  { leftHandK, rightHandK :: [[String]] -- keycaps
-  , leftHandM, rightHandM :: [[TeX]] -- mnemonics
-  , leftHandL, leftHandU, rightHandL, rightHandU :: [[(TeX,Argument)]] -- commands (lowercase, uppercase)
-  , leftHandR :: [[(TeX,Argument)]] -- region selectors
+  { leftHandK, rightHandK :: [[String]] -- keycap glyphs
+  , commandsInfo, selectorsInfo :: [(Integer,(String,String))]
   }
 
+commandArgument :: String -> Argument
+commandArgument x | "region" `isSuffixOf` x = TextRegion
+                  | "character" `isSuffixOf` x = Char
+                  | "map" `isSuffixOf` x = Prefix
+                  | "avy" `isPrefixOf` x = Char
+commandArgument "boon-enclose" = Bin Enclosure TextRegion
+commandArgument "selectContent" = TextRegion
+commandArgument "" = Reserved
+commandArgument _  = None
+
+
+colemakCS :: CheatSheet
 colemakCS = CS {
   leftHandK = [["q","w","f","p","g"]
               ,["a","r","s","t","d"]
@@ -45,41 +53,11 @@ colemakCS = CS {
  ,rightHandK = [["j","l","u","y",";"," "]
                ,["h","n","e","i","o","'"]
                ,["k","m",",",".","/"," "]]
-
- ,rightHandM = [["Jump", "⇤", "↑", "↓", "⇥"]
-               ,["Hop", "⇠" , "←", "→", "⇢" , "'"]
-               ,["bacK to marK", "", "↜", "↝", ""]
-               ]
- ,leftHandL = [[("escape",Char), ("search backward",SearchObject), ("search forward",SearchObject), ("occur",None), ("goto-...",Prefix)]
-              ,[("enclose",Bin Enclosure TextRegion), ("kill+insert", TextRegion), ("yank", None), ("kill", TextRegion), ("replace char", Char)]
-              ,[reserved, ("C-x",Prefix), ("C-c C-...",Prefix), ("insert mode",None), ("yank register",Char)]
-              ]
- ,leftHandM = [["Quote", "backWard", "Forward", "Pinpoint", "Goto"]
-              ,["Around", "Replace", "Splice", "Take", "Displace"]
-              ,["", "eXtended", "Command", "⋎ (insert mark)", "Bank"]
-              ]
- ,leftHandU = [[reserved, ("re-search backward",None), ("re-search forward",None), ("Play-macro",None), reserved]
-              ,[reserved, ("Record macro", None), ("pop-yank", None), ("copy", TextRegion), reserved]
-              ,[reserved, reserved, reserved, ("open line",None), ("copy register",Char)]
-              ]
- ,leftHandR = [[("quotes (string)",None), ("word",None), ("word",None), ("paragraph",None), reserved]
-              ,[("enclosure",TextRegion), ("whole-line",None), ("symbol",None), ("whitespace+",TextRegion), ("document",None), ("previous-region",None)]
-              ,[("inclosure",TextRegion), ("s-expr",None), ("s-expr contents",None), reserved, reserved]
-              ]
- ,rightHandL = movesC
-  [["jump-to-def", "begin-of-line", "previous-line", "next-line", "end-of-line"]
-  ,["avy-jump", "smarter-left", "backward-char", "forward-char", "smarter-right", "toggle mark-active"]
-  ,["pop-mark", "", "begin-of-expr", "end-of-expr", ""]
-  ]
-
- ,rightHandU = movesC
-  [["reserved", "", "previous-paragraph", "next-paragraph", ""]
-  ,["avy-jump-char", "", "smarter-up", "smarter-down", "", ""]
-  ,["pop-mark-quick", "", "begin-of-buffer", "end-of-buffer", ""]
-  ]
+ ,commandsInfo = Colemak.commandMap ++ Colemak.movesMap
+ ,selectorsInfo = Colemak.selectMap
 }
 
-qwertyCS = colemakCS {
+qwertyCS = CS {
   leftHandK = [["q","w","e","r","t"]
               ,["a","s","d","f","g"]
               ,["z","x","c","v","b"]]
@@ -87,26 +65,11 @@ qwertyCS = colemakCS {
  ,rightHandK = [["y","u","i","o","p"," "]
                ,["h","j","k","l",";","'"]
                ,["n","m",",",".","/"," "]]
-
- ,leftHandL = [[("escape",Char), ("search backward",SearchObject), ("search forward",SearchObject), ("occur",None), ("replace char", Char)]
-              ,[("enclose",Bin Enclosure TextRegion), ("kill+insert", TextRegion), ("kill", TextRegion), ("yank", None), ("goto-...",Prefix)]
-              ,[reserved, ("C-x",Prefix), ("C-c C-...",Prefix), ("insert mode",None), ("yank register",Char)]
-              ]
- ,leftHandU = [[reserved, ("re-search backward",None), ("re-search forward",None), ("Record macro", None), reserved]
-              ,[reserved, reserved,  ("copy", TextRegion), ("pop-yank", None), reserved]
-              ,[reserved, reserved, reserved, ("open line",None), ("copy register",Char)]
-              ]
- ,leftHandM = [["Quote", "backWard", "Elsewhere?", "occurR", "Transform"]
-              ,["Around", "Substitute", "Delete", "Flush", "Goto"]
-              ,["", "eXtended", "Command", "⋎ (insert mark)", "Bank"]
-              ]
- ,leftHandR = [[("quotes (string)",None), ("word",None), ("word",None), ("paragraph",None), reserved]
-              ,[("enclosure",TextRegion), ("symbol",None), ("document",None), reserved, ("paragraph",None), ("previous-region",None)]
-              ,[("inclosure",TextRegion), ("s-expr",None), ("s-expr contents",None),  ("whitespace+",TextRegion), ("blanks",TextRegion) ]
-              ]
 }
 
-upKey c = case [c] 
+
+upKey :: Char -> Char
+upKey c = case [c] of
   "'" -> head "\""
   ";" -> ':'
   "," -> '<'
@@ -127,52 +90,47 @@ argColor a = case a of
   Bin _ _ -> "purple"
   _ -> "white"
 
-reserved :: (TeX,Argument)
-reserved = (italic "reserved",Reserved)
-
-
-moveC :: String -> (TeX,Argument)
-moveC "" = ("",Reserved)
-moveC x | "avy" `isPrefixOf` x = (textual x,Char)
-moveC x | "region" `isSuffixOf` x = (textual x,TextRegion)
-moveC x = (textual x,None)
-movesC = map (map moveC)
-
-sm = cmd0 "shortmid"
-ma = ensureMath
-
+varwidth :: forall a. String -> Tex a -> Tex a
 varwidth x body = env "varwidth" ((braces $ tex x) >> cmd0 "centering" >> body)
-
-zzip = zipWith zip
-zzipWith = zipWith . zipWith
-
-zzip4 f = zipWith4 (zipWith4 f)
-zzip3 f = zipWith3 (zipWith3 f)
 
 keySize :: Constant
 keySize = 65
 
-fontsize :: String -> String -> TeX -> TeX
-fontsize x y body = braces $ cmdn_ "fontsize" [tex x, tex y] <> body
+massageInfo :: (Integer, (String,String)) -> (String, (TeX,Argument,TeX))
+massageInfo (c,(mnemonic,command)) = ([chr (fromIntegral c)],(cmdTex,arg,textual mnemonic))
+  where (cmdTex,arg) | command == "nil" = (italic "reserved",Reserved)
+                     | otherwise = (textual (shortenCommand command),commandArgument command)
 
--- keyHalf :: String -> (TeX,Argument) -> TexDiagram Anchorage
-keyHalf k (act,arg) = do
-  up <- using (fill (argColor arg)) $ draw $ box "keyHalf"
-  upK <- label "k" $  textSize Huge $ sans $ textual $ k
-  upT <- label "scr" $ varwidth "45pt" $ sans $ textSize ScriptSize $ act
-  up # E .=. upT # E
-  up # W .=. upK # W
-  width up === constant keySize
-  height up === constant (keySize / 2)
-  return up
+shortenCommand :: String -> String
+shortenCommand c | "boon-" `isPrefixOf` c = shortenCommand (drop 5 c)
+shortenCommand c | "-map" `isSuffixOf` c = shortenCommand (dropR 4 c)
+shortenCommand c = c
+
+dropR :: forall a. Int -> [a] -> [a]
+dropR n = reverse . drop n . reverse
+
+keyHalf :: [(String, (TeX, Argument, TeX))]
+           -> String -> TexDiagram Object
+keyHalf kmInfo k = case lookup k kmInfo of
+    Nothing -> error $ "key (" ++ k ++ ") not found in keymap."
+    Just (act,arg,mnem) -> do
+      up <- using (fill (argColor arg)) $ draw $ box "keyHalf"
+      upK <- label "k" $  textSize Huge $ sans $ textual $ k
+      upT <- label "scr" $ varwidth "45pt" $ sans $ textSize ScriptSize $ act
+      m <- (label "mnem" $ sans $ textSize Tiny $ mnem)
+      m # SW .=. up # SW
+      up # E .=. upT # E
+      up # W .=. upK # W
+      width up === constant keySize
+      height up === constant (keySize / 2)
+      return up
 
 
-keyDiagram k mnem l u = do
+keyDiagram :: [(String, (TeX, Argument, TeX))] -> String -> Diagram TeX Tex Object
+keyDiagram kmInfo k = do
   b <- using (set lineWidth thick) $ draw $ box "keyB"
-  up <- keyHalf (map upKey k) u
-  down <- keyHalf k l
-  m <- (label "mnem" $ sans $ textSize Tiny $ mnem)
-  m # SW .=. b # SW
+  up <- keyHalf kmInfo (map upKey k)
+  down <- keyHalf kmInfo k
   up # S .=. down # N
   b # NW .=. up # NW
   b # NE .=. up # NE
@@ -193,6 +151,7 @@ keyFull w k act arg = do
 keyDist :: Constant
 keyDist = 5
 
+argDescs :: [(Argument, TeX)]
 argDescs =
   [(Bin Enclosure TextRegion, "First an enclosure, then a region")
   ,(None,"No Argument")
@@ -226,27 +185,30 @@ matrixDiag matrix = do
   alignMatrix $ map (map (# Center)) keys
   return $ reverse keys
 
+keyBDiag :: CheatSheet -> TexDiagram ()
 keyBDiag CS {..} = do
-  keys <- matrixDiag (zzip4 keyDiagram (leftHandK +++ rightHandK) (leftHandM +++ rightHandM) (leftHandL +++ rightHandL) (leftHandU +++ rightHandU))
+  keys <- matrixDiag (map (map (keyDiagram (map massageInfo commandsInfo))) (leftHandK +++ rightHandK))
   esc <- keyFull keySize "esc" "back to normal mode" None
   esc # SW .=. (keys !! 0 !! 0) # NW + (Point zero (constant keyDist))
   bar <- keyFull (keySize * 6 + keyDist * 5) "space" "select region" TextRegion
   keys !! 2 !! 2 # SW .=. bar # NW  + (Point zero (constant keyDist))
   return ()
 
+regDiag :: CheatSheet -> TexDiagram ()
 regDiag CS {..} = do
   txt <- label "lhtrs" "Left-hand text region specifiers:"
-  keys <- matrixDiag (zzipWith keyHalf leftHandK leftHandR)
+  keys <- matrixDiag (map (map (keyHalf (map massageInfo selectorsInfo))) leftHandK)
   spread vdist (constant 7) [keys!!0!!0,txt]
   return ()
-  
+
 (+++) :: [[a]] -> [[a]] -> [[a]]
 x +++ y = zipWith (++) x y
 
 
+main :: IO ()
 main = do
   renderTex Plain "cheat-sheet" (docu colemakCS)
-  renderTex Plain "qwerty"      (docu qwertyCS)
+  -- renderTex Plain "qwerty"      (docu qwertyCS)
 
 docu :: CheatSheet -> TeX
 docu csData = preamble «

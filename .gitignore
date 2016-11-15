@@ -11,5 +11,8 @@ TAGS
 /cheat-sheet.tex
 
 /.stack-work
-/boon.elc
+*.elc
 /Colemak.hs
+/problem.smt2
+/result.smt2
+/dist

@@ -1,0 +1,5 @@
+nix-repos:
+  lp-diagrams:
+    location: https://github.com/jyp/lp-diagrams.git
+  marxup:
+    location: https://github.com/jyp/marxup.git
