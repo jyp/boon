@@ -32,7 +32,6 @@
              (boon-open-next-line-and-insert)
              (buffer-substring-no-properties 1 (point-max))))))
 
-(setq byte-compile-error-on-warn t)
 
 
 ;; Untested:
@@ -40,6 +39,7 @@
 
 (require 'dash)
 
+(setq byte-compile-error-on-warn t)
 (unless
  (-all? #'byte-compile-file
         '("boon.el"

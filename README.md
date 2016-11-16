@@ -127,9 +127,10 @@ not activated and you want to try it locally, activate it by
 Usage
 -----
 
-You can jump-start by reading the
-[cheat sheet](https://pdf.yt/d/hSKUThNNSxrNFXkQ) directly, but reading
-through the tutorial is highly recommended:
+You can jump-start by reading the cheat sheet
+([colemak](https://github.com/jyp/boon/blob/master/colemak.pdf)
+[qwerty](https://github.com/jyp/boon/blob/master/colemak.pdf))
+directly, but reading through the tutorial is highly recommended:
 
     M-x boon-tutorial
 
