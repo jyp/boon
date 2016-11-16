@@ -26,7 +26,7 @@
 (define-key boon-moves-map "n" '("noon walk" . boon-switch-mark))
 (define-key boon-moves-map "N" 'xref-pop-marker-stack)
 
-(define-key boon-moves-map "y"  'xref-find-definitions) ; fYnd
+(define-key boon-moves-map "y"  '("fYnd" . xref-find-definitions))
 (define-key boon-moves-map "Y"  'xref-find-references)
 (define-key boon-moves-map "i"  'previous-line)
 (define-key boon-moves-map "o"  'next-line)
@@ -69,7 +69,7 @@
 (define-key boon-moves-map "E"  'boon-qsearch-next)
 
 ;; r
-(define-key boon-command-map "r" 'occur) ;; occuR
+(define-key boon-command-map "r" '("occuR" . occur))
 (define-key boon-command-map "R" 'kmacro-start-macro) ; Record
 
 ;; Misc crap
@@ -77,7 +77,7 @@
 (define-key boon-command-map "X" 'boon-highlight-regexp)
 
 ;; t
-(define-key boon-command-map "t" 'boon-replace-by-character) ; "transform"
+(define-key boon-command-map "t" '("transform" . boon-replace-by-character))
 
 
 ;; home row
@@ -92,7 +92,7 @@
 (define-key boon-command-map "D" 'boon-treasure-region) ; "duplicate"
 
 ;; f
-(define-key boon-command-map "f" '("fetch" . boon-splice)) ; flush
+(define-key boon-command-map "f" '("fetch" . boon-splice))
 (define-key boon-command-map "F" 'yank-pop)
 
 ;; g
