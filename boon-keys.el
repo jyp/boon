@@ -31,7 +31,7 @@
 (define-key boon-backward-search-map "u"  'mc/cycle-backward)
 
 
-(defvar boon-goto-map (make-sparse-keymap))
+(define-prefix-command 'boon-goto-map)
 (set-keymap-parent boon-goto-map goto-map)
 
 (define-key boon-goto-map "l" 'goto-line)

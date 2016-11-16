@@ -78,7 +78,7 @@
 (define-key boon-command-map "P" 'kmacro-end-or-call-macro) ; Play
 
 ;; g
-(define-key boon-command-map "g" (cons "goto" boon-goto-map))
+(define-key boon-command-map "g" '("goto" . boon-goto-map))
 
 ;; home row
 ;; a
@@ -103,7 +103,7 @@
 ;; z
 ;; reserved (repeat?)
 ;; x
-(define-key boon-command-map "x" boon-x-map)
+(define-key boon-command-map "x" 'boon-x-map)
 (define-key boon-command-map "X" 'boon-highlight-regexp)
 ;; c
 (define-key boon-command-map "c" 'boon-c-god)

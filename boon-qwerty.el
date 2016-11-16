@@ -96,13 +96,13 @@
 (define-key boon-command-map "F" 'yank-pop)
 
 ;; g
-(define-key boon-command-map "g" (cons "goto" boon-goto-map))
+(define-key boon-command-map "g" '("goto" . boon-goto-map))
 
 ;; Bottom row
 ;; z
 ;; reserved (repeat?)
 ;; x
-(define-key boon-command-map "x" boon-x-map)
+(define-key boon-command-map "x" 'boon-x-map)
 ;; c
 (define-key boon-command-map "c" 'boon-c-god)
 ;; v

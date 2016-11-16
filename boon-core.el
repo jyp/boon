@@ -11,7 +11,7 @@
 
 ;; Maps
 
-(defvar boon-x-map (make-sparse-keymap) "Keymap bound to x.")
+(define-prefix-command 'boon-x-map)
 (set-keymap-parent boon-x-map ctl-x-map)
 
 (defvar boon-command-map (make-sparse-keymap)
