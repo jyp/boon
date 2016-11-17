@@ -14,7 +14,7 @@
        ,body
        (progn (exchange-point-and-mark) ,body (exchange-point-and-mark))))
 
-(defcustom boon-hints-enabled 't "Display hints." :group 'boon)
+(defcustom boon-hints-enabled 't "Display hints." :group 'boon :type 'boolean)
 
 (defun boon-hint (msg)
   "Provide MSG as a hint."

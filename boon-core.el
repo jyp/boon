@@ -11,6 +11,9 @@
 
 ;; Maps
 
+(defgroup boon nil "Boon" :group 'Editing)
+
+(defvar boon-x-map)
 (define-prefix-command 'boon-x-map)
 (set-keymap-parent boon-x-map ctl-x-map)
 
