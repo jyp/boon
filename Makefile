@@ -5,9 +5,9 @@ sheets: colemak.pdf qwerty.pdf
 %.pdf: cheat-sheet.hs %.hs
 	cp $*.hs Layout.hs
 	nix-shell --run "cabal build"
-	nix-shell --run "dist/build/boonCS/boonCS $*"
+	nix-shell --run "dist/build/boonCS/boonCS $*" # generate the size of boxes
 	nix-shell latex.nix --run "xelatex $*.tex"
-	nix-shell --run "dist/build/boonCS/boonCS $*"
+	nix-shell --run "dist/build/boonCS/boonCS $*" # generate the diagram according to the above sizes
 	nix-shell latex.nix --run "xelatex $*.tex"
 
 test:
