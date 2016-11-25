@@ -45,6 +45,7 @@
         '("boon.el"
           "boon-arguments.el"
           "boon-colemak.el"
+          "boon-core.el"
           "boon-keys.el"
           "boon-main.el"
           "boon-moves.el"

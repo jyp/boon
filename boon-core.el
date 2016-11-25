@@ -142,9 +142,6 @@ those. See 'boon-special-map' for exceptinons.")
   :keymap nil
   (cond
    (boon-local-mode
-    ;; restore the proper value of `major-mode' in Fundamental buffers
-    (when (eq major-mode 'turn-on-boon-mode)
-      (setq major-mode 'fundamental-mode))
     ;; The initial state is usually setup by `boon-initialize' when
     ;; the major-mode in a buffer changes. This preliminary
     ;; initialization is only for the case when `boon-local-mode' is
@@ -157,22 +154,6 @@ those. See 'boon-special-map' for exceptinons.")
     (boon-set-off-state)
     (message "Boon disabled")
     )))
-
-;; No hooks are run in Fundamental buffers, so other measures are
-;; necessary to initialize Boon in these buffers. When Boon is
-;; enabled globally, the default value of `major-mode' is set to
-;; `turn-on-boon-mode', so that Boon is enabled in Fundamental
-;; buffers as well. Then, the buffer-local value of `major-mode' is
-;; changed back to `fundamental-mode'. (Since the `boon-mode' function
-;; is created by a macro, we use `defadvice' to augment it.)
-(defadvice boon-mode (after start-boon activate)
-  "Enable Boon in Fundamental mode."
-  (if boon-mode
-      (when (eq (default-value 'major-mode) 'fundamental-mode)
-        ;; changed back by `boon-local-mode'
-        (setq-default major-mode 'turn-on-boon-mode))
-    (when (eq (default-value 'major-mode) 'turn-on-boon-mode)
-      (setq-default major-mode 'fundamental-mode))))
 
 (add-hook 'minibuffer-setup-hook 'boon-minibuf-hook)
 
@@ -191,8 +172,7 @@ This is because no command mode is activated in the minibuffer."
     (boon-local-mode 1)))
 
 ;;;###autoload (autoload 'boon-mode "boon" "Toggle boon in all buffers" t)
-(define-globalized-minor-mode boon-mode
-  boon-local-mode boon-initialize)
+(define-globalized-minor-mode boon-mode boon-local-mode boon-initialize)
 
 ;;;###autoload
 (defun turn-on-boon-mode ()
