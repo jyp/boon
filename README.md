@@ -129,7 +129,7 @@ Usage
 
 You can jump-start by reading the cheat sheet
 ([colemak](https://github.com/jyp/boon/blob/master/colemak.pdf)
-[qwerty](https://github.com/jyp/boon/blob/master/colemak.pdf))
+[qwerty](https://github.com/jyp/boon/blob/master/qwerty.pdf))
 directly, but reading through the tutorial is highly recommended:
 
     M-x boon-tutorial
