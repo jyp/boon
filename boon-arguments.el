@@ -88,11 +88,25 @@ This item is either the symbol at point, or, if this fails, the sexp at point."
                 (forward-thing thing (1- count))
                 (list (boon-mk-reg (car bnds) (point)))))))
 
+(defun boon-select-n-copies (count thing)
+  "Return list of regions with COUNT copies of the THING."
+  (lambda() (save-excursion
+              (let* ((bnds (bounds-of-thing-at-point thing))
+                     (what (buffer-substring-no-properties (car bnds) (cdr bnds)))
+                     (result nil))
+                (goto-char (car bnds))
+                (while (and (> count 0) (search-forward what nil t))
+                  (setq count (1- count))
+                  (push (boon-mk-reg (match-beginning 0)
+                                     (match-end 0))
+                        result))
+                result))))
+
 (defun boon-select-document () (interactive) (lambda () (boon-regs-from-bounds (cons (point-min) (point-max)))))
 (defun boon-select-paragraph      (count) (interactive "p") (boon-select-n count 'paragraph))
-(defun boon-select-word           (count) (interactive "p") (boon-select-n count 'word))
+(defun boon-select-word           (count) (interactive "p") (boon-select-n-copies count 'word))
 (defun boon-select-sentence       (count) (interactive "p") (boon-select-n count 'sentence))
-(defun boon-select-symbol         (count) (interactive "p") (boon-select-n count 'symbol))
+(defun boon-select-symbol         (count) (interactive "p") (boon-select-n-copies count 'symbol))
 (defun boon-select-list           (count) (interactive "p") (boon-select-n count 'list))
 (defun boon-select-sexp           (count) (interactive "p") (boon-select-n count 'sexp))
 (defun boon-select-whitespace     (count) (interactive "p") (boon-select-n count 'whitespace))
