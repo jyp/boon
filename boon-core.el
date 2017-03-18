@@ -121,6 +121,7 @@ those. See 'boon-special-map' for exceptinons.")
     mu4e-headers-mode
     mu4e-view-mode
     org-agenda-mode
+    cfw:calendar-mode
     )
     "A List of modes which should use `boon-special-state'."
     :group 'boon
