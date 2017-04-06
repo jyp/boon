@@ -90,13 +90,16 @@ This item is either the symbol at point, or, if this fails, the sexp at point."
 
 (defun boon-select-n-copies (count thing)
   "Return list of regions with COUNT copies of the THING."
-  (lambda() (save-excursion
+  (lambda() (save-mark-and-excursion
               (let* ((bnds (bounds-of-thing-at-point thing))
                      (what (buffer-substring-no-properties (car bnds) (cdr bnds)))
+                     (local-count count)
+                     ;; local-count variable necessary because the argument
+                     ;; is shared between all calls to this closure.
                      (result nil))
                 (goto-char (car bnds))
-                (while (and (> count 0) (search-forward what nil t))
-                  (setq count (1- count))
+                (while (and (> local-count 0) (search-forward what nil t))
+                  (setq local-count (1- local-count))
                   (push (boon-mk-reg (match-beginning 0)
                                      (match-end 0))
                         result))
