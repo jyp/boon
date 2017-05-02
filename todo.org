@@ -1,6 +1,8 @@
 * Helm/Ivy/?
 
-Here is the section from the tutorial
+Here is the old section from the tutorial. Removed it as helm/ivy is a
+choice that will depend on customization.
+
  HELM
 -------
 
@@ -42,9 +44,21 @@ Besides `helm-occur', a few other helm commands are bound to keys starting with 
 The full list of key bound to that prefix is:
 \\{boon-goto-map}
 
-* explain what g and x maps are for
 * swap-region
-* Fully Support Fundamental buffers (see evil code?)
-* Repeat "last command" (bind on return?)
-No idea how to do that
+* Fully Support Fundamental buffers
+I tried to do this following the code in Evil but it does not work.
+* Repeat "last command"
+
+The package dot-mode allows to do this to some extent but falls short
+for boon.  The general method of dot-mode could be re-used; namely:
+
+- Add a pre/post command hooks which record the keys/commands
+- The sequences are delimited by move commands
+
+However this is quite heavyweight (there are also lots of special
+cases and complications in dot-mode), so it's not clear that's the way
+to go.
+
+** Binding
+could be bound to RET or Z.
 
