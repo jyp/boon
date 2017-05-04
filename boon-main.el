@@ -15,6 +15,14 @@
 (require 'subr-x)
 (require 'dash)
 
+(defun boon-repeat-command (count)
+  (interactive "p")
+  (let ((cmd (car command-history)))
+    (dotimes (i count)
+      (apply #'funcall-interactively
+             (car cmd)
+             (mapcar (lambda (e) (eval e t)) (cdr cmd))))))
+
 (defun boon-deactivate-mark ()
   "Deactivate the mark robustly."
   (mc/execute-command-for-all-fake-cursors (lambda () (interactive) (deactivate-mark)))
@@ -28,9 +36,9 @@
 
 (defun boon-enclose (enclosure regs)
   "Wrap with the given ENCLOSURE the regions given as REGS."
-  (interactive (list (boon-spec-enclosure) (boon-spec-region "enclose")))
+  (interactive (list (boon-spec-enclosure) (boon-spec-select-top "enclose")))
   ;; (message "boon-enclose regs=%s" regs)
-  (dolist (reg (mapcar 'boon-reg-to-markers regs))
+  (dolist (reg (mapcar 'boon-reg-to-markers (boon-run-selector regs)))
     (save-excursion
       (goto-char (boon-reg-end reg))
       (insert (cadr enclosure))
@@ -120,13 +128,13 @@ Return nil if no changes are made."
 (defun boon-toggle-region-case (regs)
   "Cycle regions through 3 capitalizations: UPPER CASE, lower case, Title Case.
 Regions are given by  REGS."
-  (interactive (list (boon-spec-region "toggle-case")))
+  (interactive (list (boon-spec-select-top "toggle-case")))
   (let* ((deactivate-mark nil)
          (case-fold-search nil)
          (cur-state (if (eq last-command this-command)
                         (get this-command 'state)
                       (save-excursion
-                        (goto-char (boon-reg-begin (car regs)))
+                        (goto-char (boon-reg-begin (car (boon-run-selector regs))))
                         (cond
                          ((looking-at "[[:upper:]][[:upper:]]") 'upcase-region)
                          ((looking-at "[[:upper:]][[:lower:]]") 'capitalize-region)
@@ -135,7 +143,7 @@ Regions are given by  REGS."
                                             (capitalize-region . upcase-region)
                                             (upcase-region . downcase-region)
                                             ))))
-    (dolist (reg regs)
+    (dolist (reg (boon-run-selector regs))
       (funcall cur-state (boon-reg-begin reg) (boon-reg-end reg)))
     (put this-command 'state cur-state)))
 
@@ -216,10 +224,11 @@ If there is more than one, use mc/create-fake-cursor-at-point."
 
 (defun boon-mark-region (regs)
   "Mark the regions REGS."
-  (interactive (list (boon-spec-region "mark")))
+  (interactive (list (boon-spec-select-top "mark")))
   (boon-lay-multiple-cursors (lambda (reg)
                                (set-mark (boon-reg-mark reg))
-                               (goto-char (boon-reg-point reg))) regs)
+                               (goto-char (boon-reg-point reg)))
+                             (boon-run-selector regs))
   (activate-mark))
 
 (defun boon-execute-for-cursor (cursor fun)
@@ -232,11 +241,12 @@ If there is more than one, use mc/create-fake-cursor-at-point."
 
 (defun boon-take-region (regs)
   "Kill the region given as REGS."
-  (interactive (list (boon-spec-region "take")))
+  (interactive (list (boon-spec-select-top "take")))
   ;; convert to markers, so that deleting text does not mess with
   ;; positions
   (unless boon-selected-by-move (setq last-command 'not-a-kill))
-  (dolist (reg-group (-partition-by 'boon-reg-cursor (mapcar 'boon-reg-to-markers regs)))
+  (dolist (reg-group (-partition-by 'boon-reg-cursor
+                                    (mapcar 'boon-reg-to-markers (boon-run-selector regs))))
     (boon-execute-for-cursor (boon-reg-cursor (car reg-group))
      (lambda ()
        (dolist (reg (mapcar 'boon-reg-from-markers reg-group))
@@ -248,14 +258,14 @@ If there is more than one, use mc/create-fake-cursor-at-point."
 
 (defun boon-treasure-region (regs)
   "Copy (kill-ring-save) the regions REGS."
-  (interactive (list (boon-spec-region "treasure")))
-  (dolist (reg regs)
+  (interactive (list (boon-spec-select-top "treasure")))
+  (dolist (reg (boon-run-selector regs))
     (kill-ring-save (boon-reg-begin reg) (boon-reg-end reg))))
 
 (defun boon-substitute-region (regs)
   "Kill the regions REGS, and switch to insertion mode."
-  (interactive (list (boon-spec-region "replace")))
-  (let ((markers (mapcar 'boon-reg-to-markers regs)))
+  (interactive (list (boon-spec-select-top "replace")))
+  (let ((markers (mapcar 'boon-reg-to-markers (boon-run-selector regs))))
     ;; use markers so that deleting things does not mess the positions
     (boon-take-region regs)
     (deactivate-mark t)
@@ -367,8 +377,8 @@ Replace the region if it is active."
 
 (defun boon-toggle-comment (regs)
   "Toggle comments in the regions REGS."
-  (interactive (list (boon-spec-region "toggle comment")))
-  (dolist (reg regs)
+  (interactive (list (boon-spec-select-top "toggle comment")))
+  (dolist (reg (boon-run-selector regs))
     (comment-or-uncomment-region (boon-reg-begin reg)(boon-reg-end reg))))
 
 (provide 'boon-main)

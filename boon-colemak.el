@@ -101,7 +101,7 @@
 
 ;; Bottom row
 ;; z
-;; reserved (repeat?)
+(define-key boon-command-map "z" '("repeat" . boon-repeat-command))
 ;; x
 (define-key boon-command-map "x" 'boon-x-map)
 (define-key boon-command-map "X" 'boon-highlight-regexp)
