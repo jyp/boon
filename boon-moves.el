@@ -72,29 +72,29 @@
 (defun boon-smarter-backward (count)
   "Move backward, over COUNT whole syntactic units."
   (interactive "p")
-  (let ((back-limit (- (point) 5))) ;; looking back at comment delimiter
   (dotimes (_number count)
-    (boon-jump-over-blanks-backward)
-    (cond
-     ((boon-looking-at-comment -1)
-      (forward-comment -1))
-     ((looking-back "\\s\"" back-limit)
-      (backward-char)
-      (er--move-point-backward-out-of-string))
-     ((looking-back "\\s)" back-limit)
-      (backward-list))
-     ((looking-back "\\s_" back-limit)  ;; symbol
-      (skip-syntax-backward "_"))
-     ((looking-back "\\s(" back-limit)
-      (backward-char))
-     ((looking-back "\\s!" back-limit)  ;; generic comment delimiter
-      (skip-syntax-backward "!"))
-     ((looking-back "\\sw" back-limit)
-      (if (not (looking-at "\\(\\s-\\|\\s(\\|\\s)\\)"))
-          (skip-syntax-backward "w")
-        (skip-syntax-backward "w_")))
-     (t
-      (backward-char))))))
+    (let ((back-limit (- (point) 5))) ;; looking back at comment delimiter
+      (boon-jump-over-blanks-backward)
+      (cond
+       ((boon-looking-at-comment -1)
+        (forward-comment -1))
+       ((looking-back "\\s\"" back-limit)
+        (backward-char)
+        (er--move-point-backward-out-of-string))
+       ((looking-back "\\s)" back-limit)
+        (backward-list))
+       ((looking-back "\\s_" back-limit)  ;; symbol
+        (skip-syntax-backward "_"))
+       ((looking-back "\\s(" back-limit)
+        (backward-char))
+       ((looking-back "\\s!" back-limit)  ;; generic comment delimiter
+        (skip-syntax-backward "!"))
+       ((looking-back "\\sw" back-limit)
+        (if (not (looking-at "\\(\\s-\\|\\s(\\|\\s)\\)"))
+            (skip-syntax-backward "w")
+          (skip-syntax-backward "w_")))
+       (t
+        (backward-char))))))
 
 (defun boon-smarter-forward (count)
   "Move forward, over COUNT whole syntactic unit."
