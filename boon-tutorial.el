@@ -374,6 +374,25 @@ that you want to yank the text.
 
 (Shifted \\[yank-pop] does `yank-pop'.)
 
+* REPEATING
+-----------
+
+The last complex command can be repeated by typing
+\\[boon-repeat-command].  In emacs, complex commands have the
+same are defined as those which demand minibuffer input. This
+definition includes commands which take region arguments, such as
+`boon-take-region' and `boon-substitute-region'. We extend this
+definition with the insert command.
+
+>> Substitute a word by typing \\[boon-substitute-region] " (selector 'boon-select-wim) " replacement <ESC>
+>> Move the cursor to another word
+>> Substitute that other word by the same replacement by typing \\[boon-repeat-command]
+
+All complex commands, including inserts, are saved in the
+`command-history'. You can can conjure up (and fix) any complex
+command of your choice using \\[repeat-complex-command]
+
+
 * WHITESPACE
 ------------
 
