@@ -15,10 +15,33 @@
 (require 'subr-x)
 (require 'dash)
 
+;; TODO: rename
+(defun boon-set-insert-like-state (&optional changes)
+  "Switch to special or insert state, depending on mode.
+When CHANGES are non-nil, replay those instead."
+  (interactive)
+  (boon-interactive-insert)
+  (if (boon-special-mode-p)
+      (boon-set-special-state)
+    (boon-insert changes)))
+
+;; TODO: rename
+(defun boon-insert (&optional changes)
+  "Switch to insert state.
+When CHANGES are non-nil, replay those instead."
+  (interactive)
+  (boon-interactive-insert)
+  (if changes ;; replay changes if we have them, otherwise switch to insert state normally
+      (progn
+        (mc/execute-command-for-all-fake-cursors (lambda () (interactive) (boon/replay-changes changes)))
+        (boon/replay-changes changes))
+    (boon-set-insert-state)))
+
 (defun boon-repeat-command (count)
+  "Repeat the most recent command in the history, COUNT times."
   (interactive "p")
   (let ((cmd (car command-history)))
-    (dotimes (i count)
+    (dotimes (_ count)
       (apply #'funcall-interactively
              (car cmd)
              (mapcar (lambda (e) (eval e t)) (cdr cmd))))))
@@ -262,9 +285,10 @@ If there is more than one, use mc/create-fake-cursor-at-point."
   (dolist (reg (boon-run-selector regs))
     (kill-ring-save (boon-reg-begin reg) (boon-reg-end reg))))
 
-(defun boon-substitute-region (regs)
-  "Kill the regions REGS, and switch to insertion mode."
+(defun boon-substitute-region (regs &optional changes)
+  "Kill the regions REGS, and switch to insertion mode or replay CHANGES."
   (interactive (list (boon-spec-select-top "replace")))
+  (boon-interactive-insert regs)
   (let ((markers (mapcar 'boon-reg-to-markers (boon-run-selector regs))))
     ;; use markers so that deleting things does not mess the positions
     (boon-take-region regs)
@@ -272,7 +296,7 @@ If there is more than one, use mc/create-fake-cursor-at-point."
     (boon-lay-multiple-cursors (lambda (reg)
                                  (goto-char (boon-reg-point reg)))
                                markers)
-    (boon-set-insert-state)))
+    (boon-insert changes)))
 
 (defun boon-replace-by-character (replacement)
   "Replace the character at point by the REPLACEMENT character.

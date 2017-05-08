@@ -8,6 +8,7 @@
 ;;; Code:
 
 (require 'cl-macs)
+(require 'dash)
 
 ;; Maps
 
@@ -60,6 +61,45 @@ those. See 'boon-special-map' for exceptinons.")
 ;; indeed: the special mode is good enough that it's not necessary to
 ;; switch to 'off' mode any longer.
 
+(defvar boon/insert-command-history nil "History of changes in this insertion round.")
+(defvar boon/insert-command nil "Command which started the insertion.")
+(defvar boon/insert-origin 0 "Point at start of insert mode.")
+
+(defun boon-interactive-insert (&rest args)
+  "Boon inserting functions must call this with ARGS being the actual arguments.
+When repeated, the function will be called with a list of
+changes, which should eventually be passed to
+`boon-set-insert-like-state'."
+  (unless boon/insert-command
+    (setq boon/insert-command (cons this-command (-map (lambda (x) (list 'quote x)) args)))))
+
+(defun boon/after-change-hook (begin end old-len)
+  "Remember the change defined by BEGIN END OLD-LEN in `boon/insert-command-history'."
+  (when (and boon-insert-state (not mc--executing-command-for-fake-cursor))
+    ;; (message "bach: %s" boon/insert-command-history (list begin end old-len))
+    ;; TODO concatenate consecutive deletes
+    (if (and boon/insert-command-history
+             (eq 0 (nth 1 (car boon/insert-command-history))) ;; no delete
+             (eq 0 old-len) ;; no delete
+             (eq begin (+ boon/insert-origin
+                          (car (car boon/insert-command-history))
+                          (length (nth 2 (car boon/insert-command-history))))))
+        ;; two consecutive inserts: concat them.
+        (setq boon/insert-command-history (cons (list (car (car boon/insert-command-history))
+                                                      0
+                                                      (concat (nth 2 (car boon/insert-command-history)) (buffer-substring-no-properties begin end)))
+                                                (cdr boon/insert-command-history)))
+    (push (list (- begin boon/insert-origin) old-len (buffer-substring-no-properties begin end))
+          boon/insert-command-history))))
+
+(defun boon/replay-changes (changes)
+  "Replay the CHANGES at the current point."
+  (let ((p0 (point)))
+    (setq boon/insert-command nil) ;; did not go to insert mode after all
+    (dolist (change changes)
+      (goto-char (+ p0 (nth 0 change)))
+      (delete-region (+ p0 (nth 0 change)) (+ p0 (nth 0 change) (nth 1 change)))
+      (insert (nth 2 change)))))
 
 (defun boon-set-state (state)
   "Set the boon state (as STATE) for this buffer."
@@ -79,26 +119,26 @@ those. See 'boon-special-map' for exceptinons.")
     (setq cursor-type 'bar))
   (cond (boon-command-state
          ;; (do-auto-save)
+         (when (and boon/insert-command boon/insert-command-history)
+           (push `(,@boon/insert-command
+                   (quote ,@(list (nreverse boon/insert-command-history))))
+                 command-history))
+         (setq boon/insert-command nil)
+         (setq boon/insert-command-history nil)
          (setq cursor-type 'box))
         (boon-special-state (setq cursor-type 'box))
         (boon-off-state)
         (boon-insert-state
-         ;; remember where the last edition was by pushing a mark
-         (push-mark))
+         (push-mark) ;; remember where the last edition was by pushing a mark
+         (setq boon/insert-command-history nil)
+         (setq boon/insert-origin (point)))
         (t (message "Unknown state!")))
   (force-mode-line-update))
 
-(defun boon-set-insert-like-state ()
-  "Switch to special or insert state, depending on mode."
-  (interactive)
-  (if (boon-special-mode-p)
-      (boon-set-special-state)
-    (boon-set-state 'boon-insert-state)))
-
 (defun boon-set-insert-state ()
   "Switch to insert state."
-  (interactive)
   (boon-set-state 'boon-insert-state))
+
 
 (defun boon-set-command-state ()
   "Switch to command state."
@@ -143,6 +183,8 @@ those. See 'boon-special-map' for exceptinons.")
   :keymap nil
   (cond
    (boon-local-mode
+    (unless (memq 'boon/after-change-hook after-change-functions)
+      (push 'boon/after-change-hook after-change-functions))
     ;; The initial state is usually setup by `boon-initialize' when
     ;; the major-mode in a buffer changes. This preliminary
     ;; initialization is only for the case when `boon-local-mode' is
@@ -213,7 +255,6 @@ This is because no command mode is activated in the minibuffer."
                   boon-find-char-forward
                   boon-quote-character
                   boon-replace-by-character
-                  boon-set-insert-like-state
                   boon-smarter-backward
                   boon-smarter-forward
                   boon-splice
@@ -233,6 +274,7 @@ This is because no command mode is activated in the minibuffer."
                   boon-query-replace
                   boon-quit
                   boon-set-command-state
+                  boon-set-insert-like-state
                   boon-substitute-region
                   boon-take-region
                   boon-toggle-character-case
