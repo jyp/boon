@@ -73,8 +73,8 @@
   "Move backward, over COUNT whole syntactic units."
   (interactive "p")
   (dotimes (_number count)
+    (boon-jump-over-blanks-backward)
     (let ((back-limit (- (point) 5))) ;; looking back at comment delimiter
-      (boon-jump-over-blanks-backward)
       (cond
        ((boon-looking-at-comment -1)
         (forward-comment -1))
