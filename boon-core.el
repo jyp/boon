@@ -77,20 +77,30 @@ changes, which should eventually be passed to
   "Remember the change defined by BEGIN END OLD-LEN in `boon/insert-command-history'."
   (when (and boon-insert-state (not mc--executing-command-for-fake-cursor))
     ;; (message "bach: %s" boon/insert-command-history (list begin end old-len))
-    ;; TODO concatenate consecutive deletes
-    (if (and boon/insert-command-history
-             (eq 0 (nth 1 (car boon/insert-command-history))) ;; no delete
-             (eq 0 old-len) ;; no delete
-             (eq begin (+ boon/insert-origin
-                          (car (car boon/insert-command-history))
-                          (length (nth 2 (car boon/insert-command-history))))))
-        ;; two consecutive inserts: concat them.
-        (setq boon/insert-command-history (cons (list (car (car boon/insert-command-history))
-                                                      0
-                                                      (concat (nth 2 (car boon/insert-command-history)) (buffer-substring-no-properties begin end)))
-                                                (cdr boon/insert-command-history)))
-    (push (list (- begin boon/insert-origin) old-len (buffer-substring-no-properties begin end))
-          boon/insert-command-history))))
+    (cond ((and boon/insert-command-history
+                (string= "" (nth 2 (car boon/insert-command-history))) ;; no insert
+                (eq begin end) ;; no insert
+                (eq (+ begin old-len) (+ boon/insert-origin
+                                         (car (car boon/insert-command-history)))))
+           ;; two consecutive deletes: concat them.
+           (setq boon/insert-command-history (cons (list (- begin boon/insert-origin)
+                                                         (+ old-len (nth 1 (car boon/insert-command-history)))
+                                                         "")
+                                                   (cdr boon/insert-command-history))))
+          ((and boon/insert-command-history
+                (eq 0 (nth 1 (car boon/insert-command-history))) ;; no delete
+                (eq 0 old-len) ;; no delete
+                (eq begin (+ boon/insert-origin
+                             (car (car boon/insert-command-history))
+                             (length (nth 2 (car boon/insert-command-history))))))
+           ;; two consecutive inserts: concat them.
+           (setq boon/insert-command-history (cons (list (car (car boon/insert-command-history))
+                                                         0
+                                                         (concat (nth 2 (car boon/insert-command-history)) (buffer-substring-no-properties begin end)))
+                                                   (cdr boon/insert-command-history))))
+          (t
+           (push (list (- begin boon/insert-origin) old-len (buffer-substring-no-properties begin end))
+                 boon/insert-command-history)))))
 
 (defun boon/replay-changes (changes)
   "Replay the CHANGES at the current point."
