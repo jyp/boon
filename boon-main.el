@@ -15,7 +15,6 @@
 (require 'subr-x)
 (require 'dash)
 
-;; TODO: rename
 (defun boon-set-insert-like-state (&optional changes)
   "Switch to special or insert state, depending on mode.
 When CHANGES are non-nil, replay those instead."
@@ -25,7 +24,6 @@ When CHANGES are non-nil, replay those instead."
       (boon-set-special-state)
     (boon-insert changes)))
 
-;; TODO: rename
 (defun boon-insert (&optional changes)
   "Switch to insert state.
 When CHANGES are non-nil, replay those instead."
@@ -308,7 +306,7 @@ Replace the region if it is active."
   (insert replacement))
 
 (defun boon-quote-character (char)
-  "Execute the command bound to the character CHAR if boon was not enabled."
+  "Execute the command which were bound to the character CHAR if boon was not enabled."
   (interactive (list (read-char))) ;; use read-char so that multiple-cursors advice kicks in.
   (let ((cmd
          (or (and (current-local-map) (lookup-key (current-local-map) (vector char)))

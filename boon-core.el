@@ -66,10 +66,11 @@ those. See 'boon-special-map' for exceptinons.")
 (defvar boon/insert-origin 0 "Point at start of insert mode.")
 
 (defun boon-interactive-insert (&rest args)
-  "Boon inserting functions must call this with ARGS being the actual arguments.
-When repeated, the function will be called with a list of
-changes, which should eventually be passed to
-`boon-set-insert-like-state'."
+  "Boon insert commands must call this function after `interactive'.
+The effect of this function is to remember the current command
+and ARGS so that it can be repeated later by
+`boon-set-insert-like-state'.  The current command must take an
+optional list of changes as its last argument."
   (unless boon/insert-command
     (setq boon/insert-command (cons this-command (-map (lambda (x) (list 'quote x)) args)))))
 

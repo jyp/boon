@@ -223,8 +223,7 @@ the region, in insertion mode.  Subregions won't be overlapping."
            (memq this-command mc/cmds-to-run-once))))
 
 (defun boon-multiple-cursor-regs ()
-  "Return the selected region and those defined by
-`multiple-cursors-mode'."
+  "Return the selected region and those defined by `multiple-cursors-mode'."
   (cons (boon-mk-reg (mark) (point) nil)
         (if (boon-bypass-mc)
             ;; TODO: is marker-position really necessary here?
@@ -236,37 +235,36 @@ the region, in insertion mode.  Subregions won't be overlapping."
   (if (use-region-p) 'orig-regs (boon-spec-selector msg)))
 
 (defun boon-run-selector (selector)
-  "Turn a selector into a concrete list of regions. This function
-returns a list of regions (See boon-regs.el).  If
-`multiple-cursors' are enabled BUT `this-command' is executed just
-once (not once per cursor), you get a region for each cursor."
+  "Return the list of regions specified by SELECTOR.
+See boon-regs.el for return type.  If `multiple-cursors' are
+enabled BUT `this-command' is executed just once (not once per
+cursor), you get a region for each cursor."
   (if (eq selector 'orig-regs) (boon-multiple-cursor-regs)
-    (apply 'append
-           (mapcar (lambda (in-reg)
-                     (save-excursion
-                       (goto-char (boon-reg-point in-reg))
-                       (mapcar (lambda (r) (boon-mk-reg (boon-reg-mark r)
-                                                        (boon-reg-point r)
-                                                        (boon-reg-cursor in-reg)))
-                               (funcall selector))))
-                   (boon-multiple-cursor-regs)))))
+    (-mapcat (lambda (in-reg)
+               (save-excursion
+                 (goto-char (boon-reg-point in-reg))
+                 (-map (lambda (r) (boon-mk-reg (boon-reg-mark r)
+                                                (boon-reg-point r)
+                                                (boon-reg-cursor in-reg)))
+                       (funcall selector))))
+             (boon-multiple-cursor-regs))))
 
 (defvar boon-selected-by-move nil
   "Non nil if the last selection was made by a move, nil otherwise.
-When killing, if a selection is made by a move, it make sense to
+When killing, if a selection is made by a move, it makes sense to
 aggregate the region in the killring, but not so if it was made
 by a 'true' selector.")
 
 (defun boon-spec-selector (msg)
   "Specify a region selector concisely using the keyboard.
-The prompt (as MSG) is displayed.  This function returns a
-non-interactive function which, when run, will return
-bounds.  This allows to run the function in question multiple
-times, but describe the region just once with the keyboard.  This
-can be useful when having multiple cursors, or just using
-descriptors referring to several subregions.  The bounds
-that are eventually returned are in the form of a list of regs.
-See boon-regs.el."
+MSG is displayed as prompt.  This function returns a
+non-interactive function which, when run, will return bounds.
+This indirection allows to run the function in question multiple
+times, without further interaction.  This is useful when having
+multiple cursors, when using descriptors referring to several
+subregions or when repeating a command.  The bounds that are
+eventually returned are in the form of a list of regs.  See
+boon-regs.el."
   (let ((my-prefix-arg 0)
         (kmv boon-moves-map)
         (kms boon-select-map))
@@ -289,7 +287,7 @@ See boon-regs.el."
           ;; point/mark.
             (let ((current-prefix-arg my-prefix-arg))
               (call-interactively kms))
-          ;; we have a 'move'. These commands do not take
+          ;; we have a 'move' command. Such commands do not take
           ;; non-universal arguments. So just run it in the
           ;; continuation.
             (lambda ()
