@@ -291,10 +291,15 @@ If there is more than one, use mc/create-fake-cursor-at-point."
     ;; use markers so that deleting things does not mess the positions
     (boon-take-region regs)
     (deactivate-mark t)
-    (boon-lay-multiple-cursors (lambda (reg)
-                                 (goto-char (boon-reg-point reg)))
-                               markers)
-    (boon-insert changes)))
+    (if changes ; if we have a change to apply then we do not want to lay new cursors, just apply the changes.
+        (save-excursion
+          (dolist (reg markers)
+            (goto-char (boon-reg-point reg))
+            (boon/replay-changes changes)))
+      (boon-lay-multiple-cursors (lambda (reg)
+                                   (goto-char (boon-reg-point reg)))
+                                 markers)
+      (boon-insert changes))))
 
 (defun boon-replace-by-character (replacement)
   "Replace the character at point by the REPLACEMENT character.
