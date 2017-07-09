@@ -66,11 +66,12 @@ directed forward, or or before, if the region is backwards."
   "Given a region REG, return its contents (crop the region by 1)."
   (boon-mk-reg (+ (boon-reg-begin reg) 1) (- (boon-reg-end reg) 1) (boon-reg-cursor reg)))
 
-(defun boon-reg-after (r1 r2)
-  "Return non-nil when R1 occurs after R2."
-  (> (boon-reg-begin r1) (boon-reg-end r2)))
+(defun boon-reg-before (r1 r2)
+  "Return non-nil when R1 occurs before R2."
+  (< (boon-reg-begin r1) (boon-reg-end r2)))
 
 (defun boon-reg-cur-after (r1 r2)
+  (declare (obsolete "unused" "July 2017"))
   (or (not (boon-reg-cursor r1))
       (and (boon-reg-cursor r2)
            (> (overlay-end (boon-reg-cursor r1))
