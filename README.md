@@ -65,27 +65,26 @@ searching. The bottom row gives access to regular Emacs stuff (C-x
 Emacs Integration: Reusable Modules
 -----------------------------------
 
-Boon is designed as a stack of layers. Each layer is customizable and
-provides reusable components, in full agreement with the Emacs
-spirit. This means that even if you disagree with the design choices
-explained above, you may still want to use some parts of Boon. The
-structure of Boon is as follows:
+Boon is designed as set of modules, largely independent of each
+other. Each module is customizable and provides reusable components,
+in full agreement with the Emacs spirit. This means that even if you
+disagree with the design choices explained above, you may still want
+to use some parts of Boon. The structure of Boon is as follows:
 
 1. boon-moves.el and boon-search.el provide a set of move and search
    commands. These work the same way as standard Emacs commands ---
-   they are merely (sometimes) more powerful. Frontends typically bind
-   these commands (and more) in boon-moves-map, which is active in
-   'command mode'.
+   they are merely more powerful (or just have different
+   emphasis). Frontends typically bind these commands (in addition to
+   standard ones) in the boon keymaps.
 2. boon-arguments.el provides a set of selectors to define
    regions. (These selectors are the equivalent of vim 'text
-   objects'.) Selectors include plain regions (words, lines,
+   objects'). Selectors include plain regions (words, lines,
    paragraphs, ...), but also region transformers (think: exclude
-   borders, just borders, including spaces, foreach,
-   etc.). Additionally every move command in the boon-moves-map keymap
-   can be used as a selector. The selectors are regular interactive
-   functions, which means that they are easily customized. On top of
-   it all, the system supports multiple-cursors (multiple regions will
-   be returned when multiple cursors are active).
+   borders, just borders, including spaces, each, etc.). Additionally
+   every move command (in the boon-moves-map keymap) can be used as a
+   selector which means that they are easily customized. On top of it
+   all, the system supports multiple-cursors (multiple regions will be
+   returned when multiple cursors are active).
 3. boon-core.el provides an infrastructure for modal editing. The
    implementation is very much inspired from evil-core, but heavily
    simplified.
@@ -102,7 +101,7 @@ Installation
 ------------
 
 REQUIREMENTS
-- Emacs version >= 24.5
+- Emacs version >= 25.1
 - Qwerty or Colemak layout (workman version partially implemented).
 
 Install Boon (perhaps using
@@ -110,8 +109,8 @@ Install Boon (perhaps using
 and add the following to your configuration:
 
     (require 'boon-colemak)
-    ;; (require 'boon-qwerty) ;; for qwerty port (alpha quality)
-        (require 'boon-powerline)
+    ;; (require 'boon-qwerty) ;; for qwerty port
+    (require 'boon-powerline)
     (boon-powerline-theme) ;; if you want use powerline with Boon
 
 Then
@@ -142,8 +141,8 @@ Configuration
 
 The main variables to configure are:
 
-- boon-select-map, boon-moves-map, boon-command-map. Those are keymaps.
-- boon-enclosures, which can be customized.
+- boon-select-map, boon-moves-map, boon-command-map. (Those are keymaps.)
+- boon-enclosures (can be `custom`ized.)
 
 Comparison with other modal layers for Emacs
 ---------------------------------------------
@@ -152,24 +151,20 @@ Comparison with other modal layers for Emacs
 
   Evil is a (quite) complete vi emulation layer for Emacs.
 
-  In Boon, quite a bit of Emacs structure and user experience is
-  retained. Examples: the x key gives the C-x prefix map.  The usual
-  Emacs (interactive) arguments are used for text objects. Thus most of
-  Boon remains usable even if one does not wish to use modal editing.
+  In contrast, in Boon, much of Emacs structure is leveraged and user
+  experience is retained. Examples: the `x` key gives the `C-x` prefix
+  map.  The usual Emacs (interactive) arguments are used for text
+  objects. Thus most of Boon remains usable even if one does not wish
+  to use modal editing.
 
-  Besides, Emacs is already customizable enough as it is: the core of
-  Boon is just 300 lines or so. Figuring out all the ins and outs of
-  Evil to do what I want would probably have required more effort than
-  implementing Boon.
-
-  Finally, evil use vi bindings (by default at least), which do not
+  Besides, Evil use vi bindings (by default at least), which do not
   feature the best ergonomics.
 
 - Xah Fly Keys http://ergoemacs.org/misc/ergoemacs_vi_mode.html
 
   Like boon, Xah Fly Keys aims at providing a layout whose design is
   ergonomic. As far as I understand it follows the spirit of Xah's
-  ErgoEmacs package. As I understand it ErgoEmacs makes most design
+  ErgoEmacs package. As I understand ErgoEmacs makes most design
   decisions differently from boon. I have not made an in-depth
   comparison of ergonomics yet.
 
@@ -181,6 +176,24 @@ Comparison with other modal layers for Emacs
   is compatible with Boon concepts and could (and probably should) be
   implemented as a Boon 'frontend'.
 
+- Modalka https://github.com/mrkkrp/modalka
+
+  Modalka is an engine to "introduce native modal editing of your own
+  design". Thus its purpose is similar to `boon-core.el`. It could be
+  possible in the future to replace parts of boon-core with a
+  dependency on Modalka. However at the moment it does not seem
+  suitable. The main issue is that modalka does not support several
+  states; it can only be either activated or not.
+
+- RYO modal mode https://github.com/Kungsgeten/ryo-modal
+
+  RYO modal has the same purpose as Modalka and boon-core. Compared to
+  Modalka, it provides support for repeating a coentirely
+  deactivated.mmand. However RYO modal's method is incompatible with
+  Emacs' repeat (and consequently also with boon complex commands)
+  Additionally it suffers from the same drawback as Modalka: it has a
+  single state.
+
 - God-mode https://github.com/chrisdone/god-mode
 
   God-mode is similar to "sticky modifier keys" in principle. Its
@@ -188,13 +201,8 @@ Comparison with other modal layers for Emacs
   lacks the main benefit of a true modal layer: text operators. (what
   vi fans call a "language for text edition").
 
-- Modal Mode http://retroj.net/modal-mode
+- Modal Mode http://retroj.net/modal-mode (Last updated in 2014)
 
   Another modal layer for Emacs, which is also lightweight and aims to
   integrate with Emacs. However, as far as I can see, there is no
   special attention paid to ergonomics.
-
-- Modal Emacs https://github.com/joelmccracken/modal-emacs
-
-  Modal Emacs does not appear to be complete.
-
