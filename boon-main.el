@@ -287,14 +287,20 @@ If there is more than one, use mc/create-fake-cursor-at-point."
   "Kill the regions REGS, and switch to insertion mode or replay CHANGES."
   (interactive (list (boon-spec-select-top "replace")))
   (boon-interactive-insert regs)
-  (let ((markers (mapcar 'boon-reg-to-markers (boon-run-selector regs))))
-    ;; use markers so that deleting things does not mess the positions
+  (let ((markers (mapcar 'boon-reg-to-markers (-sort 'boon-reg-before (boon-run-selector regs)))))
+    ;; Sort so that the changes recorded will be relative to a consistent position.
+    ;; (The actual cursor will be 1st and will not jump around).
+    ;; Use markers so that deleting things does not mess the positions
     (boon-take-region regs)
     (deactivate-mark t)
-    (boon-lay-multiple-cursors (lambda (reg)
-                                 (goto-char (boon-reg-point reg)))
-                               markers)
-    (boon-insert changes)))
+    (if changes ; if we have a change to apply then we do not want to lay new cursors, just apply the changes.
+        (save-excursion
+          (dolist (reg markers)
+            (goto-char (boon-reg-point reg))
+            (boon/replay-changes changes)))
+      (boon-lay-multiple-cursors (lambda (reg) (goto-char (boon-reg-point reg)))
+                                 markers)
+      (boon-insert changes))))
 
 (defun boon-replace-by-character (replacement)
   "Replace the character at point by the REPLACEMENT character.
