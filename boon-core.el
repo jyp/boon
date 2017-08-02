@@ -10,10 +10,9 @@
 (require 'cl-macs)
 (require 'dash)
 
-;; Maps
-
 (defgroup boon nil "Boon" :group 'Editing)
 
+;; Maps
 (defvar boon-x-map)
 (define-prefix-command 'boon-x-map)
 (set-keymap-parent boon-x-map ctl-x-map)
@@ -22,7 +21,7 @@
   "Keymap used in Boon command mode.
 
 \\{boon-command-map}")
-(suppress-keymap boon-command-map 't)  ; so that typing is disabled altogether in command mode
+(suppress-keymap boon-command-map 't)
 (defvar boon-moves-map (make-sparse-keymap)
   "Keymap for moves (subset of command mode).
 
@@ -32,16 +31,14 @@
   "Keymap for text regions selectors.
 \\{boon-select-map}
 
-Any move is also a valid region selector.
-\\{boon-moves-map}")
-(defvar boon-off-map (make-sparse-keymap))
-(make-obsolete-variable 'boon-off-map nil "20160713")
+Any move is also a valid region selector, see `boon-moves-map'.")
 (defvar boon-insert-map (make-sparse-keymap))
-(defvar boon-special-map (make-sparse-keymap))
+(defvar boon-special-map (make-sparse-keymap) "Keymap used in special modes.
+See also `boon-special-mode-list'.
 
+\\{boon-special-map}")
 
 (defvar boon-mode-map-alist (list (cons 'boon-command-state boon-command-map)
-                                  (cons 'boon-off-state     boon-off-map)
                                   (cons 'boon-special-state boon-special-map)
                                   (cons 'boon-insert-state  boon-insert-map)))
 (push 'boon-mode-map-alist emulation-mode-map-alists)
@@ -49,17 +46,10 @@ Any move is also a valid region selector.
 ;; States
 (defvar-local boon-command-state nil "Non-nil when boon command mode is activated. (Boon commands can be entered in this mode.)")
 (defvar-local boon-insert-state nil "Non-nil when boon insert mode is activated.")
-(defvar-local boon-off-state nil "Non-nil when off state is
-activated. Off state is similar to insert mode, but
-insertion-specific commands are disabled then.")
-(defvar-local boon-special-state nil "Non-nil when off state is
-activated. Special is active when special-mode buffers are
+(defvar-local boon-special-state nil "Non-nil when special state is
+activated. Special is active when special-mode buffers (see `boon-special-mode-list') are
 activated. This buffers have their own set of commands, so we use
-those. See 'boon-special-map' for exceptinons.")
-
-(make-obsolete-variable 'boon-off-state nil "20160713")
-;; indeed: the special mode is good enough that it's not necessary to
-;; switch to 'off' mode any longer.
+those. See `boon-special-map' for exceptions.")
 
 (defvar boon/insert-command-history nil "History of changes in this insertion round.")
 (defvar boon/insert-command nil "Command which started the insertion.")
@@ -116,18 +106,8 @@ optional list of changes as its last argument."
   "Set the boon state (as STATE) for this buffer."
   (setq boon-command-state nil)
   (setq boon-insert-state nil)
-  (setq boon-off-state nil)
   (setq boon-special-state nil)
-
   (set state t)
-  (unless (or boon-command-state boon-special-state)
-    (deactivate-mark)
-    (save-excursion
-      (when (not (bolp))
-        (let ((orig (point)))
-          (skip-chars-forward " " (line-end-position))
-          (when (eolp) (delete-region orig (point))))))
-    (setq cursor-type 'bar))
   (cond (boon-command-state
          ;; (do-auto-save)
          (when (and boon/insert-command boon/insert-command-history)
@@ -138,52 +118,50 @@ optional list of changes as its last argument."
          (setq boon/insert-command-history nil)
          (setq cursor-type 'box))
         (boon-special-state (setq cursor-type 'box))
-        (boon-off-state)
         (boon-insert-state
+         (deactivate-mark)
+         (save-excursion
+           (when (not (bolp))
+             (let ((orig (point)))
+               (skip-chars-forward " " (line-end-position))
+               (when (eolp) (delete-region orig (point))))))
+         (setq cursor-type 'bar)
          (push-mark) ;; remember where the last edition was by pushing a mark
          (setq boon/insert-command-history nil)
          (setq boon/insert-origin (point)))
-        (t (message "Unknown state!")))
+        (t (error "Boon: Unknown state!")))
   (force-mode-line-update))
 
 (defun boon-set-insert-state ()
   "Switch to insert state."
   (boon-set-state 'boon-insert-state))
 
-
 (defun boon-set-command-state ()
   "Switch to command state."
   (interactive) (boon-set-state 'boon-command-state))
 
-(defun boon-set-off-state ()
-  "Switch to off state."
-  (interactive) (boon-set-state 'boon-off-state))
-
 (defun boon-set-special-state ()
   "Switch to special state."
-  (interactive) (boon-set-state 'boon-special-state))
+  (boon-set-state 'boon-special-state))
 
 (defcustom boon-special-mode-list
-  '(
-    Buffer-menu-mode
+  '(Buffer-menu-mode
     debugger-mode
     ediff-mode
     git-rebase-mode
     mu4e-headers-mode
     mu4e-view-mode
     org-agenda-mode
-    cfw:calendar-mode
-    )
+    cfw:calendar-mode)
     "A List of modes which should use `boon-special-state'."
     :group 'boon
     :type '(repeat symbol))
 
 (defun boon-special-mode-p ()
   "Should the mode use `boon-special-state'?"
-  (or
-   (and (eq (get major-mode 'mode-class) 'special)
-        (not (derived-mode-p 'comint-mode 'eshell-mode)))
-   (memq major-mode boon-special-mode-list)))
+  (or (and (eq (get major-mode 'mode-class) 'special)
+           (not (derived-mode-p 'comint-mode 'eshell-mode)))
+      (memq major-mode boon-special-mode-list)))
 
 ;;; Initialisation and activation
 
@@ -192,22 +170,12 @@ optional list of changes as its last argument."
   :init-value nil
   :lighter (:eval (boon-modeline-string))
   :keymap nil
-  (cond
-   (boon-local-mode
+  (when boon-local-mode
     (unless (memq 'boon/after-change-hook after-change-functions)
       (push 'boon/after-change-hook after-change-functions))
-    ;; The initial state is usually setup by `boon-initialize' when
-    ;; the major-mode in a buffer changes. This preliminary
-    ;; initialization is only for the case when `boon-local-mode' is
-    ;; called directly for the first time in a buffer.
-    (cond
-     ((boon-special-mode-p)
-      (boon-set-state 'boon-special-state))
-     (t (boon-set-command-state))))
-   (t
-    (boon-set-off-state)
-    (message "Boon disabled")
-    )))
+    (if (boon-special-mode-p)
+        (boon-set-state 'boon-special-state)
+     (boon-set-command-state))))
 
 (add-hook 'minibuffer-setup-hook 'boon-minibuf-hook)
 
@@ -226,7 +194,7 @@ This is because no command mode is activated in the minibuffer."
     (boon-local-mode 1)))
 
 ;;;###autoload (autoload 'boon-mode "boon" "Toggle boon in all buffers" t)
-(define-globalized-minor-mode boon-mode boon-local-mode boon-initialize)
+(define-globalized-minor-mode boon-mode boon-local-mode boon-initialize :group 'boon)
 
 ;;;###autoload
 (defun turn-on-boon-mode ()
@@ -249,7 +217,6 @@ This is because no command mode is activated in the minibuffer."
   (cond
    (boon-command-state "CMD")
    (boon-insert-state  "INS")
-   (boon-off-state     "OFF")
    (boon-special-state "SPC")
    (t "???")))
 
@@ -293,4 +260,3 @@ This is because no command mode is activated in the minibuffer."
 
 (provide 'boon-core)
 ;;; boon-core ends here
-
