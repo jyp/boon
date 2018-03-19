@@ -83,39 +83,6 @@
 (define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
 (define-key isearch-mode-map [escape] 'isearch-abort)
 
-(defun boon-god-control-swap (event)
-  "Swap the control 'bit' in EVENT, unless C-c <event> is a prefix reserved for modes."
-  (interactive (list (read-key)))
-  (cond
-   ((memq event '(9 13 ?{ ?} ?[ ?] ?$ ?< ?> ?: ?\; ?/ ?? ?. ?, ?' ?\")) event)
-   ((<= event 27) (+ 96 event))
-   ((not (eq 0 (logand (lsh 1 26) event))) (logxor (lsh 1 26) event))
-   (t (list 'control event))))
-
-(defun boon-c-god (arg)
-  "Input a key sequence, prepending C- to keys unless keys are
-already reserved for modes, and run the command bound to that
-sequence."
-  (interactive "P")
-  (let ((keys '((control c)))
-        (binding (key-binding (kbd "C-c")))
-        (key-vector (kbd "C-c"))
-        (prompt "C-c-"))
-    (while (and binding
-                (or (eq binding 'mode-specific-command-prefix)
-                    ;; if using universal prefix, the above will happen.
-                    (not (symbolp binding))))
-      (let ((key (read-key (format "%s" prompt))))
-        (if (eq key ?h) (describe-bindings key-vector) ;; h -> show help
-          (push (boon-god-control-swap key) keys)
-          (setq key-vector (vconcat (reverse keys)))
-          (setq prompt (key-description key-vector))
-          (setq binding (key-binding key-vector)))))
-    (cond
-     ((not binding) (error "No command bound to %s" prompt))
-     ((commandp binding)
-      (let ((current-prefix-arg arg)) (call-interactively binding)))
-     (t (error "Key not bound to a command: %s" binding)))))
 
 (provide 'boon-keys)
 ;;; boon-keys.el ends here
