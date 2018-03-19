@@ -91,23 +91,27 @@
    ((not (eq 0 (logand (lsh 1 26) event))) (logxor (lsh 1 26) event))
    (t (list 'control event))))
 
-(defun boon-c-god ()
+(defun boon-c-god (arg)
   "Input a key sequence, prepend C- if that is a good choice, and run the command bound to that sequence."
-  (interactive)
+  (interactive "P")
   (let ((keys '((control c)))
         (binding (key-binding (kbd "C-c")))
         (key-vector (kbd "C-c"))
         (prompt "C-c-"))
-    (while (and binding (not (symbolp binding)))
+    (while (and binding
+                (or (eq binding 'mode-specific-command-prefix)
+                    ;; if using universal prefix, the above will happen.
+                    (not (symbolp binding))))
       (let ((key (read-key (format "%s" prompt))))
-        (if (eq key ?h) (describe-bindings key-vector)
+        (if (eq key ?h) (describe-bindings key-vector) ;; h -> show help
           (push (boon-god-control-swap key) keys)
           (setq key-vector (vconcat (reverse keys)))
           (setq prompt (key-description key-vector))
           (setq binding (key-binding key-vector)))))
     (cond
      ((not binding) (error "No command bound to %s" prompt))
-     ((commandp binding) (call-interactively binding))
+     ((commandp binding)
+      (let ((current-prefix-arg arg)) (call-interactively binding)))
      (t (error "Key not bound to a command: %s" binding)))))
 
 (provide 'boon-keys)
