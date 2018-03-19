@@ -84,7 +84,7 @@
 (define-key isearch-mode-map [escape] 'isearch-abort)
 
 (defun boon-god-control-swap (event)
-  "Swap the control 'bit' in EVENT, if that is a good choice."
+  "Swap the control 'bit' in EVENT, unless C-c <event> is a prefix reserved for modes."
   (interactive (list (read-key)))
   (cond
    ((memq event '(9 13 ?{ ?} ?[ ?] ?$ ?< ?> ?: ?\; ?/ ?? ?. ?, ?' ?\")) event)
@@ -93,7 +93,9 @@
    (t (list 'control event))))
 
 (defun boon-c-god (arg)
-  "Input a key sequence, prepend C- if that is a good choice, and run the command bound to that sequence."
+  "Input a key sequence, prepending C- to keys unless keys are
+already reserved for modes, and run the command bound to that
+sequence."
   (interactive "P")
   (let ((keys '((control c)))
         (binding (key-binding (kbd "C-c")))
