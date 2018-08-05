@@ -15,6 +15,7 @@
                dash
                expand-region
                powerline ;; only for boon-powerline
+               spaceline ;; only for boon-spaceline
                ))
   (package-install pkg)
   (package-activate pkg))

@@ -120,7 +120,8 @@ in several ways:
 - If you invoke `(boon-powerline-theme)' and have powerline
   installed then the state text will be shown using various
   colors. This is useful to find out what state you're in without
-  having to read any text.
+  having to read any text. (There is also support for spaceline,
+  but it requires a patch to said package at the time of writing)
 
 You can switch from command to insert mode by typing
 \\[boon-set-insert-like-state] " (boon-mnemonic

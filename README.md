@@ -110,8 +110,6 @@ and add the following to your configuration:
 
     (require 'boon-colemak)
     ;; (require 'boon-qwerty) ;; for qwerty port
-    (require 'boon-powerline)
-    (boon-powerline-theme) ;; if you want use powerline with Boon
 
 Then
 
@@ -143,6 +141,12 @@ The main variables to configure are:
 
 - boon-select-map, boon-moves-map, boon-command-map. (Those are keymaps.)
 - boon-enclosures (can be `custom`ized.)
+
+If you use powerline, you may want to:
+
+    (require 'boon-powerline)
+    (boon-powerline-theme) ;; if you want use powerline with Boon
+
 
 Comparison with other modal layers for Emacs
 ---------------------------------------------
