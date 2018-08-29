@@ -18,6 +18,7 @@
 (define-key boon-forward-search-map "p"  'boon-qsearch-next)
 (define-key boon-forward-search-map "e"  'next-error)
 (define-key boon-forward-search-map "k"  'flycheck-next-error)
+(define-key boon-forward-search-map "m"  'flymake-goto-next-error)
 (define-key boon-forward-search-map "b"  'next-buffer)
 (define-key boon-forward-search-map "u"  'mc/cycle-forward)
 
@@ -27,6 +28,7 @@
 (define-key boon-backward-search-map "p"  'boon-qsearch-previous)
 (define-key boon-backward-search-map "e"  'previous-error)
 (define-key boon-backward-search-map "k"  'flycheck-previous-error)
+(define-key boon-backward-search-map "m"  'flymake-goto-prev-error)
 (define-key boon-backward-search-map "b"  'previous-buffer)
 (define-key boon-backward-search-map "u"  'mc/cycle-backward)
 
