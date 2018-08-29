@@ -134,6 +134,7 @@ optional list of changes as its last argument."
 
 (defun boon-set-insert-state ()
   "Switch to insert state."
+  (if buffer-read-only (error "buffer is read only, can't insert in it."))
   (boon-set-state 'boon-insert-state))
 
 (defun boon-set-command-state ()
