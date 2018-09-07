@@ -158,10 +158,16 @@ optional list of changes as its last argument."
     :group 'boon
     :type '(repeat symbol))
 
+(defcustom boon-special-conditions
+  '(magit-blame-mode)
+  "A list of sufficient conditions to trigger special state."
+  :group 'boon)
+
 (defun boon-special-mode-p ()
   "Should the mode use `boon-special-state'?"
   (or (and (eq (get major-mode 'mode-class) 'special)
            (not (derived-mode-p 'comint-mode 'eshell-mode)))
+      (-some 'eval boon-special-conditions)
       (memq major-mode boon-special-mode-list)))
 
 ;;; Initialisation and activation
