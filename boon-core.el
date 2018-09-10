@@ -159,7 +159,7 @@ optional list of changes as its last argument."
     :type '(repeat symbol))
 
 (defcustom boon-special-conditions
-  '(magit-blame-mode)
+  '((bound-and-true-p magit-blame-mode))
   "A list of sufficient conditions to trigger special state."
   :group 'boon)
 
