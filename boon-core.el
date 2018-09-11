@@ -108,6 +108,7 @@ optional list of changes as its last argument."
   (setq boon-insert-state nil)
   (setq boon-special-state nil)
   (set state t)
+  (let ((previous-cursor-type cursor-type))
   (cond (boon-command-state
          ;; (do-auto-save)
          (when (and boon/insert-command boon/insert-command-history)
@@ -117,7 +118,7 @@ optional list of changes as its last argument."
          (setq boon/insert-command nil)
          (setq boon/insert-command-history nil)
          (setq cursor-type 'box))
-        (boon-special-state (setq cursor-type 'box))
+        (boon-special-state (setq cursor-type previous-cursor-type))
         (boon-insert-state
          (deactivate-mark)
          (save-excursion
@@ -130,7 +131,7 @@ optional list of changes as its last argument."
          (setq boon/insert-command-history nil)
          (setq boon/insert-origin (point)))
         (t (error "Boon: Unknown state!")))
-  (force-mode-line-update))
+  (force-mode-line-update)))
 
 (defun boon-set-insert-state ()
   "Switch to insert state."
