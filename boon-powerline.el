@@ -71,6 +71,10 @@
                                      (powerline-raw " " mode-line)
                                      (powerline-raw "%p" mode-line)
                                      (powerline-raw " " mode-line)
+                                     (if (eq major-mode 'pdf-view-mode)
+					 (concat "p"(number-to-string (pdf-view-current-page))
+						 "/"
+						 (number-to-string (pdf-cache-number-of-pages)) " "))
                                      (powerline-buffer-size mode-line nil)
                                      (powerline-raw " " mode-line)
                                      (powerline-hud mode-line face1)

@@ -1,3 +1,4 @@
+
 ;;; boon-core.el --- An Ergonomic Command Mode  -*- lexical-binding: t -*-
 
 ;;; Commentary:
@@ -55,6 +56,9 @@ those. See `boon-special-map' for exceptions.")
 (defvar boon/insert-command nil "Command which started the insertion.")
 (defvar boon/insert-origin 0 "Point at start of insert mode.")
 
+(defvar boon/command-cursor-type 'box "Cursor type for command mode.")
+(defvar boon/insert-cursor-type 'bar "Cursor type for insert mode.")
+
 (defun boon-interactive-insert (&rest args)
   "Boon insert commands must call this function after `interactive'.
 The effect of this function is to remember the current command
@@ -95,7 +99,7 @@ optional list of changes as its last argument."
 
 (defun boon/replay-changes (changes)
   "Replay the CHANGES at the current point."
-  (let ((p0 (point)))
+  (let ((p0 (point))) 
     (setq boon/insert-command nil) ;; did not go to insert mode after all
     (dolist (change changes)
       (goto-char (+ p0 (nth 0 change)))
@@ -117,7 +121,7 @@ optional list of changes as its last argument."
                  command-history))
          (setq boon/insert-command nil)
          (setq boon/insert-command-history nil)
-         (setq cursor-type 'box))
+         (setq cursor-type boon/command-cursor-type))
         (boon-special-state (setq cursor-type previous-cursor-type))
         (boon-insert-state
          (deactivate-mark)
@@ -126,7 +130,7 @@ optional list of changes as its last argument."
              (let ((orig (point)))
                (skip-chars-forward " " (line-end-position))
                (when (eolp) (delete-region orig (point))))))
-         (setq cursor-type 'bar)
+         (setq cursor-type boon/insert-cursor-type)
          (push-mark) ;; remember where the last edition was by pushing a mark
          (setq boon/insert-command-history nil)
          (setq boon/insert-origin (point)))
