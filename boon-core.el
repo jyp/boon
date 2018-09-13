@@ -134,7 +134,8 @@ optional list of changes as its last argument."
 
 (defun boon-set-insert-state ()
   "Switch to insert state."
-  (if buffer-read-only (error "buffer is read only, can't insert in it."))
+  (when (and buffer-read-only (not (boon-shell-mode-p)))
+    (error "Buffer is read only, can't insert in it"))
   (boon-set-state 'boon-insert-state))
 
 (defun boon-set-command-state ()
@@ -158,6 +159,9 @@ optional list of changes as its last argument."
     :group 'boon
     :type '(repeat symbol))
 
+(defun boon-shell-mode-p ()
+  (derived-mode-p 'comint-mode 'eshell-mode 'term-mode))
+
 (defcustom boon-special-conditions
   '((bound-and-true-p magit-blame-mode))
   "A list of sufficient conditions to trigger special state."
@@ -166,7 +170,7 @@ optional list of changes as its last argument."
 (defun boon-special-mode-p ()
   "Should the mode use `boon-special-state'?"
   (or (and (eq (get major-mode 'mode-class) 'special)
-           (not (derived-mode-p 'comint-mode 'eshell-mode)))
+           (not (boon-shell-mode-p)))
       (-some 'eval boon-special-conditions)
       (memq major-mode boon-special-mode-list)))
 
