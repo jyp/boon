@@ -56,8 +56,8 @@ those. See `boon-special-map' for exceptions.")
 (defvar boon/insert-command nil "Command which started the insertion.")
 (defvar boon/insert-origin 0 "Point at start of insert mode.")
 
-(defvar boon/command-cursor-type 'box "Cursor type for command mode.")
-(defvar boon/insert-cursor-type 'bar "Cursor type for insert mode.")
+(defcustom boon-command-cursor-type 'box "`cursor-type' for command mode." :group 'boon)
+(defcustom boon-insert-cursor-type 'bar "`cursor-type' for insert mode." :group 'boon)
 
 (defun boon-interactive-insert (&rest args)
   "Boon insert commands must call this function after `interactive'.
@@ -99,7 +99,7 @@ optional list of changes as its last argument."
 
 (defun boon/replay-changes (changes)
   "Replay the CHANGES at the current point."
-  (let ((p0 (point))) 
+  (let ((p0 (point)))
     (setq boon/insert-command nil) ;; did not go to insert mode after all
     (dolist (change changes)
       (goto-char (+ p0 (nth 0 change)))
@@ -112,17 +112,15 @@ optional list of changes as its last argument."
   (setq boon-insert-state nil)
   (setq boon-special-state nil)
   (set state t)
-  (let ((previous-cursor-type cursor-type))
   (cond (boon-command-state
-         ;; (do-auto-save)
          (when (and boon/insert-command boon/insert-command-history)
            (push `(,@boon/insert-command
                    (quote ,@(list (nreverse boon/insert-command-history))))
                  command-history))
          (setq boon/insert-command nil)
          (setq boon/insert-command-history nil)
-         (setq cursor-type boon/command-cursor-type))
-        (boon-special-state (setq cursor-type previous-cursor-type))
+         (setq cursor-type boon-command-cursor-type))
+        (boon-special-state)
         (boon-insert-state
          (deactivate-mark)
          (save-excursion
@@ -130,12 +128,12 @@ optional list of changes as its last argument."
              (let ((orig (point)))
                (skip-chars-forward " " (line-end-position))
                (when (eolp) (delete-region orig (point))))))
-         (setq cursor-type boon/insert-cursor-type)
+         (setq cursor-type boon-insert-cursor-type)
          (push-mark) ;; remember where the last edition was by pushing a mark
          (setq boon/insert-command-history nil)
          (setq boon/insert-origin (point)))
         (t (error "Boon: Unknown state!")))
-  (force-mode-line-update)))
+  (force-mode-line-update))
 
 (defun boon-set-insert-state ()
   "Switch to insert state."
