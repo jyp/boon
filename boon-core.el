@@ -168,7 +168,11 @@ optional list of changes as its last argument."
 (defcustom boon-special-conditions
   '((bound-and-true-p magit-blame-mode))
   "A list of sufficient conditions to trigger special state."
-  :group 'boon)
+  :group 'boon :type '(list sexp))
+
+(defcustom boon-insert-conditions '((eq major-mode 'message-mode))
+  "A list of sufficient conditions to start in insert state."
+  :group 'boon :type '(list sexp))
 
 (defun boon-special-mode-p ()
   "Should the mode use `boon-special-state'?"
@@ -176,13 +180,6 @@ optional list of changes as its last argument."
            (not (boon-shell-mode-p)))
       (-some 'eval boon-special-conditions)
       (memq major-mode boon-special-mode-list)))
-
-(defcustom boon-insert-by-default nil
-  "Should boon start in insert state?
-If a new buffer is not deemed special, `boon-insert-by-default'
-is evaluated.  If the result is non nil, boon starts in insert
-state, otherwise in command state."
-  :group 'boon :type 'sexp)
 
 ;;; Initialisation and activation
 
@@ -195,7 +192,7 @@ state, otherwise in command state."
     (unless (memq 'boon/after-change-hook after-change-functions)
       (push 'boon/after-change-hook after-change-functions))
     (cond ((boon-special-mode-p) (boon-set-state 'boon-special-state))
-          ((eval boon-insert-by-default) (boon-set-insert-state))
+          ((-some 'eval boon-insert-conditions) (boon-set-insert-state))
           (t (boon-set-command-state)))))
 
 (add-hook 'minibuffer-setup-hook 'boon-minibuf-hook)
