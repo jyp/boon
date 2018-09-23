@@ -178,15 +178,11 @@ optional list of changes as its last argument."
       (memq major-mode boon-special-mode-list)))
 
 (defcustom boon-insert-by-default nil
-  "For non-special buffers, if value is 't, `boon-local-mode'
-starts in insert state.
-
-If the value is a function symbol, call that function in the
-current buffer.  The function returns non-nil for insert state.
-
-Otherwise, starts in command state.
-"
-  :group 'boon)
+  "Should boon start in insert state?
+If a new buffer is not deemed special, `boon-insert-by-default'
+is evaluated.  If the result is non nil, boon starts in insert
+state, otherwise in command state."
+  :group 'boon :type 'sexp)
 
 ;;; Initialisation and activation
 
@@ -198,15 +194,9 @@ Otherwise, starts in command state.
   (when boon-local-mode
     (unless (memq 'boon/after-change-hook after-change-functions)
       (push 'boon/after-change-hook after-change-functions))
-    (if (boon-special-mode-p)
-        (boon-set-state 'boon-special-state)
-      (pcase boon-insert-by-default
-        ('t (boon-set-insert-state))
-        ((and func (pred symbolp) (pred functionp))
-         (if (funcall func)
-             (boon-set-insert-state)
-           (boon-set-command-state)))
-        (_ (boon-set-command-state))))))
+    (cond ((boon-special-mode-p) (boon-set-state 'boon-special-state))
+          ((eval boon-insert-by-default) (boon-set-insert-state))
+          (t (boon-set-command-state)))))
 
 (add-hook 'minibuffer-setup-hook 'boon-minibuf-hook)
 
