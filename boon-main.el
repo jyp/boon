@@ -15,6 +15,18 @@
 (require 'subr-x)
 (require 'dash)
 
+(defcustom boon-quoted-cmd-lookup-alist nil
+  "An alist for `boon-quote-character' to look up a command for
+the event returned by `read-char'.  This helps in major modes
+when some bindings are in places besides `current-local-map' and
+`current-global-map'.
+
+CAR of each element in this list is a major mode symbol.  CDR can
+be a function.  The function should take an event number and
+return a command symbol, or nil.  The CDR can also be an alist
+that maps events to command symbols."
+  :group 'boon)
+
 (defun boon-set-insert-like-state (&optional changes)
   "Switch to special or insert state, depending on mode.
 When CHANGES are non-nil, replay those instead."
@@ -315,7 +327,11 @@ Replace the region if it is active."
   "Execute the command which were bound to the character CHAR if boon was not enabled."
   (interactive (list (read-char))) ;; use read-char so that multiple-cursors advice kicks in.
   (let ((cmd
-         (or (and (current-local-map) (lookup-key (current-local-map) (vector char)))
+         (or (let ((lookup (cdr (assoc major-mode boon-quoted-cmd-lookup-alist))))
+               (if (functionp lookup)
+                   (funcall lookup char)
+                 (assoc char lookup)))
+             (and (current-local-map) (lookup-key (current-local-map) (vector char)))
              (lookup-key (current-global-map) (vector char)))))
     (setq last-command-event char)
     (message "Executing the command bound to %c" char)
