@@ -30,7 +30,7 @@
                   (:eval
                    (let* ((active (powerline-selected-window-active))
                           (mode-line (if active 'mode-line 'mode-line-inactive))
-                          (face0 (if active (boon-state-face) 'modeline-inactive))
+                          (face0 (if active (boon-state-face) 'mode-line-inactive))
                           (face1 (if active 'powerline-active1 'powerline-inactive1))
                           (face2 (if active 'powerline-active2 'powerline-inactive2))
                           (separator-left (intern (format "powerline-%s-%s"
