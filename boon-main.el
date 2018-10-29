@@ -359,8 +359,9 @@ Replace the region if it is active."
    (t (list 'control event))))
 
 (defun boon-c-god (arg)
-  "Input a key sequence, prepending C- to keys unless keys are
-already reserved for modes, and run the command bound to that
+  "Input a key sequence, prepending C- to each key (unless such
+key is already reserved for minor mode, see
+`boon-god-control-swap'), and run the command bound to that
 sequence."
   (interactive "P")
   (let ((keys '((control c)))

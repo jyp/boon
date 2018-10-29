@@ -43,7 +43,8 @@ possible, by adhering to the following design principles:
   commands (often user and mode-dependenent).
 
 In command mode, movement keys are bound to the right hand, while text
-manipulation is bound to the left hand.
+manipulation is bound to the left hand. This division of tasks is
+reminiscent of game-console controllers.
 
 
 Right-hand.
@@ -162,7 +163,7 @@ Comparison with other modal layers for Emacs
   to use modal editing.
 
   Besides, Evil use vi bindings (by default at least), which do not
-  feature the best ergonomics.
+  provide the best ergonomics.
 
 - Xah Fly Keys http://ergoemacs.org/misc/ergoemacs_vi_mode.html
 
@@ -192,17 +193,18 @@ Comparison with other modal layers for Emacs
 - RYO modal mode https://github.com/Kungsgeten/ryo-modal
 
   RYO modal has the same purpose as Modalka and boon-core. Compared to
-  Modalka, it provides support for repeating the last command. However
-  RYO modal's method is incompatible with Emacs' repeat (and
-  consequently also with boon complex commands). Additionally it suffers
-  from the same drawback as Modalka: it has a single state.
+  Modalka, it provides support for repeating a command. However RYO
+  modal's method is incompatible with Emacs' repeat (and consequently
+  also with boon complex commands). Additionally it suffers from the
+  same drawback as Modalka: it has a single non-insertion state.
 
 - God-mode https://github.com/chrisdone/god-mode
 
   God-mode is similar to "sticky modifier keys" in principle. Its
   simplicity allows to quickly get up to speed with it. However, it
   lacks the main benefit of a true modal layer: text operators. (what
-  vi fans call a "language for text edition").
+  vi people call a "language for text edition"). Boon integrates basic
+  god-mode functionality (bound to the C key).
 
 - Modal Mode http://retroj.net/modal-mode (Last updated in 2014)
 
