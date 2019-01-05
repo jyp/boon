@@ -125,7 +125,7 @@ Usage
 -----
 
 You can jump-start by reading the cheat sheet
-([colemak](https://github.com/jyp/boon/blob/master/colemak.pdf)
+([colemak](https://github.com/jyp/boon/blob/master/colemak.pdf),
 [qwerty](https://github.com/jyp/boon/blob/master/qwerty.pdf))
 directly, but reading through the tutorial is highly recommended:
 
@@ -192,11 +192,10 @@ Comparison with other modal layers for Emacs
 - RYO modal mode https://github.com/Kungsgeten/ryo-modal
 
   RYO modal has the same purpose as Modalka and boon-core. Compared to
-  Modalka, it provides support for repeating a coentirely
-  deactivated.mmand. However RYO modal's method is incompatible with
-  Emacs' repeat (and consequently also with boon complex commands)
-  Additionally it suffers from the same drawback as Modalka: it has a
-  single state.
+  Modalka, it provides support for repeating the last command. However
+  RYO modal's method is incompatible with Emacs' repeat (and
+  consequently also with boon complex commands). Additionally it suffers
+  from the same drawback as Modalka: it has a single state.
 
 - God-mode https://github.com/chrisdone/god-mode
 
