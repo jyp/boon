@@ -57,12 +57,7 @@ the regexp."
   "Search the previous occurence of the current string at point and select the match."
   (interactive)
   (boon-set-search-string (boon-stuff-at-point))
-  (save-excursion
-    (when (use-region-p)
-      ;; make sure that we don't find the stuff that we've just
-      ;; selected, by moving the point at the beginning of the match.
-      (goto-char (region-beginning)))
-    (boon-qsearch nil))
+  (boon-qsearch nil)
   (deactivate-mark))
 
 (defun boon-set-search-string (string)
