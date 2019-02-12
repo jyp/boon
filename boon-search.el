@@ -88,7 +88,7 @@ the regexp."
 
 (defadvice isearch-exit (after ysph-hl-search activate compile)
   "After isearch, highlight the search term and set it as boon current regexp."
-  (boon-set-search-regexp isearch-string))
+  (boon-set-search-string isearch-string))
 
 (provide 'boon-search)
 ;;; boon-search.el ends here
