@@ -156,10 +156,10 @@ To switch from insert state to command state, type: '<ESC>'
 
 Try switching between the states now:
 
-If your in command state:
+If you're in command state:
 >> Type: '\\[boon-set-insert-like-state]' to switch to insert state.
 
-If your in insert state:
+If you're in insert state:
 >> Type: '<ESC>' to switch to command state.
 
 
