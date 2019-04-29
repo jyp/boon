@@ -370,7 +370,7 @@ sequence."
     (while (and binding
                 (or (eq binding 'mode-specific-command-prefix)
                     ;; if using universal prefix, the above will happen.
-                    (not (symbolp binding))))
+                    (not (commandp binding))))
       (let ((key (read-key (format "%s" prompt))))
         (if (eq key ?h) (describe-bindings key-vector) ;; h -> show help
           (push (boon-god-control-swap key) keys)
