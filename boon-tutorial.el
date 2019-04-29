@@ -39,6 +39,7 @@
       (insert (format "selectMap  = %s\n" (boon-dump-map boon-select-map)))
       (write-region nil nil (concat flavour ".hs")))))
 
+;;;###autoload
 (defun boon-keymap-rev-look (sub map)
   "Return an event yielding SUB from the keymap MAP."
   (let (res)
@@ -611,14 +612,16 @@ multiple cursors.
 Certain Emacs modes already offer their own command system.  Such
 modes include \"dired\", \"magit\", and others.  In such buffers, it
 makes little sense to have an insert state, and most edit commands
-don't make sense either.
+do not make sense either.
 
 In such modes Boon switches to a \"special state\", where the modeline
 shows: Boon:SPC, and only overrides the 'x' key, which is bound to
 `boon-x-map'.
 
 You can get the original behavior of x keys by prefixing it
-with (\\<boon-special-map>\\[boon-quote-character]).
+with (\\<boon-special-map>\\[boon-quote-character]). For example, in \"dired\",
+\\<boon-special-map>\\[boon-quote-character] x
+will execute the pending actions.
 
 
 * COPYING
