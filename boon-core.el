@@ -132,6 +132,7 @@ optional list of changes as its last argument."
          (push-mark) ;; remember where the last edition was by pushing a mark
          (setq boon/insert-command-history nil)
          (setq boon/insert-origin (point)))
+        (boon-off-state)
         (t (error "Boon: Unknown state!")))
   (force-mode-line-update))
 
@@ -188,7 +189,8 @@ optional list of changes as its last argument."
   :init-value nil
   :lighter (:eval (boon-modeline-string))
   :keymap nil
-  (when boon-local-mode
+  (if (not boon-local-mode)
+      (boon-set-state 'boon-off-state)
     (unless (memq 'boon/after-change-hook after-change-functions)
       (push 'boon/after-change-hook after-change-functions))
     (cond ((boon-special-mode-p) (boon-set-state 'boon-special-state))
