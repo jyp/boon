@@ -75,10 +75,17 @@ This item is either the symbol at point, or, if this fails, the sexp at point."
   (interactive) (boon-regs-from-bounds (cons (line-beginning-position) (line-end-position))))
 
 (defun boon-select-line (count)
-  "Return a selector of COUNT visual lines."
+  "Return a selector of COUNT logical lines."
   (interactive "p")
   (setq temporary-goal-column 0)
-  (boon-select-n count 'visible-line))
+  (lambda ()
+    (list (boon-mk-reg
+           (save-excursion
+             (newline (+ (forward-line count)
+                         (if (eq (point) (line-beginning-position)) 0 1)))
+             (point))
+           (line-beginning-position)))))
+
 
 (defun boon-select-n (count thing)
   "Return a region of COUNT THING's."
