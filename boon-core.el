@@ -45,6 +45,7 @@ See also `boon-special-mode-list'.
 (push 'boon-mode-map-alist emulation-mode-map-alists)
 
 ;; States
+(defvar-local boon-off-state nil "Used to disable boon altogether without fiddling with emulation-mode-map-alists")
 (defvar-local boon-command-state nil "Non-nil when boon command mode is activated. (Boon commands can be entered in this mode.)")
 (defvar-local boon-insert-state nil "Non-nil when boon insert mode is activated.")
 (defvar-local boon-special-state nil "Non-nil when special state is
