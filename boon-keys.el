@@ -40,6 +40,8 @@
 (define-key boon-goto-map "." 'find-tag)
 
 (define-key boon-x-map "x" 'execute-extended-command)
+(define-key boon-x-map "n" 'boon-narrow)
+(define-key boon-x-map "N" 'widen)
 
 (define-key boon-select-map "@"  'boon-select-occurences)
 (define-key boon-select-map "#"  'boon-select-all)

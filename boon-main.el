@@ -415,6 +415,13 @@ sequence."
   (dolist (reg (boon-run-selector regs))
     (comment-or-uncomment-region (boon-reg-begin reg)(boon-reg-end reg))))
 
+(defun boon-narrow (regs)
+  "Narrow to the first region of REGS."
+  (interactive (list (boon-spec-select-top "narrow")))
+  (let ((reg (car (boon-run-selector regs))))
+    (narrow-to-region (boon-reg-begin reg) (boon-reg-end reg))))
+
+
 (provide 'boon-main)
 ;;; boon-main.el ends here
 
