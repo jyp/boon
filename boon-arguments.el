@@ -70,20 +70,21 @@ This item is either the symbol at point, or, if this fails, the sexp at point."
               (save-excursion
                 (skip-chars-forward "^|") (point))))))
 
-(defun boon-select-org-tree ()
-  "Return the region corresponding to the current subtree."
-  (interactive)
-  (lambda ()
-    (boon-regs-from-bounds
-     (save-excursion
-       (save-match-data
-         (org-with-limited-levels
-          (cons
-	   (progn (org-back-to-heading t) (point))
-	   (progn (org-end-of-subtree t t)
-	          (when (and (org-at-heading-p) (not (eobp))) (backward-char 1))
-	          (point)))))))))
-
+(with-eval-after-load 'org
+  (defun boon-select-org-tree ()
+    "Return the region corresponding to the current subtree."
+    (interactive)
+    (lambda ()
+      (boon-regs-from-bounds
+       (save-excursion
+         (save-match-data
+           (org-with-limited-levels
+            (cons
+	     (progn (org-back-to-heading t) (point))
+	     (progn (org-end-of-subtree t t)
+	            (when (and (org-at-heading-p) (not (eobp))) (backward-char 1))
+	            (point))))))))))
+  
 (defun boon-select-justline ()
   "Return the region of the current line, without any newline."
   (interactive) (boon-regs-from-bounds (cons (line-beginning-position) (line-end-position))))
