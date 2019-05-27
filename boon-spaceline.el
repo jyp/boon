@@ -15,7 +15,7 @@
   "Boon status"
   (boon-state-string)
   :when (bound-and-true-p boon-mode)
-  :face (if (powerline-selected-window-active) (boon-state-face) 'modeline-inactive))
+  :face (if (powerline-selected-window-active) (boon-state-face) 'mode-line-inactive))
 
 
 
