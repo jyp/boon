@@ -80,7 +80,8 @@
         (forward-comment -1))
        ((looking-back "\\s\"" back-limit)
         (backward-char)
-        (er--move-point-backward-out-of-string))
+        (when-let ((char (nth 8 (syntax-ppss))))
+          (goto-char char)))
        ((looking-back "\\s)" back-limit)
         (backward-list))
        ((looking-back "\\s_" back-limit)  ;; symbol
@@ -109,7 +110,9 @@
       (forward-comment 1))
      ((looking-at "\\s\"")
       (forward-char)
-      (er--move-point-forward-out-of-string))
+      (when-let ((char (nth 8 (syntax-ppss))))
+        (goto-char char)
+        (forward-sexp)))
      ((looking-at "\\s(")
       (forward-list))
      ((looking-at "\\s_") ;; symbol
