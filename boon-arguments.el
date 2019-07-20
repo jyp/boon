@@ -99,11 +99,11 @@ This item is either the symbol at point, or, if this fails, the sexp at point."
   (setq temporary-goal-column 0)
   (lambda ()
     (list (boon-mk-reg
+           (line-beginning-position)
            (save-excursion
              (newline (+ (forward-line count)
                          (if (eq (point) (line-beginning-position)) 0 1)))
-             (point))
-           (line-beginning-position)))))
+             (point))))))
 
 
 (defun boon-select-n (count thing)
