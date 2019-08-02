@@ -107,8 +107,16 @@ optional list of changes as its last argument."
       (delete-region (+ p0 (nth 0 change)) (+ p0 (nth 0 change) (nth 1 change)))
       (insert (nth 2 change)))))
 
+(defvar-local boon-input-method nil
+"The input method to activate
+when going to insert state. (When leaving insert state the
+input-method is reset to nil.)")
+
 (defun boon-set-state (state)
   "Set the boon state (as STATE) for this buffer."
+  (when boon-insert-state
+    (setq-local boon-input-method current-input-method)
+    (set-input-method nil))
   (setq boon-command-state nil)
   (setq boon-insert-state nil)
   (setq boon-special-state nil)
@@ -123,6 +131,7 @@ optional list of changes as its last argument."
          (setq cursor-type boon-command-cursor-type))
         (boon-special-state)
         (boon-insert-state
+         (set-input-method boon-input-method)
          (deactivate-mark)
          (save-excursion
            (when (not (bolp))
