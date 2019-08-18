@@ -97,7 +97,14 @@
 
 "Boon tutorial.  See end for copying conditions.
 
-This tutorial assumes that you know Emacs already.
+
+* PREAMBLE
+----------
+
+This tutorial mostly assumes that you know Emacs already.  Boon
+does not overwrite any familiar key combination. C-x, M-x and C-c
+still work as you're used to. Should you be overwhelmed at any
+point, and old habits kick in, you should feel right at home.
 
 * INTRODUCTION
 --------------
@@ -109,7 +116,7 @@ provided by the tutorial, but it is best to invent your own.  If the
 tutorial says 'mnemonic: nil', this means that the frontend that you
 have activated has not defined a mnemonic for that command.
 
-Make sure that Boon is active in this buffer.  Call
+Make sure that Boon is active in this buffer. Call
 '\\[turn-on-boon-mode]' if necessary.
 
 Boon mode can be turned off with: '\\[turn-off-boon-mode]'
@@ -118,13 +125,11 @@ it restores the default Emacs experience.
 Lines that start with the characters \">>\", indicate directions for
 trying a command.  For example:
 
->> Type 'C-k' and 'C-l' to scroll this text.
+>> Type '\\[scroll-up-line]' and '\\[scroll-down-line]' to scroll this text.
 
 There is a cheat sheet that can be used as reference while going
 through this tutorial.  It's linked in the readme usage section
 https://github.com/jyp/boon#usage
-
-Most Emacs key-chord commands (M-... and C-...) will work as expected.
 
 
 * SWITCHING STATES
@@ -136,8 +141,7 @@ Boon has two states:
 
 - Insert state
 
-Boon indicates the difference between command state and insert state
-in several ways:
+Boon indicates the current active state in several ways:
 
 - The modeline says Boon:<STATE> (where <STATE> can be INS or CMD)
 
@@ -174,7 +178,7 @@ purpose.
 
 There are several ways you can do this.  You can still use the
 arrow keys, but it's more efficient to keep your right hand
-around the home row and use the commands:
+on the home row and use the commands:
 
   \\[backward-char] \\[forward-char] \\[previous-line] \\[next-line]
 
@@ -201,7 +205,7 @@ you're doing, as when using arrow keys.
 You will be using these basic cursor positioning commands a lot,
 but there are even faster ways to go about moving the cursor.
 
-If moving on character at a time is too slow, you can move by
+If moving one character at a time is too slow, you can move by
 words.  The '\\[boon-smarter-forward]' key moves forward a word and '\\[boon-smarter-backward]' moves back a word.
 
 >> Type '\\[boon-smarter-forward]' and '\\[boon-smarter-backward]' a couple of times.
@@ -226,7 +230,8 @@ You can also move to the beginning or end of the current line:
 
 >> Type '\\[boon-end-of-line]' to move to the end of a line.
 
-Like '\\[previous-line]' and '\\[next-line]', the keys on the top row are line-based.
+Like '\\[previous-line]' and '\\[next-line]', the keys on the top
+row are line-related.
 
 When moving up and down, Emacs tries to manage the cursor position
 inside a line intelligently.  This often works, but sometimes one need
@@ -235,9 +240,9 @@ down.  You can do all that by staying on the top row.
 
 If you want to moving up and down faster, use the shift key:
 
->> Type '\\[backward-paragraph]' (shift i) to move to the previous paragraph.
+>> Type '\\[backward-paragraph]' (pay attention to case) to move to the previous paragraph.
 
->> Type '\\[forward-paragraph]' (shift letter o) to move to the next paragraph.
+>> Type '\\[forward-paragraph]' to move to the next paragraph.
 
 You also can jump several steps at once by typing a number before
 a command.
@@ -248,13 +253,13 @@ a command.
 >> Try all of the above commands now a few times for practice.
    These are the commands that are used most often.
 
-Before trying the next two commands, remember that 'I' and 'O' moves
+Before trying the next two commands, remember that '\\[backward-paragraph]' and '\\[forward-paragraph]' moves
 by paragraph, use them to return to the next section after trying the
 following commands.
 
 Two less used cursor motion commands, moves you to the top or bottom of
 the whole text.
-
+kr
 >> Type '\\[beginning-of-buffer]' to move to the beginning of the whole text.
 
 >> Type '\\[end-of-buffer]' to move to the end of the whole text.
@@ -263,25 +268,20 @@ the whole text.
 * OTHER MOVEMENT COMMANDS
 -------------------------
 
-- '\\[boon-switch-mark]' " (boon-mnemonic 'boon-switch-mark) " pops a mark and jumps to it.
-  If a region is active, exchange point and mark.
+- '\\[boon-switch-mark]' " (boon-mnemonic 'boon-switch-mark) "
+  pops a mark from the mark ring and jumps to it. This is more
+  useful than in regular Emacs because Boon leaves 'bread crumbs'
+  whenever you switch to insert state.  So this command is very
+  useful to go to the last place you were touching.
 
-- '\\[xref-find-definitions]' is bound to `xref-find-definitions'.
+  If a region is active, this command will exchange point and
+  mark instead.
+
+- '\\[xref-find-definitions]' is bound to
+  `xref-find-definitions'. (Extremely useful when programming.)
 
 If the Avy package is installed:
 - '\\[avy-goto-word-1]' " (boon-mnemonic 'avy-goto-word-1) " activates `avy-goto-word-1'
-
-* IF EMACS STOPS RESPONDING
----------------------------
-
-If Emacs stops responding to your commands, you can stop it safely
-by typing 'C-g'.  You can also use 'C-g' to stop a command which is
-taking too long to execute.
-
-And 'C-g' can discard an argument or cancel a command that you do not
-want to finish.
-
-'<ESC>' is also an alternative which works in many contexts.
 
 
 * 'C-x' prefix
@@ -302,10 +302,12 @@ via " x-key ".  (Standard commands are always available under 'C-x')
 * 'C-c' prefix
 ------------
 
-Mode-specific commands often have the form 'C-c C-<letter>'.  These
-are accessible by typing simply '\\[boon-c-god] <letter>' from command state.
-Unfortunately there is no such binding in text mode by default
---- so you cannot test this right away.
+Mode-specific commands often have the form 'C-c C-<letter>'.
+These are accessible by typing simply '\\[boon-c-god] <letter>'
+from command state.  Unfortunately there is no such binding in
+text mode by default --- so you cannot test this right away. But
+say if you're typing a magit commit message, '\\[boon-c-god] c'
+will confirm the message.
 
 
 * UNDO
@@ -330,24 +332,25 @@ In insert state, regular Emacs editing commands also work.
 >> Type '<ESC>' to go back to command state.
 
 A single character can also be inserted in command state by first
-typing the quote command: '\\[boon-quote-character]' (mnemonic: quote)
+typing the quote command: '\\[boon-quote-character]' "  (boon-mnemonic 'boon-quote-character) "
 
->> Type '\\[boon-quote-character] *' to insert a character in command state.
+>> Type '\\[boon-quote-character] *' to insert a single character
+   while in command state.
 
 And just like you can move several steps at once, you can also insert
 a character several times from command state, by pressing a number key
 before pressing '\\[boon-quote-character]’.
 
->> Try that now -- type ’8q*’ to insert ********.
+>> Try that now -- type '8 \\[boon-quote-character] *' to insert ********.
 
 
-* TAKING (DELETING)
-----------
+* DELETING
+-------------
 
-Taking (deleting) text is mostly done with the:
+Deleting text is mostly done with the:
 '\\[boon-take-region]' key " (boon-mnemonic 'boon-take-region) ".
 
-The take command expects an argument.  This argument can be any
+The '\\[boon-take-region]' command expects an argument.  This argument can be any
 right-hand move command (in `boon-moves-map'), such as '\\[backward-char]'.
 
 >> Type '\\[boon-take-region] \\[backward-char]' to delete the character before the cursor
@@ -357,7 +360,7 @@ In the above instructions, '\\[backward-char]' is the argument to the '\\[boon-t
 >> Type '\\[boon-take-region] \\[boon-smarter-backward]' to delete backwards, up to the beginning of a word
 
 You can also use a left-hand _region specifier_ as an argument to
-'\\[boon-take-region]'.  One such arguments is '" (selector 'boon-select-wim) "', which refers to the symbol or (sexp)
+'\\[boon-take-region]'.  One such arguments is '" (selector 'boon-select-wim) "', which refers to the symbol (word) or (sexp)
 at point.
 
 >> Type '\\[boon-take-region] " (selector 'boon-select-wim) "' to delete the symbol where the cursor is
@@ -398,8 +401,9 @@ behaves like putting a mark at the the current point.
 
 >> Type '\\[boon-drop-mark]' with an active selection to cancel the selection.
 
-The region specifier `boon-select-line' '" (selector 'boon-select-line) "' can be
-given to the marking command '\\[boon-drop-mark]'.
+In particular the region specifier `boon-select-line'
+'" (selector 'boon-select-line) "' can be given to the marking
+command '\\[boon-drop-mark]', which is a convenient way to select some lines.
 
 >> Type '\\[boon-drop-mark] " (selector 'boon-select-line) "' to select the current line.
 
@@ -412,33 +416,39 @@ You can kill and switch to insert state with a single command:
 
 >> Type '\\[boon-substitute-region] " (selector 'boon-select-wim) "' to replace the word/symbol at point.
 
-To delete the word under the cursor.
+>> Insert some replacement text and go back to command mode.
+
+When deleting the word under the cursor, it is sometimes a
+problem that an space remains. The argument-modifier
+\\<boon-select-map>\\[boon-select-with-spaces] adds the extra
+space to the region.
 
 >> Move the cursor to a word you wish to kill (Cut).
 
 >> Type '\\[boon-take-region] \\<boon-select-map>\\[boon-select-with-spaces] \\[boon-select-word]\\<boon-command-map>' to remove the word and it's surrounding spaces.
 
 
-* TREASURE (Copy, `kill-ring-save')
-------------
+* (Copy, `kill-ring-save')
+--------------------------
 
-The command for coping is: '\\[boon-treasure-region]'.
+The command for coping is: '\\[boon-treasure-region]'. " (boon-mnemonic 'boon-treasure-region) "
 
 It adds the copied text to the `kill-ring' but doesn't remove it from
 the buffer.
 
-If a region is active, then the region contents gets copied.
-Otherwise it expects a motion command.
+The command '\\[boon-treasure-region]' behaves like
+'\\[boon-take-region]', if a region is active, then the region
+contents gets copied.  Otherwise it expects a motion command.
 
 >> Type '\\[boon-treasure-region] " (selector 'boon-select-wim) "' to copy the symbol under the cursor.
 
 >> Type '\\[boon-treasure-region] \\[boon-drop-mark]' to copy the current line.
 
 
-* FETCH (YANK, PASTE)
----------------------
+* (Paste, `yank')
+-----------------
 
-The command for fetching (yanking, pasting) is: '\\[boon-splice]' (mnemonic: fetch).
+The command for fetching (yanking, pasting) is: '\\[boon-splice]' " (boon-mnemonic 'boon-splice) "
 
 >> Try it, type '\\[boon-splice]' to yank the text back from the `kill-ring'.
 
@@ -449,7 +459,7 @@ yank the text.
 with the previous entry in the `kill-ring'
 
 
-* REPEATE
+* REPEAT
 ---------
 
 The last complex command can be repeated by typing: '\\[boon-repeat-command]'.
@@ -470,7 +480,7 @@ We extend this definition with the insert command.
    (the word was substituted with the same replacement text).
 
 All complex commands, including inserts, are saved in the
-‘command-history’.  You can can conjure up (and fix) any complex
+‘command-history’.  You can can conjure up (and possibly fix) any complex
 command of your choice using '\\[repeat-complex-command]'.
 
 
@@ -509,7 +519,7 @@ last word (ending with a period).
 
 Boon provides help with manipulating enclosures.
 
-The command '\\<boon-select-map>\\[boon-select-borders]\\<boon-command-map>' " (boon-mnemonic 'boon-enclose) " adds enclosures around a region.
+The command '\\[boon-enclose]' " (boon-mnemonic 'boon-enclose) " adds enclosures around a region.
 
 It takes two arguments:
 
@@ -518,7 +528,7 @@ It takes two arguments:
 2. The region to surround.  This region is specified by the same
    language as the arguments to '\\[boon-take-region]' or '\\[boon-drop-mark]' commands.
 
->> Type '\\<boon-select-map>\\[boon-select-borders]\\<boon-command-map> p \\<boon-select-map>\\[boon-select-wim]\\<boon-command-map>' inside a symbol, to enclose it in parens.
+>> With the cursor over a word, type '\\[boon-enclose] p \\<boon-select-map>\\[boon-select-wim]\\<boon-command-map>' to enclose it in parens.
 
 It is often useful to put enclosures around what has just been pasted.
 The just pasted region is accessible with: '\\[boon-toggle-mark]' (single quote).
@@ -527,7 +537,7 @@ The just pasted region is accessible with: '\\[boon-toggle-mark]' (single quote)
 
 >> Put parens around the just pasted word with: '\\[boon-enclose] p \\[boon-toggle-mark]'.
 
->> Inspect the kind of enclosures available with:
+>> Inspect and customize the kind of enclosures available with:
    '\\[customize-variable] boon-enclosures' '<Return>'
 
 It is also possible to remove enclosures with the '\\<boon-select-map>\\[boon-select-borders]\\<boon-command-map>' operator, which
@@ -569,6 +579,9 @@ Search backward:
 Lists all lines that match a regexp:
 
 \\[occur] --> `occur'
+
+(It's probably a good idea to rebind this to swiper or similar
+package of your choice)
 
 
 * MULTIPLE REGIONS
@@ -624,6 +637,19 @@ with (\\<boon-special-map>\\[boon-quote-character]). For example, in \"dired\",
 will execute the pending actions.
 
 
+* IF EMACS STOPS RESPONDING
+---------------------------
+
+If Emacs stops responding to your commands, you can stop it safely
+by typing 'C-g'.  You can also use 'C-g' to stop a command which is
+taking too long to execute.
+
+And 'C-g' can discard an argument or cancel a command that you do not
+want to finish.
+
+'<ESC>' is also an alternative which works in many contexts.
+
+
 * COPYING
 ---------
 
@@ -634,7 +660,7 @@ This version of the tutorial is not a part of GNU Emacs, but derived
 from the standard Emacs tutorial,
 
 
-  Copyright (C) 1985, 1996, 1998, 2001-2013 Free Software Foundation,
+  Copyright (C) 1985, 1996, 1998, 2001-2019 Free Software Foundation,
   Inc.
 ")))))
 (goto-char 1))
