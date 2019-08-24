@@ -86,9 +86,13 @@ the regexp."
   (interactive)
   (hi-lock-face-buffer boon-regexp 'hi-yellow))
 
-(defadvice isearch-exit (after ysph-hl-search activate compile)
+(defadvice isearch-exit (after boon-isearch-set-search activate compile)
   "After isearch, highlight the search term and set it as boon current regexp."
   (boon-set-search-string isearch-string))
+
+(defadvice swiper--action (after boon-swiper-set-search activate compile)
+  "After isearch, highlight the search term and set it as boon current regexp."
+  (boon-set-search-regexp (car regexp-search-ring)))
 
 (provide 'boon-search)
 ;;; boon-search.el ends here
