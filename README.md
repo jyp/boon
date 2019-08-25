@@ -15,7 +15,6 @@ Selling points:
 - Good Emacs integration: integrates well with existing Emacs
   infrastructure and takes advantage of it.
 
-
 Ergonomic Design
 ----------------
 
@@ -75,7 +74,7 @@ to use some parts of Boon. The structure of Boon is as follows:
 1. boon-moves.el and boon-search.el provide a set of move and search
    commands. These work the same way as standard Emacs commands ---
    they are merely more powerful (or just have different
-   emphasis). Frontends typically bind these commands (in addition to
+   emphasis). Layout-frontends typically bind these commands (in addition to
    standard ones) in the boon keymaps.
 2. boon-arguments.el provides a set of selectors to define
    regions. (These selectors are the equivalent of vim 'text
@@ -94,9 +93,9 @@ to use some parts of Boon. The structure of Boon is as follows:
    described above. (For good measure, some random extra commands are
    thrown in.) These commands may be used in combination with a modal
    system or not. A few commands also switch to insert mode.
-5. boon-keys.el, boon-colemak.el, boon-qwerty.el, etc. are frontends. Those
-   require all the above and provide a mapping of moves, selectors and
-   commands onto keys.
+5. boon-keys.el, boon-colemak.el, boon-qwerty.el, etc. are (partially
+   layout specific) frontends. Those require all the above and provide
+   a mapping of moves, selectors and commands onto keys.
 
 Installation
 ------------
@@ -125,15 +124,15 @@ not activated and you want to try it locally, activate it by
 Usage
 -----
 
-You can jump-start by reading the cheat sheet
+You can jump-start by reading any of the cheat sheets
 ([colemak](https://github.com/jyp/boon/blob/master/colemak.pdf),
 [qwerty](https://github.com/jyp/boon/blob/master/qwerty.pdf))
 directly, but reading through the tutorial is highly recommended:
 
     M-x boon-tutorial
 
-(You'll get the version of the tutorial adapted to the frontend you
-have activated, qwerty or colemak.)
+(You'll get the version of the tutorial adapted to the layout-frontend
+you have activated, qwerty or colemak.)
 
 Configuration
 -------------
@@ -164,16 +163,36 @@ Comparison with other modal layers for Emacs
   objects. Thus most of Boon remains usable even if one does not wish
   to use modal editing.
 
-  Besides, Evil use vi bindings (by default at least), which do not
-  provide the best ergonomics.
+  Besides, the vi keybindings do not provide the best ergonomics (IMO).
 
 - Xah Fly Keys http://ergoemacs.org/misc/ergoemacs_vi_mode.html
 
-  Like boon, Xah Fly Keys aims at providing a layout whose design is
-  ergonomic. As far as I understand it follows the spirit of Xah's
-  ErgoEmacs package. As I understand ErgoEmacs makes most design
-  decisions differently from boon. I have not made an in-depth
-  comparison of ergonomics yet.
+  Like boon, Xah Fly Keys (hereafter abbreviated to XFK) aims at
+  providing a layout whose design is ergonomic. (According to the
+  author it constitutes "the most efficient editing system in the
+  universe.")  Regardless, there follows a comparison, to the best of
+  my understanding.
+
+  1. As far as I can tell XFK has no notion of selectors (vim's ``text
+     objects''). Instead some keys are specially purposed to delete
+     specific chunks of texts. Boon has a smaller set of useful
+     commands and modifiers which can be combined in useful ways. It
+     leaves keys for more "clever" navigation commands (eg. browsing
+     errors) and editing shortcuts (eg. replace and insert in one
+     keystroke).
+
+  1b. XFK binds digits to actions, boon leaves them for prefixes.
+
+  2. XFK seem to have less of a systematic assignments of keys to
+     actions, even though the movements are roughly bound to the right
+     hand, Boon-style.
+
+  3. Boon provides 1-key access to `C-x` and `C-c` prefixes. Instead,
+     XFK puts everything under a single "leader key" (space),
+     presumably without a particular convention.
+
+  4. The set of supported layouts is different. (Even though I'd
+     expect ports to be easy.)
 
 - Fingers https://github.com/fgeller/fingers.el
 
@@ -181,7 +200,7 @@ Comparison with other modal layers for Emacs
   work between left and right hand. fgeller gives a detailed account
   of the particular differences with Boon. My opinion is that Fingers
   is compatible with Boon concepts and could (and probably should) be
-  implemented as a Boon 'frontend'.
+  implemented as a Boon layout-frontend.
 
 - Modalka https://github.com/mrkkrp/modalka
 
@@ -206,7 +225,7 @@ Comparison with other modal layers for Emacs
   simplicity allows to quickly get up to speed with it. However, it
   lacks the main benefit of a true modal layer: text operators. (what
   vi people call a "language for text edition"). Boon integrates basic
-  god-mode functionality (bound to the C key).
+  god-mode functionality for the C-c prefix map (bound to the C key).
 
 - Modal Mode http://retroj.net/modal-mode (Last updated in 2014)
 
