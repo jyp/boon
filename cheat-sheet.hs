@@ -64,7 +64,7 @@ argColor a = case a of
   Char -> "red"
   SearchObject -> "orange"
   Prefix -> "yellow"
-  TextRegion -> "blue"
+  TextRegion -> "cyan"
   Bin _ _ -> "purple"
   _ -> "white"
 
