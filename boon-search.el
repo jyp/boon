@@ -30,7 +30,8 @@ the regexp."
                  (message "Wrapping around")
                  (if forward (point-min) (point-max))))
     (setq boon-search-success nil)
-    (if forward (re-search-forward boon-regexp) (re-search-backward boon-regexp))
+    (let ((case-fold-search nil)) ;; because hi-lock is case-sensitive
+      (if forward (re-search-forward boon-regexp) (re-search-backward boon-regexp)))
     ;; If search fails an exception is thrown and this won't be set.
     (setq boon-search-success t))
   (goto-char (match-beginning 0)))
@@ -78,7 +79,16 @@ the regexp."
                            string ""))
                          (t (regexp-quote string)))))
 
-
+(defun boon-case-fold-regex (regex)
+  "Make REGEX case-insensitive, depending on `case-fold-search'.
+This is an extremely bugged first draft."
+  (if (not case-fold-search) regex
+    (replace-regexp-in-string
+           "[[:alpha:]]"
+           (lambda (m) (format "[%s%s]"
+                               (upcase (match-string 0 m))
+                               (match-string 0 m)))
+           regex)))
 
 (defun boon-highlight-regexp ()
   "Make sure boon-regexp is highlighted."
@@ -112,7 +122,7 @@ the regexp."
 
 (defadvice swiper--action (after boon-swiper-set-search activate compile)
   "After swiper, highlight the search term and set it as boon current regexp."
-  (boon-set-search-regexp (car regexp-search-ring)))
+  (boon-set-search-regexp (boon-case-fold-regex (car regexp-search-ring))))
 
 (provide 'boon-search)
 ;;; boon-search.el ends here
