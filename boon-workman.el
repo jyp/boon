@@ -53,27 +53,11 @@
 
 ;; w,f
 ;; where is? find?
-(define-key boon-moves-map "d "  'isearch-backward)
-(define-key boon-moves-map "r "  'isearch-forward)
-
-(define-key boon-moves-map (kbd "dt")  'boon-qsearch-previous-at-point)
-(define-key boon-moves-map (kbd "rt")  'boon-qsearch-next-at-point)
-(define-key boon-moves-map (kbd "ds")  'boon-qsearch-previous-at-point)
-(define-key boon-moves-map (kbd "rs")  'boon-qsearch-next-at-point)
-
-(define-key boon-moves-map (kbd "dd")  'boon-qsearch-previous)
-(define-key boon-moves-map (kbd "rr")  'boon-qsearch-next)
+(define-key boon-moves-map "d" 'boon-backward-search-map)
+(define-key boon-moves-map "r" 'boon-forward-search-map)
 
 (define-key boon-moves-map (kbd "D")  'boon-qsearch-previous)
 (define-key boon-moves-map (kbd "R")  'boon-qsearch-next)
-(define-key boon-moves-map (kbd "dw")  'boon-qsearch-previous)
-(define-key boon-moves-map (kbd "rw")  'boon-qsearch-next)
-(define-key boon-moves-map (kbd "de")  'previous-error)
-(define-key boon-moves-map (kbd "re")  'next-error)
-(define-key boon-moves-map (kbd "dk")  'flycheck-previous-error)
-(define-key boon-moves-map (kbd "rk")  'flycheck-next-error)
-(define-key boon-moves-map (kbd "db")  'previous-buffer)
-(define-key boon-moves-map (kbd "rb")  'next-buffer)
 
 ;; p
 ;; Pinpoint Place
