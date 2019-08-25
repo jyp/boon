@@ -577,29 +577,34 @@ The '\\<boon-select-map>\\[boon-select-borders]\\<boon-command-map>' operator is
 and '\\[boon-smarter-forward]' --- but it works on any region.
 
 
-* SEARCHING
------------
+* Navigation
+-------------
 
-Search forward:
+A number of keys are reserved for navigation.
 
-\\[isearch-forward] --> `isearch-forward'
-\\[next-error] --> `next-error'
-\\[boon-qsearch-next-at-point] --> `boon-qsearch-next-at-point'
-\\[boon-qsearch-next] --> `boon-qsearch-next'
+To search for the next/previous occurence of the word at point,
+use the keys \\[boon-qsearch-next-at-point] and \\[boon-qsearch-previous-at-point].
 
-Search backward:
+Searching is bound to the key `\\[occur]'. (Note: it is
+recommended to rebind this key to `swiper' (from the package of
+the same name))
 
-\\[isearch-backward] --> `isearch-backward'
-\\[previous-error] --> `previous-error'
-\\[boon-qsearch-previous-at-point] --> `boon-qsearch-previous-at-point'
-\\[boon-qsearch-previous] --> `boon-qsearch-previous'
+Once you have completed a search you can quickly navigate
+through the list of searches using the keys
+`\\[boon-backward-search-map]' (backward) and `\\[boon-forward-search-map]'.
 
-Lists all lines that match a regexp:
+>> Type `\\[occur]' navig <Return>
+>> Examine all the occurences in the buffer.
 
-\\[occur] --> `occur'
-
-(It's probably a good idea to rebind this to swiper or similar
-package of your choice)
+These commands will perform by default `previous-error' and
+`next-error', which are in fact versatile navigation commands in
+Emacs, allowing you to browse not only errors but `occur' or grep
+occurences and many other things depending on context.  However, additionally, if you
+have performed a search using `isearch', `swiper' or
+\\[boon-qsearch-next-at-point] and \\[boon-qsearch-previous-at-point], then `\\[boon-backward-search-map]' (backward) and `\\[boon-forward-search-map]'
+will navigate through the matches. Finally, the same keys will
+cycle through multiple cursors when they are active.
+(Use \\[boon-quit] to exit such contexts.)
 
 
 * MULTIPLE REGIONS
