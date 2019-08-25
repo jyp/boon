@@ -26,10 +26,9 @@ the regexp."
   (boon-highlight-regexp)
   (save-excursion ;; so that we don't move the point if an exception is thrown
     (goto-char (if boon-search-success
-                   (if forward (+ 1 (point)) (- (point) 1))
-                 (progn
-                   (message "Wrapping around")
-                   (if forward (point-min) (point-max)))))
+                   (if forward (1+ (point)) (1- (point)))
+                 (message "Wrapping around")
+                 (if forward (point-min) (point-max))))
     (setq boon-search-success nil)
     (if forward (re-search-forward boon-regexp) (re-search-backward boon-regexp))
     ;; If search fails an exception is thrown and this won't be set.
