@@ -62,9 +62,6 @@
 (define-key boon-moves-map "w" '("where was?" . boon-backward-search-map))
 (define-key boon-moves-map "e" '("elsewhere?" . boon-forward-search-map))
 
-(define-key boon-moves-map "ww"  'boon-qsearch-previous)
-(define-key boon-moves-map "ee"  'boon-qsearch-next)
-
 (define-key boon-moves-map "W"  'boon-qsearch-previous)
 (define-key boon-moves-map "E"  'boon-qsearch-next)
 
