@@ -9,9 +9,6 @@
 
 (require 'boon-core)
 
-(defalias 'boon-backward-search-map 'boon-navigate-backward)
-(defalias 'boon-forward-search-map 'boon-navigate-forward)
-
 (define-prefix-command 'boon-goto-map)
 (set-keymap-parent boon-goto-map goto-map)
 (set-keymap-parent boon-goto-map goto-map)

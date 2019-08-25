@@ -59,8 +59,8 @@
 
 ;; w,e
 ;; where is? elsewhere?
-(define-key boon-moves-map "w" '("where was?" . boon-backward-search-map))
-(define-key boon-moves-map "e" '("elsewhere?" . boon-forward-search-map))
+(define-key boon-moves-map "w" '("where was?" . boon-navigate-backward))
+(define-key boon-moves-map "e" '("elsewhere?" . boon-navigate-forward))
 
 (define-key boon-moves-map "W"  'boon-qsearch-previous)
 (define-key boon-moves-map "E"  'boon-qsearch-next)
