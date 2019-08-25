@@ -103,7 +103,7 @@ Installation
 
 REQUIREMENTS
 - Emacs version >= 25.1
-- Qwerty, Qwertz or Colemak layout (Workman version partially implemented).
+- Qwerty, Qwertz or Colemak layout (Workman version partially implemented -- contributions welcome).
 
 Install Boon (perhaps using
 [![MELPA](http://stable.melpa.org/packages/boon-badge.svg)](http://stable.melpa.org/#/boon)),

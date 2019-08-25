@@ -15,16 +15,17 @@
   (concat
    "["
    (-reduce (lambda (x y) (concat x "," y))
-            (--map (let* ((b (lookup-key map (make-vector 1 it)))
-                          (mn (boon-mnemonic-noformat b map)))
-                     (format "(%d,(%S,\"%S\"))" it mn
-                             (cond ((symbolp b) b))))
-                   (-concat
-                    (-iterate '1+ ?A 26)
-                    (-iterate '1+ ?a 26)
-                    '(?\; ?: ?- ?' ?, ?. ?< ?> ?/ ?? 32 ?\")
-                    )))
+            (-non-nil
+            (--map (let ((b (lookup-key map (make-vector 1 it))))
+                     (when b
+                       (format "(%d,(%S,\"%S\"))" it (boon-mnemonic-noformat b map)
+                               (cond ((symbolp b) b)))))
+                     (-concat
+                      (-iterate '1+ ?A 26)
+                      (-iterate '1+ ?a 26)
+                      '(?\; ?: ?- ?' ?, ?. ?< ?> ?/ ?? 32 ?\" ?ö ?ä ?Ö ?Ä)))))
    "]"))
+
 
 (defun boon-dump-cheatsheet (flavour)
   "Dump cheatcheat info for FLAVOUR."

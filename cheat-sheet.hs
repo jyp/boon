@@ -89,19 +89,20 @@ dropR n = reverse . drop n . reverse
 
 keyHalf :: [(String, (TeX, Argument, TeX))]
            -> String -> TexDiagram Object
-keyHalf kmInfo k = case lookup k kmInfo of
-    Nothing -> error $ "key (" ++ k ++ ") not found in keymap."
-    Just (act,arg,mnem) -> do
-      up <- using (fill (argColor arg)) $ draw $ box "keyHalf"
-      upK <- label "k" $  textSize Huge $ sans $ textual $ k
-      upT <- label "scr" $ varwidth "45pt" $ sans $ textSize ScriptSize $ act
-      m <- (label "mnem" $ sans $ textSize Tiny $ mnem)
-      m # SW .=. up # SW
-      up # E .=. upT # E
-      up # W .=. upK # W
-      width up === constant keySize
-      height up === constant (keySize / 2)
-      return up
+keyHalf kmInfo k = do
+  let (act,arg,mnem) = case lookup k kmInfo of
+                         Nothing -> (mempty,Reserved,mempty)
+                         Just (act,arg,mnem) -> (act,arg,mnem)
+  up <- using (fill (argColor arg)) $ draw $ box "keyHalf"
+  upK <- label "k" $  textSize Huge $ sans $ textual $ k
+  upT <- label "scr" $ varwidth "45pt" $ sans $ textSize ScriptSize $ act
+  m <- (label "mnem" $ sans $ textSize Tiny $ mnem)
+  m # SW .=. up # SW
+  up # E .=. upT # E
+  up # W .=. upK # W
+  width up === constant keySize
+  height up === constant (keySize / 2)
+  return up
 
 
 keyDiagram :: [(String, (TeX, Argument, TeX))] -> String -> Diagram TeX Tex Object
@@ -207,6 +208,22 @@ main = do
                ,rightHandK = [["y","u","i","o","p",""]
                     ,["h","j","k","l",";","'"]
                     ,["n","m",",",".","/",""]]}
+         "qwertz" -> cs
+               {leftHandK = [["q","w","e","r","t"]
+                            ,["a","s","d","f","g"]
+                            ,["y","x","c","v","b"]]
+
+               ,rightHandK = [["z","u","i","o","p",""]
+                             ,["h","j","k","l","ö","ä"]
+                             ,["n","m",";",":","-",""]]}
+         "workman" -> cs
+               {leftHandK = [["q","d","r","w","b"]
+                            ,["a","s","h","t","g"]
+                            ,["z","x","m","c","v"]]
+
+               ,rightHandK = [["j","f","u","p","k",";"]
+                             ,["y","n","e","o","i","'"]
+                             ,["k","l",",",".","/",""]]}
   renderTex Plain flavor (docu cs')
 
 docu :: CheatSheet -> TeX

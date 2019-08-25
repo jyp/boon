@@ -1,3 +1,5 @@
+all: sheets
+
 emacs ?= emacs
 
 sheets: colemak.pdf qwerty.pdf qwertz.pdf workman.pdf
