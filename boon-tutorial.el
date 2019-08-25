@@ -577,26 +577,29 @@ The '\\<boon-select-map>\\[boon-select-borders]\\<boon-command-map>' operator is
 and '\\[boon-smarter-forward]' --- but it works on any region.
 
 
-* Navigation
--------------
+* NAVIGATION (BROWSE)
+---------------------
 
 A number of keys are reserved for navigation.
 
 To search for the next/previous occurence of the word at point,
 use the keys \\[boon-qsearch-next-at-point] and \\[boon-qsearch-previous-at-point].
 
-Searching is bound to the key `\\[occur]'. (Note: it is
-recommended to rebind this key to `swiper' (from the package of
-the same name))
+Searching for all occurences of a string is bound to the key
+`\\[occur]' " (boon-mnemonic 'occur) ". (Note: it is recommended to rebind this key to
+`swiper' (from the package of the same name))
 
 Once you have completed a search you can quickly navigate
 through the list of searches using the keys
-`\\[boon-backward-search-map]' (backward) and `\\[boon-forward-search-map]'.
+`\\[boon-backward-search-map]' " (boon-mnemonic 'boon-backward-search-map) " and `\\[boon-forward-search-map]' "(boon-mnemonic 'boon-forward-search-map)".
 
 >> Type `\\[occur]' navig <Return>
->> Examine all the occurences in the buffer.
+>> Examine some of the occurences in the buffer using `\\[boon-backward-search-map]' and `\\[boon-forward-search-map]'.
 
-These commands will perform by default `previous-error' and
+>> Type `\\[isearch-forward]' navig <Return>
+>> Examine some more of the occurences in the buffer. 
+
+The keys `\\[boon-backward-search-map]' and `\\[boon-forward-search-map]' will perform by default `previous-error' and
 `next-error', which are in fact versatile navigation commands in
 Emacs, allowing you to browse not only errors but `occur' or grep
 occurences and many other things depending on context.  However, additionally, if you
