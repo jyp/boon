@@ -83,14 +83,35 @@ the regexp."
 (defun boon-highlight-regexp ()
   "Make sure boon-regexp is highlighted."
   (interactive)
-  (hi-lock-face-buffer boon-regexp 'hi-yellow))
+  (hi-lock-face-buffer boon-regexp))
+
+(defun boon-navigate (forward)
+  "Go to the next item of interest, FORWARD or backwards."
+  (cond
+   ((and (bound-and-true-p multiple-cursors-mode) (> (mc/num-cursors) 1))
+    (if forward (mc/cycle-forward) (mc/cycle-backward)))
+   ((and boon-regexp
+         (bound-and-true-p hi-lock-interactive-patterns)
+         (equal boon-regexp (car (car hi-lock-interactive-patterns))))
+    (boon-qsearch forward))
+   (t (next-error (if forward 1 -1)))))
+
+(defun boon-navigate-forward ()
+  "Go to the next item of interest."
+  (interactive)
+  (boon-navigate t))
+
+(defun boon-navigate-backward ()
+  "Go to the next item of interest."
+  (interactive)
+  (boon-navigate nil))
 
 (defadvice isearch-exit (after boon-isearch-set-search activate compile)
   "After isearch, highlight the search term and set it as boon current regexp."
   (boon-set-search-string isearch-string))
 
 (defadvice swiper--action (after boon-swiper-set-search activate compile)
-  "After isearch, highlight the search term and set it as boon current regexp."
+  "After swiper, highlight the search term and set it as boon current regexp."
   (boon-set-search-regexp (car regexp-search-ring)))
 
 (provide 'boon-search)
