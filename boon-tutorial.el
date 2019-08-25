@@ -345,7 +345,7 @@ before pressing '\\[boon-quote-character]’.
 
 
 * DELETING
--------------
+----------
 
 Deleting text is mostly done with the:
 '\\[boon-take-region]' key " (boon-mnemonic 'boon-take-region) ".
@@ -411,10 +411,6 @@ command '\\[boon-drop-mark]', which is a convenient way to select some lines.
 
 >> Type '\\[boon-take-region]' to delete all selected lines.
 
-You can kill and switch to insert state with a single command:
-'\\[boon-substitute-region]' " (boon-mnemonic 'boon-substitute-region) ".
-
->> Type '\\[boon-substitute-region] " (selector 'boon-select-wim) "' to replace the word/symbol at point.
 
 >> Insert some replacement text and go back to command mode.
 
@@ -427,6 +423,28 @@ space to the region.
 
 >> Type '\\[boon-take-region] \\<boon-select-map>\\[boon-select-with-spaces] \\[boon-select-word]\\<boon-command-map>' to remove the word and it's surrounding spaces.
 
+
+
+* REPLACING
+-----------
+
+You can kill and switch to insert state with a single command:
+'\\[boon-substitute-region]' " (boon-mnemonic 'boon-substitute-region) ".
+
+>> Type '\\[boon-substitute-region] " (selector 'boon-select-wim) "' to replace the word/symbol at point.
+
+It is sometimes useful to replace a single character. You can
+quickly replace the character at point using the command
+\\[boon-replace-by-character].
+
+>> Fix this tipo by moving on the `i' and type \\[boon-replace-by-character] y
+
+A typical character replacement is a change of case. The command
+\\[boon-toggle-case] is made for this special purpose.
+
+>> move to the beginning of this sentence and type \\[boon-toggle-case] to fix is case.
+
+>> Select a whole sentence and use \\[boon-toggle-case] to change its capitalization.
 
 * (Copy, `kill-ring-save')
 --------------------------
