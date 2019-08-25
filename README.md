@@ -195,10 +195,10 @@ Comparison with other modal layers for Emacs
 - RYO modal mode https://github.com/Kungsgeten/ryo-modal
 
   RYO modal has the same purpose as Modalka and boon-core. Compared to
-  Modalka, it provides support for repeating a command. However RYO
-  modal's method is incompatible with Emacs' repeat (and consequently
-  also with boon complex commands). Additionally it suffers from the
-  same drawback as Modalka: it has a single non-insertion state.
+  Modalka, it provides support for repeating a command. However boon
+  can repeat insertion commands, while RYO modal cannot. Additionally
+  it suffers from the same drawback as Modalka: it has a single
+  non-insertion state.
 
 - God-mode https://github.com/chrisdone/god-mode
 
