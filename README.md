@@ -94,7 +94,7 @@ to use some parts of Boon. The structure of Boon is as follows:
    described above. (For good measure, some random extra commands are
    thrown in.) These commands may be used in combination with a modal
    system or not. A few commands also switch to insert mode.
-5. boon-keys.el, boon-colemak.el, boon-qwerty.el are frontends. Those
+5. boon-keys.el, boon-colemak.el, boon-qwerty.el, etc. are frontends. Those
    require all the above and provide a mapping of moves, selectors and
    commands onto keys.
 
@@ -103,14 +103,14 @@ Installation
 
 REQUIREMENTS
 - Emacs version >= 25.1
-- Qwerty or Colemak layout (workman version partially implemented).
+- Qwerty, Qwertz or Colemak layout (Workman version partially implemented).
 
 Install Boon (perhaps using
 [![MELPA](http://stable.melpa.org/packages/boon-badge.svg)](http://stable.melpa.org/#/boon)),
 and add the following to your configuration:
 
     (require 'boon-colemak)
-    ;; (require 'boon-qwerty) ;; for qwerty port
+    ;; (require 'boon-qwerty) ;; for qwerty variant
 
 Then
 

@@ -277,8 +277,9 @@ kr
   If a region is active, this command will exchange point and
   mark instead.
 
-- '\\[xref-find-definitions]' is bound to
+- '\\[xref-find-definitions]' " (boon-mnemonic 'xref-find-definitions) " is bound to
   `xref-find-definitions'. (Extremely useful when programming.)
+  Go back to where you were using `\\[xref-pop-marker-stack]'.
 
 If the Avy package is installed:
 - '\\[avy-goto-word-1]' " (boon-mnemonic 'avy-goto-word-1) " activates `avy-goto-word-1'
