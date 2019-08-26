@@ -6,21 +6,21 @@
 Boon: An Ergonomic Command Mode for Emacs
 ==========================================
 
-
 Boon is a complete package for modal editing, which is not Evil.
 
-Selling points:
+Strong points:
 - Ergonomic: common commands are easy to type. (See below)
 - Lightweight: ~300 loc for its core.
 - Good Emacs integration: integrates well with existing Emacs
-  infrastructure and takes advantage of it.
+  infrastructure and leverages it.
 
 Ergonomic Design
 ----------------
 
 It is largely accepted that modal edition is more ergonomic than using
-key-chords.  Boon attempts to make modal editing as comfortable as
-possible, by adhering to the following design principles:
+key-chords.  Boon attempts to take this advantage to its conclusion,
+making modal editing as comfortable as possible, by adhering to the
+following design principles:
 
 - Spacial allocation first, mnemonics second: the allocation of keys
   to commands is primarily based on the locations of keys on the
@@ -29,10 +29,10 @@ possible, by adhering to the following design principles:
 - Easy finger rolls: common key combinations should either be
   left/right hand alternation or easy one-hand rolls.
 
-- Use of home row and strong fingers for the most used commands
+- Use of home row and strong fingers for the most used commands.
 
-- Easy navigation: many commands are bound to navigation. This
-  allocation of keys facilitates moving around, which is the most
+- Easy navigation: many keys are allocated to navigation. This
+  strategy facilitates moving around, which is in fact the most
   common task when editting text. Because movements double up as
   region-definitions, this design also makes manipulation commands
   more powerful.
@@ -51,8 +51,8 @@ Right-hand.
 The leftwards (and upwards) movements are bound to the leftmost
 fingers (index and middle finger), while rightwards (and downwards)
 movements are bound to the rightmost fingers (ring finger and pinky.)
-Additional unpaired, movements are bound to the middle column
-(extended reach with index).
+Additional unpaired, movements are bound to the middle column, which is
+reached with an extension of the index finger.
 
 Left-hand.
 
@@ -74,28 +74,29 @@ to use some parts of Boon. The structure of Boon is as follows:
 1. boon-moves.el and boon-search.el provide a set of move and search
    commands. These work the same way as standard Emacs commands ---
    they are merely more powerful (or just have different
-   emphasis). Layout-frontends typically bind these commands (in addition to
-   standard ones) in the boon keymaps.
+   emphasis). Layout-frontends typically bind these commands (in
+   addition to standard ones) in the boon keymaps.
 2. boon-arguments.el provides a set of selectors to define
    regions. (These selectors are the equivalent of vim 'text
    objects'). Selectors include plain regions (words, lines,
    paragraphs, ...), but also region transformers (think: exclude
-   borders, just borders, including spaces, each, etc.). Additionally
-   every move command (in the boon-moves-map keymap) can be used as a
-   selector which means that they are easily customized. On top of it
-   all, the system supports multiple-cursors (multiple regions will be
-   returned when multiple cursors are active).
+   borders, just borders, including spaces, "foreach",
+   etc.). Additionally every move command (in the `boon-moves-map`
+   keymap) can be used as a selector which means that they are easily
+   customized. On top of it all, the system supports multiple-cursors
+   (multiple regions will be returned when multiple cursors are
+   active).
 3. boon-core.el provides an infrastructure for modal editing. The
-   implementation is very much inspired from evil-core, but heavily
+   implementation draws much inspiration from evil-core, but is heavily
    simplified.
 4. boon-main.el provides a set of commands. These are similar to
    standard Emacs commands, but they use the system of selectors
    described above. (For good measure, some random extra commands are
    thrown in.) These commands may be used in combination with a modal
    system or not. A few commands also switch to insert mode.
-5. boon-keys.el, boon-colemak.el, boon-qwerty.el, etc. are (partially
-   layout specific) frontends. Those require all the above and provide
-   a mapping of moves, selectors and commands onto keys.
+5. boon-keys.el, boon-colemak.el, boon-qwerty.el, etc. are
+   (layout-specific) frontends. Those require all the above and
+   provide a mapping of moves, selectors and commands onto keys.
 
 Installation
 ------------
@@ -132,7 +133,7 @@ directly, but reading through the tutorial is highly recommended:
     M-x boon-tutorial
 
 (You'll get the version of the tutorial adapted to the layout-frontend
-you have activated, qwerty or colemak.)
+you have activated, qwerty, colemak, etc.)
 
 Configuration
 -------------
@@ -170,8 +171,8 @@ Comparison with other modal layers for Emacs
   Like boon, Xah Fly Keys (hereafter abbreviated to XFK) aims at
   providing a layout whose design is ergonomic. (According to the
   author it constitutes "the most efficient editing system in the
-  universe.")  Regardless, there follows a comparison, to the best of
-  my understanding.
+  universe".)  Regardless, there follows a comparison based on my
+  understanding.
 
   1. As far as I can tell XFK has no notion of selectors (vim's ``text
      objects''). Instead some keys are specially purposed to delete
@@ -181,15 +182,18 @@ Comparison with other modal layers for Emacs
      errors) and editing shortcuts (eg. replace and insert in one
      keystroke).
 
-  1b. XFK binds digits to actions, boon leaves them for prefixes.
+  1b. XFK binds digits to actions, boon leaves them for prefixes. (I
+      may be misunderstandig here --- perhaps they are bound to
+      special characters.)
 
-  2. XFK seem to have less of a systematic assignments of keys to
+  2. XFK seem to have less of a systematic assignment of keys to
      actions, even though the movements are roughly bound to the right
-     hand, Boon-style.
+     hand. I believe that a more systematic binding startegy is easier
+     to learn.
 
   3. Boon provides 1-key access to `C-x` and `C-c` prefixes. Instead,
      XFK puts everything under a single "leader key" (space),
-     presumably without a particular convention.
+     presumably without preserving emacs convention.
 
   4. The set of supported layouts is different. (Even though I'd
      expect ports to be easy.)
@@ -206,8 +210,8 @@ Comparison with other modal layers for Emacs
 
   Modalka is an engine to "introduce native modal editing of your own
   design". Thus its purpose is similar to `boon-core.el`. It could be
-  possible in the future to replace parts of boon-core with a
-  dependency on Modalka. However at the moment it does not seem
+  possible and beneficial in the future to replace parts of boon-core
+  with a dependency on Modalka. However at the moment it does not seem
   suitable. The main issue is that modalka does not support several
   states; it can only be either activated or not.
 
@@ -232,3 +236,6 @@ Comparison with other modal layers for Emacs
   Another modal layer for Emacs, which is also lightweight and aims to
   integrate with Emacs. However, as far as I can see, there is no
   special attention paid to ergonomics.
+
+
+All the above is to the best of my understanding and at the time of writing.
