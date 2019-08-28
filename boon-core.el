@@ -114,14 +114,13 @@ input-method is reset to nil.)")
 
 (defun boon-set-state (state)
   "Set the boon state (as STATE) for this buffer."
-  (when boon-insert-state
-    (setq-local boon-input-method current-input-method)
-    (set-input-method nil))
+  (when boon-insert-state (setq-local boon-input-method current-input-method))
   (setq boon-command-state nil)
   (setq boon-insert-state nil)
   (setq boon-special-state nil)
   (set state t)
   (cond (boon-command-state
+         (setq current-input-method nil)
          (when (and boon/insert-command boon/insert-command-history)
            (push `(,@boon/insert-command
                    (quote ,@(list (nreverse boon/insert-command-history))))
@@ -131,7 +130,7 @@ input-method is reset to nil.)")
          (setq cursor-type boon-command-cursor-type))
         (boon-special-state)
         (boon-insert-state
-         (set-input-method boon-input-method)
+         (setq current-input-method boon-input-method)
          (deactivate-mark)
          (save-excursion
            (when (not (bolp))
