@@ -228,7 +228,7 @@ Regions are given by  REGS."
 (defun boon-newline-dwim ()
   "Insert a new line do-what-i-mean style."
   (interactive)
-  (if (and (not (eolp)) (< (boon-col-relative-to-indent) 0))
+  (if (and (not (eolp)) (<= (boon-col-relative-to-indent) 0))
       (call-interactively 'boon-open-line)
     (boon-split-line)))
 
