@@ -29,7 +29,9 @@
         (?D . ("``" "''")) ;; Double quotes
         (?f . ("«" "»")) ;; french quotes
         (?h . ("#" "#")) ;; hash
-        (?m . ("`" "'")) ;; mixed
+        (?s . ("`" "'")) ;; symbol
+        (?m . ("\\(" "\\)")) ;; Math
+        (?M . ("\\[" "\\]")) ;; display Math
         (?o . ("⟦" "⟧")) ;; oxford brackets
         (?p . ("(" ")"))
         (?q . ("'" "'"))
