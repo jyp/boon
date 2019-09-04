@@ -81,7 +81,7 @@
 
 ;; s
 (define-key boon-command-map (kbd "h") 'boon-splice) ; splice
-(define-key boon-command-map (kbd "h") 'yank-pop)
+(define-key boon-command-map (kbd "H") 'yank-pop)
 
 ;; t
 (define-key boon-command-map (kbd "t") 'boon-take-region) ; "take"
