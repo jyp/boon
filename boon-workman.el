@@ -53,8 +53,8 @@
 
 ;; w,f
 ;; where is? find?
-(define-key boon-moves-map "d" 'boon-navigate-backward)
-(define-key boon-moves-map "r" 'boon-navigate-forward)
+(define-key boon-moves-map "d" 'boon-backward-search-map)
+(define-key boon-moves-map "r" 'boon-forward-search-map)
 
 (define-key boon-moves-map (kbd "D")  'boon-qsearch-previous)
 (define-key boon-moves-map (kbd "R")  'boon-qsearch-next)
