@@ -22,6 +22,7 @@
 (define-key boon-forward-search-map "m"  'flymake-goto-next-error)
 (define-key boon-forward-search-map "b"  'next-buffer)
 (define-key boon-forward-search-map "u"  'mc/cycle-forward)
+(define-key boon-forward-search-map "c"  'iy-go-to-char)
 
 (define-key boon-backward-search-map " "  'isearch-backward)
 (define-key boon-backward-search-map "t"  'boon-qsearch-previous-at-point)
@@ -32,6 +33,7 @@
 (define-key boon-backward-search-map "m"  'flymake-goto-prev-error)
 (define-key boon-backward-search-map "b"  'previous-buffer)
 (define-key boon-backward-search-map "u"  'mc/cycle-backward)
+(define-key boon-backward-search-map "c"  'iy-go-to-char-backward)
 
 (define-prefix-command 'boon-goto-map)
 (set-keymap-parent boon-goto-map goto-map)
