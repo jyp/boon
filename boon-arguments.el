@@ -103,8 +103,9 @@ This item is either the symbol at point, or, if this fails, the sexp at point."
     (list (boon-mk-reg
            (line-beginning-position)
            (save-excursion
-             (newline (+ (forward-line count)
-                         (if (eq (point) (line-beginning-position)) 0 1)))
+             (let ((num-lines (+ (forward-line count)
+                                  (if (eq (point) (line-beginning-position)) 0 1))))
+               (when (> num-lines 0) (newline num-lines))) ; so readonly buffers work
              (point))))))
 
 
