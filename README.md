@@ -37,7 +37,7 @@ following design principles:
 
 - Easy navigation: many keys are allocated to navigation. This
   strategy facilitates moving around, which is in fact the most
-  common task when editting text. Because movements double up as
+  common task when editing text. Because movements double up as
   region-definitions, this design also makes manipulation commands
   more powerful.
 
@@ -55,7 +55,7 @@ Right-hand.
 The leftwards (and upwards) movements are bound to the leftmost
 fingers (index and middle finger), while rightwards (and downwards)
 movements are bound to the rightmost fingers (ring finger and pinky.)
-Additional unpaired, movements are bound to the middle column, which is
+Additional unpaired movements are bound to the middle column, which is
 reached with an extension of the index finger.
 
 Left-hand.
