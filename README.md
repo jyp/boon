@@ -21,7 +21,7 @@ Strong points:
 Ergonomic Design
 ----------------
 
-It is largely accepted that modal edition is more ergonomic than using
+It is largely accepted that modal editing is more ergonomic than using
 key-chords.  Boon attempts to take this advantage to its conclusion,
 making modal editing as comfortable as possible, by adhering to the
 following design principles:
@@ -37,7 +37,7 @@ following design principles:
 
 - Easy navigation: many keys are allocated to navigation. This
   strategy facilitates moving around, which is in fact the most
-  common task when editting text. Because movements double up as
+  common task when editing text. Because movements double up as
   region-definitions, this design also makes manipulation commands
   more powerful.
 
@@ -55,12 +55,12 @@ Right-hand.
 The leftwards (and upwards) movements are bound to the leftmost
 fingers (index and middle finger), while rightwards (and downwards)
 movements are bound to the rightmost fingers (ring finger and pinky.)
-Additional unpaired, movements are bound to the middle column, which is
+Additional unpaired movements are bound to the middle column, which is
 reached with an extension of the index finger.
 
 Left-hand.
 
-The most common edition commands (cut, paste, parenthesis
+The most common editing commands (cut, paste, parenthesis
 manipulation) are bound to the home row. The top row is (mainly) for
 searching. The bottom row gives access to user-defined (C-x) and
 mode-specific shortcuts (C-c), insert mode, and registers.
@@ -286,7 +286,7 @@ alternative was Evil. )
   God-mode is similar to "sticky modifier keys" in principle. Its
   simplicity allows to quickly get up to speed with it. However, it
   lacks the main benefit of a true modal layer: text operators. (what
-  vi people call a "language for text edition"). Boon integrates
+  vi people call a "language for text editing"). Boon integrates
   god-mode functionality for the C-c prefix map specifically (bound to
   the C key).
 
