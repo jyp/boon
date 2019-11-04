@@ -120,7 +120,7 @@ input-method is reset to nil.)")
   (setq boon-special-state nil)
   (set state t)
   (cond (boon-command-state
-         (setq current-input-method nil)
+         (deactivate-input-method)
          (when (and boon/insert-command boon/insert-command-history)
            (push `(,@boon/insert-command
                    (quote ,@(list (nreverse boon/insert-command-history))))
@@ -130,7 +130,7 @@ input-method is reset to nil.)")
          (setq cursor-type boon-command-cursor-type))
         (boon-special-state)
         (boon-insert-state
-         (setq current-input-method boon-input-method)
+         (activate-input-method boon-input-method)
          (deactivate-mark)
          (save-excursion
            (when (not (bolp))
