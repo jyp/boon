@@ -57,8 +57,8 @@ those. See `boon-special-map' for exceptions.")
 (defvar boon/insert-command nil "Command which started the insertion.")
 (defvar boon/insert-origin 0 "Point at start of insert mode.")
 
-(defcustom boon-command-cursor-type 'box "`cursor-type' for command mode." :group 'boon)
-(defcustom boon-insert-cursor-type 'bar "`cursor-type' for insert mode." :group 'boon)
+(defcustom boon-command-cursor-type 'box "`cursor-type' for command mode." :group 'boon :type 'sexp)
+(defcustom boon-insert-cursor-type 'bar "`cursor-type' for insert mode." :group 'boon :type 'sexp)
 
 (defun boon-interactive-insert (&rest args)
   "Boon insert commands must call this function after `interactive'.
