@@ -13,6 +13,7 @@
 (define-key boon-select-map "a"  'boon-select-borders) ;; Around
 (define-key boon-select-map "r"  'boon-select-justline) ;; Row
 (define-key boon-select-map "s"  '("symbol" . boon-select-wim)) ;; symbol
+(define-key boon-select-map "S"  'boon-select-sentence)
 (define-key boon-select-map "t"  'boon-select-with-spaces)
 (define-key boon-select-map "T"  'boon-select-org-tree)
 (define-key boon-select-map "d"  'boon-select-document)
@@ -21,7 +22,6 @@
 (define-key boon-select-map "x"  'boon-select-outside-pairs) ;; eXpression
 (define-key boon-select-map "C"  'boon-select-comment)
 (define-key boon-select-map "c"  'boon-select-inside-pairs) ;; Contents
-
 (define-key boon-select-map "b"  'boon-select-block)
 
 (define-key boon-select-map "k"  '("blanks" . boon-select-blanks))
