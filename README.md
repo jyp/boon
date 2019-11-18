@@ -165,6 +165,7 @@ You can jump-start by reading any of the cheat sheets
 [qwerty](https://github.com/jyp/boon/blob/master/qwerty.pdf))
 directly, but reading through the tutorial is highly recommended:
 
+    (require 'boon-tutorial)
     M-x boon-tutorial
 
 (You'll get the version of the tutorial adapted to the layout-frontend
@@ -175,7 +176,9 @@ Configuration
 
 The main variables to configure are:
 
-- boon-select-map, boon-moves-map, boon-command-map. (Those are keymaps.)
+- boon-select-map, boon-moves-map, boon-command-map, boon-insert-map,
+  boon-special-map. (Those are keymaps.)
+
 - boon-enclosures (can be `custom`ized.)
 
 If you use powerline (or *mutatis mutandis* spaceline), you may want
