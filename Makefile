@@ -20,7 +20,7 @@ BOON_ENV = -batch \
           --eval "(package-initialize)" \
 
 %.hs:  boon-tutorial.el boon-%.el boon-keys.el
-	$(emacs) $(BOON_ENV) -l boon-tutorial.el \
+	$(emacs) -q $(BOON_ENV) -l boon-tutorial.el \
           --eval "(boon-dump-cheatsheet \"$*\")"
 
 clean:
