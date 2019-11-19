@@ -1,4 +1,4 @@
-with import (fetchTarball https://github.com/NixOS/nixpkgs-channels/archive/nixos-19.03.tar.gz) {};
+with import (fetchTarball https://github.com/NixOS/nixpkgs-channels/archive/nixos-19.09.tar.gz) {};
 let hp = haskellPackages.override{
       overrides = self: super: {
         lp-diagrams = self.callPackage ./lp-diagrams.nix {};
