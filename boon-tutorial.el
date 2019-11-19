@@ -693,4 +693,5 @@ from the standard Emacs tutorial,
 ")))))
 (goto-char 1))
 
+(provide 'boon-tutorial)
 ;;; boon-tutorial.el ends here
