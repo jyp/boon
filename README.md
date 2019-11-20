@@ -188,7 +188,6 @@ to:
     (boon-powerline-theme) ;; if you want use powerline with Boon
 
 
-
 Comparison with other modal layers for Emacs
 ---------------------------------------------
 
@@ -199,7 +198,7 @@ like to share code and/or replace parts of Boon with similar package,
 at the moment no package offers enough that I feel the urge to try and
 use them. This is partly due to the fact that Boon maintenance burden
 is fairly low. (And at the time of inception, the only conceivable
-alternative was Evil. )
+alternative was Evil.)
 
 
 - Evil
@@ -237,28 +236,29 @@ alternative was Evil. )
      errors) and editing shortcuts (eg. replace and insert in one
      keystroke).
 
-  1b. XFK binds digits to actions, boon leaves them for prefixes. (I
+  2. XFK binds digits to actions, boon leaves them for prefixes. (I
       may be misunderstandig here --- perhaps they are bound to
       special characters.)
 
-  2. XFK seem to have less of a systematic assignment of keys to
+  3. XFK seem to have less of a systematic assignment of keys to
      actions, even though the movements are roughly bound to the right
      hand. I believe that a more systematic binding startegy is easier
      to learn.
 
-  3. Boon provides 1-key access to `C-x` and `C-c` prefixes. Instead,
+  4. Boon provides 1-key access to `C-x` and `C-c` prefixes. Instead,
      XFK puts everything under a single "leader key" (space),
      presumably without preserving emacs convention.
 
-  4. The set of supported layouts is different. (Even though I'd
+  5. The set of supported layouts is different. (Even though I'd
      expect ports to be easy.) As far as I can see, XFK has an
      automatic way to construct maps for a new keyboard layout. This
-     may be a worthy idea, but unfortunately boon already uses
-     changes it mapping depending on the layout.
+     is a worthy idea, but unfortunately boon already uses ad-hoc
+     mapping depending on the layout, so adopting this strategy is not
+     backwards compatible.
 
 - Fingers https://github.com/fgeller/fingers.el
 
-  Fingers borrows a few ideas from Boon, including the division of
+  *Fingers* borrows a few ideas from Boon, including the division of
   work between left and right hand. The author (fgeller) gives a
   detailed account of the particular differences with Boon. My opinion
   is that Fingers is compatible with Boon concepts and could (and
@@ -273,7 +273,7 @@ alternative was Evil. )
   suitable. The main issue is that modalka does not support several
   states; it can only be either activated or not. Also, this part of
   Boon is sufficently simple that adding a dependency may be more
-  troublesome.
+  troublesome than helpful.
 
 - RYO modal mode https://github.com/Kungsgeten/ryo-modal
 
@@ -290,8 +290,8 @@ alternative was Evil. )
   simplicity allows to quickly get up to speed with it. However, it
   lacks the main benefit of a true modal layer: text operators. (what
   vi people call a "language for text editing"). Boon integrates
-  god-mode functionality for the C-c prefix map specifically (bound to
-  the C key).
+  god-mode functionality for the `C-c` prefix map specifically (bound to
+  the `c` key).
 
 - Modal Mode http://retroj.net/modal-mode (Last updated in 2014)
 
