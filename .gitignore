@@ -22,3 +22,7 @@ TAGS
 /qwerty.pdf
 /qwerty.tex
 *.tex
+/M*.hs
+/cabal.project
+/cabal.project.local
+/dist-newstyle
