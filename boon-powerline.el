@@ -6,7 +6,7 @@
 
 ;;; Code:
 
-(require 'powerline)
+(require 'powerline nil t)
 (require 'boon-core)
 
 (defface boon-modeline-cmd '((((background light)) :background "dodger blue") (((background dark)) :background "blue")) "Face for modeline indicator of boon command state" :group 'boon)
