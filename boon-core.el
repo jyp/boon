@@ -184,6 +184,10 @@ input-method is reset to nil.)")
   "A list of sufficient conditions to start in insert state."
   :group 'boon :type '(list sexp))
 
+(defcustom boon-default-special t
+  "Wheter or not should boon special mode be used"
+  :group 'boon :type 'boolean)
+
 (defun boon-special-mode-p ()
   "Should the mode use `boon-special-state'?"
   (or (and (eq (get major-mode 'mode-class) 'special)
@@ -202,7 +206,7 @@ input-method is reset to nil.)")
       (boon-set-state 'boon-off-state)
     (unless (memq 'boon/after-change-hook after-change-functions)
       (push 'boon/after-change-hook after-change-functions))
-    (cond ((boon-special-mode-p) (boon-set-state 'boon-special-state))
+    (cond ((and (boon-special-mode-p) boon-default-special) (boon-set-state 'boon-special-state))
           ((-some 'eval boon-insert-conditions) (boon-set-insert-state))
           (t (boon-set-command-state)))))
 
