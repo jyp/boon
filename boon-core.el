@@ -185,7 +185,7 @@ input-method is reset to nil.)")
   :group 'boon :type '(list sexp))
 
 (defcustom boon-default-special t
-  "Wheter or not should boon special mode be used"
+  "Wheter or not special buffers should use special mode by default"
   :group 'boon :type 'boolean)
 
 (defun boon-special-mode-p ()
