@@ -73,26 +73,30 @@
   (define-key boon-command-map number 'digit-argument))
 (define-key boon-command-map "~" 'universal-argument)
 
+(defcustom boon-quit-key [escape] "Key to go back to command
+state and generally exit local states and modes." :group 'boon
+:type 'key-sequence)
+
 (define-key boon-command-map " " 'boon-drop-mark)
-(define-key boon-command-map [escape] 'boon-quit)
+(define-key boon-command-map boon-quit-key 'boon-quit)
 
 ;; Special mode rebinds
 (define-key boon-special-map "`" 'boon-quote-character)
 (define-key boon-special-map "'" 'boon-quote-character)
 (define-key boon-special-map "x" boon-x-map)
-(define-key boon-special-map [escape] 'boon-set-command-state)
+(define-key boon-special-map boon-quit-key 'boon-set-command-state)
 
 ;;  Insert mode rebinds
 (define-key boon-insert-map [remap newline] 'boon-newline-dwim)
-(define-key boon-insert-map [escape] 'boon-set-command-state)
+(define-key boon-insert-map boon-quit-key 'boon-set-command-state)
 
 ;; Global rebinds
-(define-key global-map [escape] 'keyboard-quit)
-(define-key minibuffer-local-map [escape] 'keyboard-quit)
-(define-key minibuffer-local-ns-map [escape] 'keyboard-quit)
-(define-key minibuffer-local-completion-map [escape] 'keyboard-quit)
-(define-key minibuffer-local-must-match-map [escape] 'keyboard-quit)
-(define-key isearch-mode-map [escape] 'isearch-abort)
+(define-key global-map boon-quit-key 'keyboard-quit)
+(define-key minibuffer-local-map boon-quit-key 'keyboard-quit)
+(define-key minibuffer-local-ns-map boon-quit-key 'keyboard-quit)
+(define-key minibuffer-local-completion-map boon-quit-key 'keyboard-quit)
+(define-key minibuffer-local-must-match-map boon-quit-key 'keyboard-quit)
+(define-key isearch-mode-map boon-quit-key 'isearch-abort)
 
 
 (provide 'boon-keys)

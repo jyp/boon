@@ -33,12 +33,13 @@
     (require 'boon)
     (load el)
     (with-temp-buffer
-      (insert "module Layout where\n")
+      (insert (format "module M%s (%s) where\n" flavour flavour))
       (insert (format "nil = \"\"\n"))
       (insert (format "commandMap = %s\n" (boon-dump-map boon-command-map)))
       (insert (format "movesMap   = %s\n" (boon-dump-map boon-moves-map)))
       (insert (format "selectMap  = %s\n" (boon-dump-map boon-select-map)))
-      (write-region nil nil (concat flavour ".hs")))))
+      (insert (format "%s = (commandMap,movesMap,selectMap)\n" flavour))
+      (write-region nil nil (concat "M" flavour ".hs")))))
 
 ;;;###autoload
 (defun boon-keymap-rev-look (sub map)
@@ -693,4 +694,5 @@ from the standard Emacs tutorial,
 ")))))
 (goto-char 1))
 
+(provide 'boon-tutorial)
 ;;; boon-tutorial.el ends here

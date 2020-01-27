@@ -14,8 +14,13 @@ import Control.Lens (set)
 import Data.Traversable
 import Data.List (isSuffixOf,isPrefixOf)
 import Algebra.Classes
-import Layout
+import qualified Layout
 import System.Environment
+import Mcolemak
+import Mqwerty
+import Mcolemak
+import Mqwertz
+import Mworkman
 
 preamble body = do
   documentClass "article" ["10pt"]
@@ -183,24 +188,25 @@ regDiag CS {..} = do
 (+++) :: [[a]] -> [[a]] -> [[a]]
 x +++ y = zipWith (++) x y
 
+mkCS (commandMap,movesMap,selectMap) =
+  CS {leftHandK = [], rightHandK = []
+     ,commandsInfo = ("",(mempty,Reserved,mempty)):
+                     map massageInfo (Layout.commandMap ++ Layout.movesMap)
+     ,selectorsInfo = map massageInfo Layout.selectMap
+     }
 
 main :: IO ()
 main = do
   [flavor] <- getArgs
-  let cs = CS {leftHandK = [], rightHandK = []
-              ,commandsInfo = ("",(mempty,Reserved,mempty)):
-                              map massageInfo (Layout.commandMap ++ Layout.movesMap)
-              ,selectorsInfo = map massageInfo Layout.selectMap
-              }
   let cs' = case flavor of
-         "colemak" -> cs {
+         "colemak" -> (mkCS colemak) {
            leftHandK = [["q","w","f","p","g"]
                        ,["a","r","s","t","d"]
                        ,["z","x","c","v","b"]]
            ,rightHandK = [["j","l","u","y",";",""]
                          ,["h","n","e","i","o","'"]
                          ,["k","m",",",".","/",""]]}
-         "qwerty" -> cs
+         "qwerty" -> (mkCS qwerty)
                {leftHandK = [["q","w","e","r","t"]
                    ,["a","s","d","f","g"]
                    ,["z","x","c","v","b"]]
@@ -208,7 +214,7 @@ main = do
                ,rightHandK = [["y","u","i","o","p",""]
                     ,["h","j","k","l",";","'"]
                     ,["n","m",",",".","/",""]]}
-         "qwertz" -> cs
+         "qwertz" -> (mkCS qwertz)
                {leftHandK = [["q","w","e","r","t"]
                             ,["a","s","d","f","g"]
                             ,["y","x","c","v","b"]]
@@ -216,7 +222,7 @@ main = do
                ,rightHandK = [["z","u","i","o","p",""]
                              ,["h","j","k","l","ö","ä"]
                              ,["n","m",";",":","-",""]]}
-         "workman" -> cs
+         "workman" -> (mkCS workman)
                {leftHandK = [["q","d","r","w","b"]
                             ,["a","s","h","t","g"]
                             ,["z","x","m","c","v"]]

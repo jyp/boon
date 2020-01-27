@@ -21,7 +21,7 @@ Strong points:
 Ergonomic Design
 ----------------
 
-It is largely accepted that modal edition is more ergonomic than using
+It is largely accepted that modal editing is more ergonomic than using
 key-chords.  Boon attempts to take this advantage to its conclusion,
 making modal editing as comfortable as possible, by adhering to the
 following design principles:
@@ -37,7 +37,7 @@ following design principles:
 
 - Easy navigation: many keys are allocated to navigation. This
   strategy facilitates moving around, which is in fact the most
-  common task when editting text. Because movements double up as
+  common task when editing text. Because movements double up as
   region-definitions, this design also makes manipulation commands
   more powerful.
 
@@ -55,12 +55,12 @@ Right-hand.
 The leftwards (and upwards) movements are bound to the leftmost
 fingers (index and middle finger), while rightwards (and downwards)
 movements are bound to the rightmost fingers (ring finger and pinky.)
-Additional unpaired, movements are bound to the middle column, which is
+Additional unpaired movements are bound to the middle column, which is
 reached with an extension of the index finger.
 
 Left-hand.
 
-The most common edition commands (cut, paste, parenthesis
+The most common editing commands (cut, paste, parenthesis
 manipulation) are bound to the home row. The top row is (mainly) for
 searching. The bottom row gives access to user-defined (C-x) and
 mode-specific shortcuts (C-c), insert mode, and registers.
@@ -165,6 +165,7 @@ You can jump-start by reading any of the cheat sheets
 [qwerty](https://github.com/jyp/boon/blob/master/qwerty.pdf))
 directly, but reading through the tutorial is highly recommended:
 
+    (require 'boon-tutorial)
     M-x boon-tutorial
 
 (You'll get the version of the tutorial adapted to the layout-frontend
@@ -175,7 +176,9 @@ Configuration
 
 The main variables to configure are:
 
-- boon-select-map, boon-moves-map, boon-command-map. (Those are keymaps.)
+- boon-select-map, boon-moves-map, boon-command-map, boon-insert-map,
+  boon-special-map. (Those are keymaps.)
+
 - boon-enclosures (can be `custom`ized.)
 
 If you use powerline (or *mutatis mutandis* spaceline), you may want
@@ -183,7 +186,6 @@ to:
 
     (require 'boon-powerline)
     (boon-powerline-theme) ;; if you want use powerline with Boon
-
 
 
 Comparison with other modal layers for Emacs
@@ -196,7 +198,7 @@ like to share code and/or replace parts of Boon with similar package,
 at the moment no package offers enough that I feel the urge to try and
 use them. This is partly due to the fact that Boon maintenance burden
 is fairly low. (And at the time of inception, the only conceivable
-alternative was Evil. )
+alternative was Evil.)
 
 
 - Evil
@@ -234,28 +236,29 @@ alternative was Evil. )
      errors) and editing shortcuts (eg. replace and insert in one
      keystroke).
 
-  1b. XFK binds digits to actions, boon leaves them for prefixes. (I
+  2. XFK binds digits to actions, boon leaves them for prefixes. (I
       may be misunderstandig here --- perhaps they are bound to
       special characters.)
 
-  2. XFK seem to have less of a systematic assignment of keys to
+  3. XFK seem to have less of a systematic assignment of keys to
      actions, even though the movements are roughly bound to the right
      hand. I believe that a more systematic binding startegy is easier
      to learn.
 
-  3. Boon provides 1-key access to `C-x` and `C-c` prefixes. Instead,
+  4. Boon provides 1-key access to `C-x` and `C-c` prefixes. Instead,
      XFK puts everything under a single "leader key" (space),
      presumably without preserving emacs convention.
 
-  4. The set of supported layouts is different. (Even though I'd
+  5. The set of supported layouts is different. (Even though I'd
      expect ports to be easy.) As far as I can see, XFK has an
      automatic way to construct maps for a new keyboard layout. This
-     may be a worthy idea, but unfortunately boon already uses
-     changes it mapping depending on the layout.
+     is a worthy idea, but unfortunately boon already uses ad-hoc
+     mapping depending on the layout, so adopting this strategy is not
+     backwards compatible.
 
 - Fingers https://github.com/fgeller/fingers.el
 
-  Fingers borrows a few ideas from Boon, including the division of
+  *Fingers* borrows a few ideas from Boon, including the division of
   work between left and right hand. The author (fgeller) gives a
   detailed account of the particular differences with Boon. My opinion
   is that Fingers is compatible with Boon concepts and could (and
@@ -270,7 +273,7 @@ alternative was Evil. )
   suitable. The main issue is that modalka does not support several
   states; it can only be either activated or not. Also, this part of
   Boon is sufficently simple that adding a dependency may be more
-  troublesome.
+  troublesome than helpful.
 
 - RYO modal mode https://github.com/Kungsgeten/ryo-modal
 
@@ -286,9 +289,9 @@ alternative was Evil. )
   God-mode is similar to "sticky modifier keys" in principle. Its
   simplicity allows to quickly get up to speed with it. However, it
   lacks the main benefit of a true modal layer: text operators. (what
-  vi people call a "language for text edition"). Boon integrates
-  god-mode functionality for the C-c prefix map specifically (bound to
-  the C key).
+  vi people call a "language for text editing"). Boon integrates
+  god-mode functionality for the `C-c` prefix map specifically (bound to
+  the `c` key).
 
 - Modal Mode http://retroj.net/modal-mode (Last updated in 2014)
 
