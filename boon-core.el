@@ -173,7 +173,7 @@ input-method is reset to nil.)")
     :type '(repeat symbol))
 
 (defun boon-shell-mode-p ()
-  (derived-mode-p 'comint-mode 'eshell-mode 'term-mode))
+  (derived-mode-p 'comint-mode 'eshell-mode 'term-mode 'vterm-mode))
 
 (defcustom boon-special-conditions
   '((bound-and-true-p magit-blame-mode))
