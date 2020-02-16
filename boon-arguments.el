@@ -93,7 +93,10 @@ This item is either the symbol at point, or, if this fails, the sexp at point."
   
 (defun boon-select-justline ()
   "Return the region of the current line, without any newline."
-  (interactive) (boon-regs-from-bounds (cons (line-beginning-position) (line-end-position))))
+  (interactive)
+  (lambda ()
+    (boon-regs-from-bounds
+     (cons (line-beginning-position) (line-end-position)))))
 
 (defun boon-select-line (count)
   "Return a selector of COUNT logical lines."
