@@ -147,6 +147,7 @@ This item is either the symbol at point, or, if this fails, the sexp at point."
 (defun boon-select-comment        () (interactive) (boon-select-from-region 'er/mark-comment))
 (defun boon-select-inside-pairs   () (interactive) (boon-select-from-region 'er/mark-inside-pairs))
 (defun boon-select-outside-quotes () (interactive) (boon-select-from-region 'er/mark-outside-quotes))
+(defun boon-select-inside-quotes  () (interactive) (boon-select-from-region 'er/mark-inside-quotes))
 (defun boon-select-blanks ()
   "Select the blanks around the point, including newlines and tabs."
   (interactive)
