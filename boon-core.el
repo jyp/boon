@@ -166,6 +166,10 @@ input-method is reset to nil.)")
     git-rebase-mode
     mu4e-headers-mode
     mu4e-view-mode
+    notmuch-hello-mode
+    notmuch-search-mode
+    notmuch-show-mode
+    notmuch-tree-mode
     org-agenda-mode
     cfw:calendar-mode)
     "A List of modes which should use `boon-special-state'."
