@@ -93,7 +93,10 @@ This item is either the symbol at point, or, if this fails, the sexp at point."
   
 (defun boon-select-justline ()
   "Return the region of the current line, without any newline."
-  (interactive) (boon-regs-from-bounds (cons (line-beginning-position) (line-end-position))))
+  (interactive)
+  (lambda ()
+    (boon-regs-from-bounds
+     (cons (line-beginning-position) (line-end-position)))))
 
 (defun boon-select-line (count)
   "Return a selector of COUNT logical lines."
@@ -113,6 +116,7 @@ This item is either the symbol at point, or, if this fails, the sexp at point."
   "Return a region of COUNT THING's."
   (lambda() (save-excursion
               (let ((bnds (bounds-of-thing-at-point thing)))
+                (unless bnds (error "No %s found at point" thing))
                 (goto-char (cdr bnds))
                 (forward-thing thing (1- count))
                 (list (boon-mk-reg (car bnds) (point)))))))
