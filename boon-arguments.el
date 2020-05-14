@@ -27,14 +27,15 @@
         (?c . ("{-" "-}"))
         (?d . ("\"" "\"")) ;; double quotes
         (?D . ("``" "''")) ;; Double quotes
-        (?f . ("«" "»")) ;; french quotes
+        (?f . ("«" "»")) ;; french quotes (or, more precisely, Russian quotes)
         (?h . ("#" "#")) ;; hash
         (?s . ("`" "'")) ;; symbol
         (?m . ("\\(" "\\)")) ;; Math
         (?M . ("\\[" "\\]")) ;; display Math
         (?o . ("⟦" "⟧")) ;; oxford brackets
         (?p . ("(" ")"))
-        (?q . ("'" "'"))
+        (?q . ("'" "'")) ;; single quotes
+        (?Q . ("`" "'")) ;; british Quotes
         (?r . ("{" "}")) ;; bRaces
         (?t . ("~" "~")) ;; tilda
         )
