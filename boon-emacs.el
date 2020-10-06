@@ -30,11 +30,11 @@
 
 (require 'boon)
 
-(define-key boon-goto-map ":" 'avy-go-to-char)
-(define-key boon-goto-map "'" 'avy-go-to-char-2)
-(define-key boon-goto-map "f" 'avy-go-to-line)
-(define-key boon-goto-map "w" 'avy-go-to-word-1)
-(define-key boon-goto-map "e" 'avy-go-to-word-0)
+(define-key boon-goto-map ":" 'avy-goto-char)
+(define-key boon-goto-map "'" 'avy-goto-char-2)
+(define-key boon-goto-map "f" 'avy-goto-line)
+(define-key boon-goto-map "w" 'avy-goto-word-1)
+(define-key boon-goto-map "e" 'avy-goto-word-0)
 
 (define-key boon-select-map "w" 'boon-select-word)
 (define-key boon-select-map "h" 'boon-select-paragraph)
