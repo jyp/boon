@@ -39,9 +39,7 @@ See also `boon-special-mode-list'.
 
 \\{boon-special-map}")
 
-(defvar boon-mode-map-alist (list (cons 'boon-command-state boon-command-map)
-                                  (cons 'boon-special-state boon-special-map)
-                                  (cons 'boon-insert-state  boon-insert-map)))
+(defvar-local boon-mode-map-alist nil)
 (push 'boon-mode-map-alist emulation-mode-map-alists)
 
 ;; States
@@ -260,18 +258,29 @@ input-method is reset to nil.)")
   :keymap nil
   (if (not boon-local-mode)
       (boon-set-state 'boon-off-state)
+    (setq boon-mode-map-alist
+          (list (cons 'boon-command-state (or (get major-mode 'boon-map) boon-command-map))
+                (cons 'boon-special-state boon-special-map)
+                (cons 'boon-insert-state  boon-insert-map)))
     (unless (memq 'boon/after-change-hook after-change-functions)
       (push 'boon/after-change-hook after-change-functions))
     (cond ((boon-special-mode-p) (boon-set-state 'boon-special-state))
           ((-some 'eval boon-insert-conditions) (boon-set-insert-state))
           (t (boon-set-command-state)))))
 
-;; The function `boon-initialize' should only be used to initialize
-;; `boon-local-mode' from the globalized minor-mode `boon-mode'. It is
-;; called whenever boon is enabled in a buffer for the first time or
-;; when boon is active and the major-mode of the buffer changes.
+(add-hook 'minibuffer-setup-hook 'boon-minibuf-hook)
+
+(defun boon-minibuf-hook ()
+  "Set the cursor type to 'bar'.
+This is because no command mode is activated in the minibuffer."
+  (setq cursor-type 'bar))
+
 (defun boon-initialize ()
-  "Enable Boon in the current buffer, if appropriate.  To enable Boon globally, do (boon-mode 1)."
+  "Setup boon in the current buffer. Should only be used to
+initialize `boon-local-mode' from the globalized minor-mode
+`boon-mode'. It is called whenever boon is enabled in a buffer
+for the first time or when boon is active and the major-mode of
+the buffer changes."
   (unless (minibufferp)
     (boon-local-mode 1)))
 

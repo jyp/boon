@@ -234,7 +234,7 @@ main = do
 
 docu :: CheatSheet -> TeX
 docu csData = preamble «
-BOON cheat sheet. It is recommended to read the TUTORIAL to make sense of this. The color of a key indicates the type of argument it expects.
+BOON cheat sheet. It is recommended to read the M-x boon-tutorial to make sense of this. The color of a key indicates the type of argument it expects.
 
 Command mode bindings.
 @keyBDiag(csData)
