@@ -14,12 +14,10 @@ import Control.Lens (set)
 import Data.Traversable
 import Data.List (isSuffixOf,isPrefixOf)
 import Algebra.Classes
-import qualified Layout
 import System.Environment
-import Mcolemak
 import Mqwerty
-import Mcolemak
 import Mqwertz
+import Mcolemak
 import Mworkman
 
 preamble body = do
@@ -191,8 +189,8 @@ x +++ y = zipWith (++) x y
 mkCS (commandMap,movesMap,selectMap) =
   CS {leftHandK = [], rightHandK = []
      ,commandsInfo = ("",(mempty,Reserved,mempty)):
-                     map massageInfo (Layout.commandMap ++ Layout.movesMap)
-     ,selectorsInfo = map massageInfo Layout.selectMap
+                     map massageInfo (commandMap ++ movesMap)
+     ,selectorsInfo = map massageInfo selectMap
      }
 
 main :: IO ()

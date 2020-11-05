@@ -4,11 +4,12 @@
 }:
 mkDerivation {
   pname = "lp-diagrams";
-  version = "2.1.0";
+  version = "2.1.4";
   src = fetchgit {
     url = "https://github.com/jyp/lp-diagrams.git";
-    sha256 = "0n25cc2h863xgr119a0y8ip0pdazpljhjixlr2pvm9g18r23csw6";
-    rev = "5a9196d14191f7d8d16a191676ad461e1fbce89f";
+    sha256 = "1c6zr5w2bbc35x8ncar8dwv2awfgkvxzql5g8r79vzyaqglnkayj";
+    rev = "3b25b411d246d2b139377094f25128dacab67310";
+    fetchSubmodules = true;
   };
   libraryHaskellDepends = [
     base containers gasp graphviz labeled-tree lens mtl parsek

@@ -1,10 +1,13 @@
-with import (fetchTarball https://github.com/NixOS/nixpkgs-channels/archive/nixos-19.09.tar.gz) {};
+with import (fetchTarball https://github.com/NixOS/nixpkgs/archive/nixos-20.09.tar.gz) {};
 let hp = haskellPackages.override{
       overrides = self: super: {
         lp-diagrams = self.callPackage ./lp-diagrams.nix {};
+        lp-diagrams-svg = self.callPackage ./lp-diagrams-svg.nix {};
         marxup = self.callPackage ./marxup.nix {};
-      };};  
-    ghc = hp.ghcWithPackages (ps: with ps; ([ base gasp lens lp-diagrams lp-diagrams-svg ]));
+        parsek = self.callPackage ./parsek.nix {};
+        gasp = self.callPackage ./gasp.nix {};
+      };};
+    ghc = hp.ghcWithPackages (ps: with ps; ([ base gasp lens lp-diagrams lp-diagrams-svg cabal-install ]));
     myTexLive =  texlive.combine {
       inherit (texlive)
       make4ht # html conversion 
@@ -64,7 +67,7 @@ let hp = haskellPackages.override{
     };
 in pkgs.stdenv.mkDerivation {
   name = "my-env-0";
-  buildInputs = [ z3 myTexLive ];
+  buildInputs = [ z3 myTexLive ghc ];
   shellHook = ''
  export LANG=en_US.UTF-8
 '';
