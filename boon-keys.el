@@ -39,7 +39,6 @@
 
 (define-prefix-command 'boon-goto-map)
 (set-keymap-parent boon-goto-map goto-map)
-(set-keymap-parent boon-goto-map goto-map)
 
 (define-key boon-goto-map "l" 'goto-line)
 (define-key boon-goto-map "." 'find-tag)
