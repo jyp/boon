@@ -288,7 +288,7 @@ If the Avy package is installed:
 
 
 * 'C-x' prefix
--------------
+---------------
 
 Instead of the 'C-x' prefix; you may just type " x-key "
 
@@ -303,7 +303,7 @@ via " x-key ".  (Standard commands are always available under 'C-x')
 
 
 * 'C-c' prefix
-------------
+---------------
 
 Mode-specific commands often have the form 'C-c C-<letter>'.
 These are accessible by typing simply '\\[boon-c-god] <letter>'
