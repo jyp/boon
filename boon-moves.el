@@ -14,18 +14,21 @@
 (require 'boon-utils)
 (require 'subr-x)
 
+;;;###autoload
 (defun boon-find-char-backward (char)
   "Move the cursor backwards, until finding an occurence of the character CHAR."
   (interactive "cType the character to find")
   (search-backward (make-string 1 char))
   (forward-char 1))
 
+;;;###autoload
 (defun boon-find-char-forward (char)
   "Find the given character (as CHAR), forwards."
   (interactive "cType the character to find")
   (search-forward (make-string 1 char))
   (backward-char 1))
 
+;;;###autoload
 (defun boon-edge-of-expression (forward)
   "Jump to the forward or backward (as FORWARD) limit of the current expression."
   (interactive "P")
@@ -41,16 +44,19 @@
     (when (eq (point) orig-point)
       (forward-char (if forward 1 -1)))))
 
+;;;###autoload
 (defun boon-end-of-expression ()
   "Jump to the end of the current expression."
   (interactive)
   (boon-edge-of-expression 't))
 
+;;;###autoload
 (defun boon-beginning-of-expression ()
   "Jump to the beginning of the current expression."
   (interactive)
   (boon-edge-of-expression nil))
 
+;;;###autoload
 (defun boon-smarter-upward (count)
   "Move upward, to a line with the same level of indentation or less, COUNT times."
   (interactive "p")
@@ -60,6 +66,7 @@
     (while (< (boon-col-relative-to-indent) 0) (previous-logical-line)))
   (back-to-indentation))
 
+;;;###autoload
 (defun boon-smarter-downward (count)
   "Move downward, to a line with the same level of indentation or less, COUNT times."
   (interactive "p")
@@ -69,6 +76,7 @@
     (while (< (boon-col-relative-to-indent) 0) (next-logical-line)))
   (back-to-indentation))
 
+;;;###autoload
 (defun boon-smarter-backward (count)
   "Move backward, over COUNT whole syntactic units."
   (interactive "p")
@@ -97,6 +105,7 @@
        (t
         (backward-char))))))
 
+;;;###autoload
 (defun boon-smarter-forward (count)
   "Move forward, over COUNT whole syntactic unit."
   (interactive "p")
@@ -128,6 +137,7 @@
      (t
       (forward-char)))))
 
+;;;###autoload
 (defun boon-visible-beginning-of-line ()
   "Move point leftwards to the first visible beginning of line."
   (interactive)
@@ -136,6 +146,7 @@
     (backward-char 1)
     (beginning-of-line 1)))
 
+;;;###autoload
 (defun boon-beginning-of-line ()
   "Move point to the first non-whitespace character on this line.
 If point was already at that position, move point to beginning of
@@ -148,6 +159,7 @@ line."
               (= oldpos (point)))
       (boon-visible-beginning-of-line))))
 
+;;;###autoload
 (defun boon-end-of-line ()
   "Intelligently jump to the end of line.
 This function toggles between jumping to 1. the last character of code on the
@@ -171,6 +183,7 @@ line."
         (end-of-line)))))
 
 
+;;;###autoload
 (defun boon-switch-mark ()
   "If mark active, switch point and mark, otherwise pop mark from mark ring."
   (interactive)
@@ -180,6 +193,7 @@ line."
       (goto-char (mark))
       (pop-mark))))
 
+;;;###autoload
 (defun boon-switch-mark-quick ()
   "Pop the mark ring until we find ourselves on a different line."
   (interactive)

@@ -36,16 +36,19 @@ the regexp."
     (setq boon-search-success t))
   (goto-char (match-beginning 0)))
 
+;;;###autoload
 (defun boon-qsearch-next ()
   "Search the next occurence of the current search regexp."
   (interactive)
   (boon-qsearch t))
 
+;;;###autoload
 (defun boon-qsearch-previous ()
   "Search the previous occurence of the current search regexp."
   (interactive)
   (boon-qsearch nil))
 
+;;;###autoload
 (defun boon-qsearch-next-at-point ()
   "Search the next occurence of the current string at point and select the match."
   (interactive)
@@ -53,6 +56,7 @@ the regexp."
   (boon-qsearch t)
   (deactivate-mark))
 
+;;;###autoload
 (defun boon-qsearch-previous-at-point ()
   "Search the previous occurence of the current string at point and select the match."
   (interactive)
@@ -60,6 +64,7 @@ the regexp."
   (boon-qsearch nil)
   (deactivate-mark))
 
+;;;###autoload
 (defun boon-set-search-string (string)
   "Set the search regexp by providing a string so match (as STRING)."
   (interactive "M")
@@ -90,11 +95,13 @@ This is an extremely bugged first draft."
                                (match-string 0 m)))
            regex)))
 
+;;;###autoload
 (defun boon-highlight-regexp ()
   "Make sure boon-regexp is highlighted."
   (interactive)
   (hi-lock-face-buffer boon-regexp))
 
+;;;###autoload
 (defun boon-navigate (forward)
   "Go to the next item of interest, FORWARD or backwards."
   (cond
@@ -106,11 +113,13 @@ This is an extremely bugged first draft."
     (boon-qsearch forward))
    (t (next-error (if forward 1 -1)))))
 
+;;;###autoload
 (defun boon-navigate-forward ()
   "Go to the next item of interest."
   (interactive)
   (boon-navigate t))
 
+;;;###autoload
 (defun boon-navigate-backward ()
   "Go to the next item of interest."
   (interactive)

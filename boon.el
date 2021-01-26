@@ -10,11 +10,9 @@
 
 ;;; Code:
 
-(require 'boon-main)
+(require 'boon-loaddefs)
 (require 'boon-keys)
-(require 'boon-search)
 (require 'boon-core)
-(require 'boon-moves)
 
 (provide 'boon)
 ;;; boon.el ends here

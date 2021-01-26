@@ -15,6 +15,7 @@
 (require 'subr-x)
 (require 'dash)
 
+;;;###autoload
 (defun boon-set-insert-like-state (&optional changes)
   "Switch to special or insert state, depending on mode.
 When CHANGES are non-nil, replay those instead."
@@ -24,6 +25,7 @@ When CHANGES are non-nil, replay those instead."
       (boon-set-special-state)
     (boon-insert changes)))
 
+;;;###autoload
 (defun boon-insert (&optional changes)
   "Switch to insert state.
 When CHANGES are non-nil, replay those instead."
@@ -35,6 +37,7 @@ When CHANGES are non-nil, replay those instead."
         (boon/replay-changes changes))
     (boon-set-insert-state)))
 
+;;;###autoload
 (defun boon-repeat-command (count)
   "Repeat the most recent command in the history, COUNT times."
   (interactive "p")
@@ -44,17 +47,20 @@ When CHANGES are non-nil, replay those instead."
              (car cmd)
              (mapcar (lambda (e) (eval e t)) (cdr cmd))))))
 
+;;;###autoload
 (defun boon-deactivate-mark ()
   "Deactivate the mark robustly."
   (mc/execute-command-for-all-fake-cursors (lambda () (interactive) (deactivate-mark)))
   (deactivate-mark t))
 
+;;;###autoload
 (defun boon-drop-mark ()
   "Drop or deactivate the mark."
   (interactive)
   (if mark-active (boon-deactivate-mark)
     (call-interactively 'boon-mark-region)))
 
+;;;###autoload
 (defun boon-enclose (enclosure regs)
   "Wrap with the given ENCLOSURE the regions given as REGS."
   (interactive (list (boon-spec-enclosure) (boon-spec-select-top "enclose")))
@@ -66,22 +72,26 @@ When CHANGES are non-nil, replay those instead."
       (goto-char (boon-reg-begin reg))
       (insert (car enclosure)))))
 
+;;;###autoload
 (defun boon-delete-region ()
   "Delete the region if it is active."
   (when (use-region-p)
     (delete-region (region-beginning) (region-end))))
 
+;;;###autoload
 (defun boon-insert-register ()
   "Insert register, replacing the region if it is active."
   (boon-delete-region)
   (call-interactively 'insert-register))
 
+;;;###autoload
 (defun boon-copy-to-register ()
   "Copy to register and deactivate mark."
   (interactive)
   (call-interactively 'copy-to-register)
   (deactivate-mark))
 
+;;;###autoload
 (defun boon-splice (number-of-copies)
   "Yank NUMBER-OF-COPIES times, replacing the region if it is active.
 When repeated, fix the spacing if necessary."
@@ -93,6 +103,7 @@ When repeated, fix the spacing if necessary."
     (dotimes (_ number-of-copies) (yank))
     (boon-hint "If spaces are wrong, run boon-splice again.")))
 
+;;;###autoload
 (defun boon-need-space ()
   "Is it necessary to insert a space here to separate words or expressions?"
   (let ((back-limit (1- (point))))
@@ -100,6 +111,7 @@ When repeated, fix the spacing if necessary."
        (not (or (bolp) (looking-back "\\s-" back-limit) (looking-back "\\s(" back-limit)))
        (or (and (looking-back "\\sw\\|\\s_\\|\\s.\\|\\s)" back-limit) (looking-at "\\sw\\|\\s_\\|\\s("))))))
 
+;;;###autoload
 (defun boon-fix-a-space ()
   "Fix the text to have the right amout of spacing at the point.
 Return nil if no changes are made, t otherwise."
@@ -119,6 +131,7 @@ Return nil if no changes are made, t otherwise."
          t)
         (t nil))))
 
+;;;###autoload
 (defun boon-splice-fix-spaces ()
   "Yank, replacing the region if it is active.
 Fix the surroundings so that they become nicely spaced.
@@ -131,6 +144,7 @@ Return nil if no changes are made."
     ;; done this way because 'or' is lazy
     (or fix-here fix-there)))
 
+;;;###autoload
 (defun boon-toggle-character-case ()
   "Toggle the case of the character at point."
   (interactive)
@@ -139,6 +153,7 @@ Return nil if no changes are made."
     (dolist (p (mapcar (lambda (r) (boon-reg-point r)) (boon-multiple-cursor-regs)))
       (funcall action p (1+ p)))))
 
+;;;###autoload
 (defun boon-toggle-case ()
   "Toggle the case of the character at point, or cycle the case of the region if it is active."
   (interactive)
@@ -146,6 +161,7 @@ Return nil if no changes are made."
       (call-interactively 'boon-toggle-region-case)
       (boon-toggle-character-case)))
 
+;;;###autoload
 (defun boon-toggle-region-case (regs)
   "Cycle regions through 3 capitalizations: UPPER CASE, lower case, Title Case.
 Regions are given by  REGS."
@@ -168,6 +184,7 @@ Regions are given by  REGS."
       (funcall cur-state (boon-reg-begin reg) (boon-reg-end reg)))
     (put this-command 'state cur-state)))
 
+;;;###autoload
 (defun boon-toggle-mark ()
   "Toggle region activation."
   (interactive)
@@ -177,6 +194,7 @@ Regions are given by  REGS."
           (message "mark placed at point"))
       (activate-mark)))
 
+;;;###autoload
 (defun boon-open-line-and-insert ()
   "Open a new line, indented as much as the current one, and switch to insert mode."
   (interactive)
@@ -186,6 +204,7 @@ Regions are given by  REGS."
       (insert (make-string indent-lvl 32))
       (boon-set-insert-state)))
 
+;;;###autoload
 (defun boon-open-next-line-and-insert ()
   "Open the line after the current one."
   (interactive)
@@ -198,6 +217,7 @@ Regions are given by  REGS."
 
 ;; alternative:
 ;; (defalias 'boon-open-line 'crux-smart-open-line-above)
+;;;###autoload
 (defun boon-open-line ()
   "Open the line before the current one."
   (interactive)
@@ -210,6 +230,7 @@ Regions are given by  REGS."
           (forward-char 1)
           (insert line-prefix))))))
 
+;;;###autoload
 (defun boon-split-line ()
   "Split the current line."
   (interactive)
@@ -225,6 +246,7 @@ Regions are given by  REGS."
     (newline)
     (insert (make-string indent-col ?\ ))))
 
+;;;###autoload
 (defun boon-newline-dwim ()
   "Insert a new line do-what-i-mean style."
   (interactive)
@@ -232,6 +254,7 @@ Regions are given by  REGS."
       (call-interactively 'boon-open-line)
     (boon-split-line)))
 
+;;;###autoload
 (defun boon-lay-multiple-cursors (place-cursor regs)
   "Create multiple cursor regions.
 This is done by calling PLACE-CURSOR for each element of REGS.
@@ -243,6 +266,7 @@ If there is more than one, use mc/create-fake-cursor-at-point."
   (funcall place-cursor (car regs))
   (mc/maybe-multiple-cursors-mode))
 
+;;;###autoload
 (defun boon-mark-region (regs)
   "Mark the regions REGS."
   (interactive (list (boon-spec-select-top "mark")))
