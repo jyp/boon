@@ -128,7 +128,68 @@ Mark the regions REGS.
 
 \(fn REGS)" t nil)
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "boon-main" '("boon-")))
+(autoload 'boon-take-region "boon-main" "\
+Kill the region given as REGS.
+
+\(fn REGS)" t nil)
+
+(autoload 'boon-treasure-region "boon-main" "\
+Copy (kill-ring-save) the regions REGS.
+
+\(fn REGS)" t nil)
+
+(autoload 'boon-substitute-region "boon-main" "\
+Kill the regions REGS, and switch to insertion mode or replay CHANGES.
+
+\(fn REGS &optional CHANGES)" t nil)
+
+(autoload 'boon-replace-by-character "boon-main" "\
+Replace the character at point by the REPLACEMENT character.
+Replace the region if it is active.
+
+\(fn REPLACEMENT)" t nil)
+
+(autoload 'boon-quote-character "boon-main" "\
+Execute the command which were bound to the character CHAR if boon was not enabled.
+
+\(fn CHAR)" t nil)
+
+(autoload 'boon-unhighlight "boon-main" "\
+Pop a highlight regexp." t nil)
+
+(autoload 'boon-quit "boon-main" "\
+Exit the current modes we're in until no special state is remaining." t nil)
+
+(autoload 'boon-god-control-swap "boon-main" "\
+Swap the control 'bit' in EVENT, unless C-c <event> is a prefix reserved for modes.
+
+\(fn EVENT)" t nil)
+
+(autoload 'boon-c-god "boon-main" "\
+Input a key sequence, prepending C- to each key (unless such
+key is already reserved for minor mode, see
+`boon-god-control-swap'), and run the command bound to that
+sequence.
+
+\(fn ARG)" t nil)
+
+(autoload 'boon-adjust-indent "boon-main" "\
+Adjust indentation of the region or current line." t nil)
+
+(autoload 'boon-query-replace "boon-main" "\
+Query replace; but if the region is active, replace its contents." t nil)
+
+(autoload 'boon-toggle-comment "boon-main" "\
+Toggle comments in the regions REGS.
+
+\(fn REGS)" t nil)
+
+(autoload 'boon-narrow "boon-main" "\
+Narrow to the first region of REGS.
+
+\(fn REGS)" t nil)
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "boon-main" '("boon-execute-for-cursor")))
 
 ;;;***
 

@@ -284,6 +284,7 @@ If there is more than one, use mc/create-fake-cursor-at-point."
           (mc/execute-command-for-fake-cursor (lambda () (interactive)(funcall fun)) cursor)))
     (funcall fun)))
 
+;;;###autoload
 (defun boon-take-region (regs)
   "Kill the region given as REGS."
   (interactive (list (boon-spec-select-top "take")))
@@ -301,12 +302,14 @@ If there is more than one, use mc/create-fake-cursor-at-point."
          ;; just killed to the top of the kill ring.
          (kill-region (boon-reg-mark reg) (boon-reg-point reg)))))))
 
+;;;###autoload
 (defun boon-treasure-region (regs)
   "Copy (kill-ring-save) the regions REGS."
   (interactive (list (boon-spec-select-top "treasure")))
   (dolist (reg (boon-run-selector regs))
     (kill-ring-save (boon-reg-begin reg) (boon-reg-end reg))))
 
+;;;###autoload
 (defun boon-substitute-region (regs &optional changes)
   "Kill the regions REGS, and switch to insertion mode or replay CHANGES."
   (interactive (list (boon-spec-select-top "replace")))
@@ -326,6 +329,7 @@ If there is more than one, use mc/create-fake-cursor-at-point."
                                  markers)
       (boon-insert changes))))
 
+;;;###autoload
 (defun boon-replace-by-character (replacement)
   "Replace the character at point by the REPLACEMENT character.
 Replace the region if it is active."
@@ -335,6 +339,7 @@ Replace the region if it is active."
     (delete-char 1))
   (insert replacement))
 
+;;;###autoload
 (defun boon-quote-character (char)
   "Execute the command which were bound to the character CHAR if boon was not enabled."
   (interactive (list (read-char))) ;; use read-char so that multiple-cursors advice kicks in.
@@ -345,12 +350,14 @@ Replace the region if it is active."
     (message "Executing the command bound to %c" char)
     (call-interactively cmd nil [char])))
 
+;;;###autoload
 (defun boon-unhighlight ()
   "Pop a highlight regexp."
   (interactive)
   (when (bound-and-true-p hi-lock-interactive-patterns)
     (hi-lock-unface-buffer (car (car hi-lock-interactive-patterns)))))
 
+;;;###autoload
 (defun boon-quit ()
   "Exit the current modes we're in until no special state is remaining."
   (interactive)
@@ -373,6 +380,7 @@ Replace the region if it is active."
    (t
     (keyboard-quit))))
 
+;;;###autoload
 (defun boon-god-control-swap (event)
   "Swap the control 'bit' in EVENT, unless C-c <event> is a prefix reserved for modes."
   (interactive (list (read-key)))
@@ -382,6 +390,7 @@ Replace the region if it is active."
    ((not (eq 0 (logand (lsh 1 26) event))) (logxor (lsh 1 26) event))
    (t (list 'control event))))
 
+;;;###autoload
 (defun boon-c-god (arg)
   "Input a key sequence, prepending C- to each key (unless such
 key is already reserved for minor mode, see
@@ -408,6 +417,7 @@ sequence."
       (let ((current-prefix-arg arg)) (call-interactively binding)))
      (t (error "Key not bound to a command: %s" binding)))))
 
+;;;###autoload
 (defun boon-adjust-indent ()
  "Adjust indentation of the region or current line."
  (interactive)
@@ -416,6 +426,7 @@ sequence."
    (end-of-line))
  (call-interactively 'indent-rigidly))
 
+;;;###autoload
 (defun boon-query-replace ()
   "Query replace; but if the region is active, replace its contents."
   (interactive)
@@ -434,12 +445,14 @@ sequence."
        ))
     (call-interactively 'query-replace)))
 
+;;;###autoload
 (defun boon-toggle-comment (regs)
   "Toggle comments in the regions REGS."
   (interactive (list (boon-spec-select-top "toggle comment")))
   (dolist (reg (boon-run-selector regs))
     (comment-or-uncomment-region (boon-reg-begin reg)(boon-reg-end reg))))
 
+;;;###autoload
 (defun boon-narrow (regs)
   "Narrow to the first region of REGS."
   (interactive (list (boon-spec-select-top "narrow")))
