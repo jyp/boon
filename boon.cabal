@@ -2,7 +2,7 @@ Cabal-Version:  2.4
 name:           boon
 version:        1.0
 category:       Development
-synopsis:       A generator of nix files
+synopsis:       A generator of cheat sheet files
 description:
   Soon to appear.
 license-file:   LICENSE
