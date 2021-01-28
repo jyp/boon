@@ -297,8 +297,14 @@ Set the search regexp by providing a string so match (as STRING).
 
 \(fn STRING)" t nil)
 
+(autoload 'boon-case-fold-regex "boon-search" "\
+Make REGEX case-insensitive, depending on `case-fold-search'.
+This is an extremely bugged first draft.
+
+\(fn REGEX)" nil nil)
+
 (autoload 'boon-highlight-regexp "boon-search" "\
-Make sure boon-regexp is highlighted." t nil)
+Make sure `boon-regexp' is highlighted." t nil)
 
 (autoload 'boon-navigate "boon-search" "\
 Go to the next item of interest, FORWARD or backwards.

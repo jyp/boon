@@ -84,6 +84,7 @@ the regexp."
                            string ""))
                          (t (regexp-quote string)))))
 
+;;;###autoload
 (defun boon-case-fold-regex (regex)
   "Make REGEX case-insensitive, depending on `case-fold-search'.
 This is an extremely bugged first draft."
@@ -125,13 +126,6 @@ This is an extremely bugged first draft."
   (interactive)
   (boon-navigate nil))
 
-(defadvice isearch-exit (after boon-isearch-set-search activate compile)
-  "After isearch, highlight the search term and set it as boon current regexp."
-  (boon-set-search-string isearch-string))
-
-(defadvice swiper--action (after boon-swiper-set-search activate compile)
-  "After swiper, highlight the search term and set it as boon current regexp."
-  (boon-set-search-regexp (boon-case-fold-regex (car regexp-search-ring))))
 
 (provide 'boon-search)
 ;;; boon-search.el ends here
