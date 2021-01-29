@@ -232,8 +232,7 @@ You can also move to the beginning or end of the current line:
 
 >> Type '\\[boon-end-of-line]' to move to the end of a line.
 
-Like '\\[previous-line]' and '\\[next-line]', the keys on the top
-row are line-related.
+Like '\\[previous-line]' and '\\[next-line]', the keys on the top row are line-related.
 
 When moving up and down, Emacs tries to manage the cursor position
 inside a line intelligently.  This often works, but sometimes one need
@@ -250,7 +249,7 @@ You also can jump several steps at once by typing a number before
 a command.
 
 >> Try '5' before a movement command.  For example:
-   '5 i' moves up 5 lines, and `5 o' moves back down 5 lines.
+   '5 \\[previous-line]' moves up 5 lines, and '5 \\[next-line]' moves back down 5 lines.
 
 >> Try all of the above commands now a few times for practice.
    These are the commands that are used most often.
@@ -261,7 +260,7 @@ following commands.
 
 Two less used cursor motion commands, moves you to the top or bottom of
 the whole text.
-kr
+
 >> Type '\\[beginning-of-buffer]' to move to the beginning of the whole text.
 
 >> Type '\\[end-of-buffer]' to move to the end of the whole text.
@@ -476,7 +475,7 @@ The command for fetching (yanking, pasting) is: '\\[boon-splice]' " (boon-mnemon
 A numeric argument to '\\[boon-splice]' is the number of times that you want to
 yank the text.
 
-'\\[yank-pop]' (shift f) calls `yank-pop', which replaces the just yanked text
+'\\[yank-pop]' calls `yank-pop', which replaces the just yanked text
 with the previous entry in the `kill-ring'
 
 
