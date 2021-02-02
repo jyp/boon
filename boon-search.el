@@ -8,25 +8,58 @@
 (require 'isearch)
 (require 's)
 (require 'dash)
+(require 'hi-lock)
 
-(defcustom boon-highlight-searched-regexp t "Should the searched regexp be highlighted?
-See also `hi-lock-auto-select-face' for automatically choosing a highlight face.")
+
+(defun boon--case-fold-regex (regex)
+  "Make REGEX case-insensitive, depending on `case-fold-search'.
+This is an extremely bugged first draft."
+  (if (isearch-no-upper-case-p regex t) regex
+    (replace-regexp-in-string
+           "[[:alpha:]]"
+           (lambda (m) (format "[%s%s]"
+                               (upcase (match-string 0 m))
+                               (match-string 0 m)))
+           regex)))
+
+(defun boon-maybe-fold (regexp)           
+  (if (if (and (eq isearch-case-fold-search t) search-upper-case)
+	  (isearch-no-upper-case-p regexp t)
+	isearch-case-fold-search)
+      (boon--case-fold-regex regexp)
+      regexp))
 
 ;;;###autoload
-(defun boon-set-search-regexp (regexp)
-  "Set REGEXP as current search."
+(defun boon-set-user-regexp (regexp)
+  "Set REGEXP as current search. Apply case-folding as necessary."
   (interactive (list (completing-read "Regexp:" regexp-search-ring)))
-  (unless (equal (car regexp-search-ring) regexp) (push regexp regexp-search-ring))
-  (boon-highlight-regexp regexp))
+  (boon-set-regexp (boon-maybe-fold regexp)))
+
+;;;###autoload
+(defun boon-set-regexp (regexp)
+  "Set REGEXP as current search. No case folding is applied on REGEXP.
+This function ensures that REGEXP is highlighted using `hi-lock'
+and on the `car' of `hi-lock-interactive-patterns'."
+  (interactive)
+  (let* ((pat (assoc regexp hi-lock-interactive-patterns)))
+    (if pat
+        ;; pattern already set. Manipulate the patterns directly to put it on top.
+        (setq hi-lock-interactive-patterns
+              (cons pat (assoc-delete-all regexp hi-lock-interactive-patterns)))
+      ;; hi-lock-face-buffer also turns on hi-lock mode, which asks
+      ;; about reading file patterns. This is annoying. So use the following instead:
+      (hi-lock-set-pattern regexp (hi-lock-read-face-name)))))
+
+(defun boon-cur-regexp ()
+  (when hi-lock-interactive-patterns (car (car hi-lock-interactive-patterns))))
 
 (defun boon-qsearch (forward)
-  "Search the `car' of `regexp-search-ring'.
+  "Search the `boon-cur-regexp'.
 Do so in the direction specified (as FORWARD).  Point is set at
 the beginning of the match."
-  (when (not regexp-search-ring)
-    (error "No set search"))
-  (boon-re-search (car regexp-search-ring) forward))
-
+  (when (not (boon-cur-regexp))
+    (error "Nothing to search: hi-lock something to search before using boon-qsearch."))
+  (boon--re (boon-cur-regexp) forward))
 
 (defun boon--re (regexp forward)
   "Search REGEXP in the direction specified (as FORWARD).
@@ -47,7 +80,7 @@ Point is set at the beginning of the match."
 Point is set at the beginning of the match. Also set the current
 search regexp."
   (boon--re regexp forward)
-  (boon-set-search-regexp regexp))
+  (boon-set-regexp regexp))
 
 
 (with-eval-after-load 'dap
@@ -55,8 +88,8 @@ search regexp."
     (boon-re-search regexp t))
   (defun boon-re-previous (regexp)
     (boon-re-search regexp nil))
-  (define-key dap-hi-lock-regexp-map [re-search-forward] 'boon-re-next)
-  (define-key dap-hi-lock-regexp-map [re-search-backward] 'boon-re-previous))
+  (define-key dap-hi-lock-regexp-map [remap re-search-forward] 'boon-re-next)
+  (define-key dap-hi-lock-regexp-map [remap re-search-backward] 'boon-re-previous))
 
 ;;;###autoload
 (defun boon-qsearch-next ()
@@ -74,7 +107,7 @@ search regexp."
 (defun boon-qsearch-next-at-point ()
   "Search the next occurence of the current string at point and select the match."
   (interactive)
-  (boon-qsearch (regexp-quote (boon-stuff-at-point)) t)
+  (boon-re-search (regexp-quote (boon-stuff-at-point)) t)
   (deactivate-mark))
 
 ;;;###autoload
@@ -84,32 +117,15 @@ search regexp."
   (boon-re-search (regexp-quote (boon-stuff-at-point)) nil)
   (deactivate-mark))
 
-(defun boon--case-fold-regex (regex)
-  "Make REGEX case-insensitive, depending on `case-fold-search'.
-This is an extremely bugged first draft."
-  (if (not case-fold-search) regex
-    (replace-regexp-in-string
-           "[[:alpha:]]"
-           (lambda (m) (format "[%s%s]"
-                               (upcase (match-string 0 m))
-                               (match-string 0 m)))
-           regex)))
 
-;;;###autoload
-(defun boon-highlight-regexp (regexp)
-  "Make sure REGEXP is highlighted using `hi-lock'."
-  (interactive)
-  (when (and boon-highlight-searched-regexp
-	     (not (assoc regexp (bound-and-true-p hi-lock-interactive-patterns))))
-    (require 'hi-lock)
-    (hi-lock-set-pattern (boon--case-fold-regex regexp) (hi-lock-read-face-name))))
+
 
 (defun boon-search-hi-lock (forward)
   "Search any `hi-lock-interactive-patterns'.
 Do so in the FORWARD direction."
   (boon--re (s-join "\\|" (-map 'car hi-lock-interactive-patterns)) forward)
   (when-let* ((re (-first 'looking-at (-map 'car hi-lock-interactive-patterns))))
-    (boon-set-search-regexp re)))
+    (boon-set-regexp re)))
 
 ;;;###autoload
 (defun boon-hi-lock-next ()
@@ -129,8 +145,7 @@ Do so in the FORWARD direction."
   (cond
    ((and (bound-and-true-p multiple-cursors-mode) (> (mc/num-cursors) 1))
     (if forward (mc/cycle-forward) (mc/cycle-backward)))
-   ((and (bound-and-true-p regexp-search-ring)
-         (assoc (car regexp-search-ring) (bound-and-true-p hi-lock-interactive-patterns)))
+   ((boon-cur-regexp)
     (boon-qsearch forward))
    (t (next-error (if forward 1 -1)))))
 
