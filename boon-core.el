@@ -352,12 +352,12 @@ the buffer changes."
                   boon-toggle-case))))
 
 (defadvice isearch-exit (after boon-isearch-set-search activate compile)
-  "After isearch, highlight the search term and set it as boon current regexp."
-  (boon-set-search-string isearch-string))
+  "After isearch, highlight the search term."
+  (boon-highlight-regexp (car regexp-search-ring)))
 
 (defadvice swiper--action (after boon-swiper-set-search activate compile)
-  "After swiper, highlight the search term and set it as boon current regexp."
-  (boon-set-search-regexp (boon-case-fold-regex (car regexp-search-ring))))
+  "After swiper, highlight the search term."
+  (boon-highlight-regexp (car regexp-search-ring)))
 
 (provide 'boon-core)
 ;;; boon-core ends here
