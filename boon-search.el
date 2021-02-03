@@ -9,16 +9,51 @@
 (require 's)
 (require 'dash)
 (require 'hi-lock)
+(require 'pcre2el) ; rxt- functions
 
+
+(defun boon-fold-set (set)
+  "Foldcase SET by returning two sets, one for each case."
+  (pcase set
+    (`(,a . ,z) (list (cons (downcase a) (downcase z))
+                      (cons (upcase a) (upcase z)))) ; not always correct (characters can mix low and upper carse), but good enough for now.
+    ('lower '(or lower upper))
+    ('upper '(or lower upper))
+    ((pred symbolp) rx) ;; digit, alpha, etc.
+    ((pred integerp) (list (downcase set) (upcase set)))))
+
+(defun boon-fold-rx (rx)
+  "Fold-case RX."
+  (pcase rx
+    ((pred integerp) (list 'any (downcase rx) (upcase rx)))
+    ((pred stringp ) (cons 'seq (-map 'boon-fold-rx rx)))
+    (`(not (any . ,rest)) `(not (any . ,(apply '-concat (-map 'boon-fold-set rest)))))
+    (     `(any . ,rest)       `(any . ,(apply '-concat (-map 'boon-fold-set rest))))
+    (`(= . (,n . ,rest)) (cons '= (cons n (-map 'boon-fold-rx rest))))
+    (`(>= . (,n . ,rest)) (cons '>= (cons n (-map 'boon-fold-rx rest))))
+    (`(group-n . (,n . ,rest)) (cons '= (cons n (-map 'boon-fold-rx rest))))
+    (`(submatch-n . (,n . ,rest)) (cons '>= (cons n (-map 'boon-fold-rx rest))))
+    (`(repeat . (,n . ,rest)) (cons '= (cons n (-map 'boon-fold-rx rest)))) ;; rx documentation contradictory for this case!
+    (`(syntax ,s) `(syntax ,s)) 
+    (`(category ,s) `(category ,s)) 
+    (`(backref ,n) `(backref ,n)) 
+    ('lower '(or lower upper))
+    ('upper '(or lower upper))
+    ((pred symbolp) rx) ;; digit, alpha, etc.
+    (`(,head . ,rest) (cons head (-map 'boon-fold-rx rest))))) ; or, and, etc.
+
+;; (boon--case-fold-regex "abcc\\|abec")
+;; (boon--case-fold-regex "[^a-z]")
+;; (boon--case-fold-regex "[^[:digit:]]")
 
 (defun boon--case-fold-regex (regex)
-  "Make REGEX case-insensitive. This is an extremely bugged first draft."
-  (replace-regexp-in-string
-   "[[:alpha:]]"
-   (lambda (m) (format "[%s%s]"
-                       (upcase (match-string 0 m))
-                       (match-string 0 m)))
-   regex))
+  "Make REGEX case-insensitive."
+  (rx-to-string (boon-fold-rx (rxt-adt->rx (rxt-parse-elisp regex))) t)
+  ;; rxt-parse-elisp is bugged as of v. 1.8.:
+  ;; (rxt-adt->rx (rxt-parse-elisp "[[:lower:][X-Z]]"))
+  ;; (rxt-adt->rx (rxt-parse-elisp "[[a-c][X-Z]]")) ;nok
+  ;; (rxt-adt->rx (rxt-parse-elisp "[^a-cX-Z]")) ;; ok 
+  )
 
 (defun boon-maybe-fold (regexp)           
   "Make REGEX case-insensitive, depending on configuration."
@@ -69,7 +104,9 @@ Point is set at the beginning of the match."
                  (message "Wrapping around")
                  (if forward (point-min) (point-max))))
     (setq isearch-success nil)
-    (if forward (re-search-forward regexp) (re-search-backward regexp))
+    (let ((case-fold-search font-lock-keywords-case-fold-search))
+      ;; we're matching what is being highlighted here.
+      (if forward (re-search-forward regexp) (re-search-backward regexp)))
     ;; If search fails an exception is thrown and this won't be done:
     (setq isearch-success t))
   (goto-char (match-beginning 0)))
