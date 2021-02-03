@@ -12,20 +12,19 @@
 
 
 (defun boon--case-fold-regex (regex)
-  "Make REGEX case-insensitive, depending on `case-fold-search'.
-This is an extremely bugged first draft."
-  (if (isearch-no-upper-case-p regex t) regex
-    (replace-regexp-in-string
-           "[[:alpha:]]"
-           (lambda (m) (format "[%s%s]"
-                               (upcase (match-string 0 m))
-                               (match-string 0 m)))
-           regex)))
+  "Make REGEX case-insensitive. This is an extremely bugged first draft."
+  (replace-regexp-in-string
+   "[[:alpha:]]"
+   (lambda (m) (format "[%s%s]"
+                       (upcase (match-string 0 m))
+                       (match-string 0 m)))
+   regex))
 
 (defun boon-maybe-fold (regexp)           
-  (if (if (and (eq isearch-case-fold-search t) search-upper-case)
-	  (isearch-no-upper-case-p regexp t)
-	isearch-case-fold-search)
+  "Make REGEX case-insensitive, depending on configuration."
+  (if (and case-fold-search
+           (if search-upper-case
+	       (isearch-no-upper-case-p regexp t) t))
       (boon--case-fold-regex regexp)
       regexp))
 
