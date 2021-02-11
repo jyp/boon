@@ -51,11 +51,20 @@
 (define-key boon-select-map "#"  'boon-select-all)
 (define-key boon-select-map " "  'boon-select-line)
 (define-key boon-select-map  "\"" 'boon-select-outside-quotes)
+(define-key boon-alt-select-map "@"  'boon-select-occurences)
+(define-key boon-alt-select-map "#"  'boon-select-all)
+(define-key boon-alt-select-map " "  'boon-select-line)
+(define-key boon-alt-select-map  "\"" 'boon-select-outside-quotes)
 (define-key boon-moves-map  "'" 'boon-switch-mark)
 (define-key boon-moves-map  (kbd "<left>") 'left-char)
 (define-key boon-moves-map  (kbd "<right>") 'right-char)
 (define-key boon-moves-map  (kbd "<up>") 'previous-line)
 (define-key boon-moves-map  (kbd "<down>") 'next-line)
+(define-key boon-alt-moves-map  "'" 'boon-switch-mark)
+(define-key boon-alt-moves-map  (kbd "<left>") 'left-char)
+(define-key boon-alt-moves-map  (kbd "<right>") 'right-char)
+(define-key boon-alt-moves-map  (kbd "<up>") 'previous-line)
+(define-key boon-alt-moves-map  (kbd "<down>") 'next-line)
 
 (define-key boon-command-map "'" 'boon-toggle-mark)
 (define-key boon-command-map [(return)] 'undefined)
@@ -63,15 +72,25 @@
 (define-key boon-command-map [(backspace)] 'undefined)
 (define-key boon-command-map (kbd "<DEL>") 'undefined)
 (define-key boon-command-map "`" 'boon-toggle-case)
-(define-key boon-moves-map "[" '("[-" . boon-navigate-backward))
-(define-key boon-moves-map "]" '("-]" . boon-navigate-forward))
+(define-key boon-alt-command-map "'" 'boon-toggle-mark)
+(define-key boon-alt-command-map [(return)] 'undefined)
+(define-key boon-alt-command-map (kbd "<RET>") 'undefined)
+(define-key boon-alt-command-map [(backspace)] 'undefined)
+(define-key boon-alt-command-map (kbd "<DEL>") 'undefined)
+(define-key boon-alt-command-map "`" 'boon-toggle-case)
+(define-key boon-alt-moves-map "[" '("[-" . boon-navigate-backward))
+(define-key boon-alt-moves-map "]" '("-]" . boon-navigate-forward))
 
 (define-key boon-command-map "!" 'shell-command)
 (define-key boon-command-map "|" 'shell-command-on-region)
 (define-key boon-command-map "-" 'undo)
+(define-key boon-alt-command-map "!" 'shell-command)
+(define-key boon-alt-command-map "|" 'shell-command-on-region)
+(define-key boon-alt-command-map "-" 'undo)
 (dolist (number '("0" "1" "2" "3" "4" "5" "6" "7" "8" "9"))
   (define-key boon-command-map number 'digit-argument))
 (define-key boon-command-map "~" 'universal-argument)
+(define-key boon-alt-command-map "~" 'universal-argument)
 (define-key universal-argument-map "~" 'universal-argument-more)
 
 (defcustom boon-quit-key [escape] "Key to go back to command
@@ -80,16 +99,18 @@ state and generally exit local states and modes." :group 'boon
 
 (define-key boon-command-map " " 'boon-drop-mark)
 (define-key boon-command-map boon-quit-key 'boon-quit)
+(define-key boon-alt-command-map " " 'boon-drop-mark)
+(define-key boon-alt-command-map boon-quit-key 'boon-quit)
 
 ;; Special mode rebinds
 (define-key boon-special-map "`" 'boon-quote-character)
 (define-key boon-special-map "'" 'boon-quote-character)
 (define-key boon-special-map "x" boon-x-map)
-(define-key boon-special-map boon-quit-key 'boon-set-command-state)
+(define-key boon-special-map boon-quit-key 'boon-restore-command-state)
 
 ;;  Insert mode rebinds
 (define-key boon-insert-map [remap newline] 'boon-newline-dwim)
-(define-key boon-insert-map boon-quit-key 'boon-set-command-state)
+(define-key boon-insert-map boon-quit-key 'boon-restore-command-state)
 
 ;; Global rebinds
 (define-key global-map boon-quit-key 'keyboard-quit)
