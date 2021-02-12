@@ -8,7 +8,7 @@
 
 (require 'boon-core)
 (require 'boon-powerline)
-(require 'spaceline-config)
+(require 'spaceline-config nil t)
 
 ;; This requires https://github.com/TheBB/spaceline/pull/201/commits/45c4c4b26d923c541ede138c3b3834e2f75778f8 to work.
 (spaceline-define-segment boon
