@@ -247,6 +247,7 @@ input-method is reset to nil.)")
   "Should the mode use `boon-special-state'?"
   (or (and (eq (get major-mode 'mode-class) 'special)
            (not (boon-shell-mode-p)))
+      view-mode
       (-some 'eval boon-special-conditions)
       (memq major-mode boon-special-mode-list)))
 
