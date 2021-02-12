@@ -217,6 +217,7 @@ input-method is reset to nil.)")
   '(Buffer-menu-mode
     debugger-mode
     ediff-mode
+    ediff-meta-mode
     git-rebase-mode
     mu4e-headers-mode
     mu4e-view-mode
