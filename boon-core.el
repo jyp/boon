@@ -14,20 +14,23 @@
 (defgroup boon nil "Boon" :group 'Editing)
 
 ;; Maps
-(defvar boon-x-map)
-(define-prefix-command 'boon-x-map)
-(set-keymap-parent boon-x-map ctl-x-map)
+(defvar boon-x-map (let ((map (make-sparse-keymap))) (set-keymap-parent map ctl-x-map))
+  "Extended boon command map.
 
-(defvar boon-command-map (make-sparse-keymap)
-  "Keymap used in Boon command mode.
+\\{boon-x-map}")
+(fset 'boon-x-map boon-x-map)
 
-\\{boon-command-map}")
-(suppress-keymap boon-command-map 't)
 (defvar boon-moves-map (make-sparse-keymap)
   "Keymap for moves (subset of command mode).
 
 \\{boon-moves-map}")
-(set-keymap-parent boon-command-map boon-moves-map)
+
+(defvar boon-command-map (let ((map (make-sparse-keymap)))
+                           (suppress-keymap map 't)
+                           (set-keymap-parent map boon-moves-map))
+  "Keymap used in Boon command mode.
+\\{boon-command-map}")
+
 (defvar boon-select-map (make-sparse-keymap)
   "Keymap for text regions selectors.
 \\{boon-select-map}
