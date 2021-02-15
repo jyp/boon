@@ -5,7 +5,7 @@
   '((emacs "25.1")
     (dash "2.12.0")
     (expand-region "0.10.0")
-    (multiple-cursors "1.3.0"))
-    (pcre2el "1.8")
+    (multiple-cursors "1.3.0")
+    (pcre2el "1.8"))
   )
 
