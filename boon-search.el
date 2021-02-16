@@ -77,12 +77,13 @@ and on the `car' of `hi-lock-interactive-patterns'."
   (interactive)
   (let* ((pat (assoc regexp hi-lock-interactive-patterns)))
     (if pat
-        ;; pattern already set. Manipulate the patterns directly to put it on top.
+        ;; pattern already set. Manipulate the patterns directly to put it on top of the stack.
         (setq hi-lock-interactive-patterns
               (cons pat (assoc-delete-all regexp hi-lock-interactive-patterns)))
-      ;; hi-lock-face-buffer also turns on hi-lock mode, which asks
-      ;; about reading file patterns. This is annoying. So use the following instead:
-      (hi-lock-set-pattern regexp (hi-lock-read-face-name)))))
+      (let ((hi-lock-auto-select-face t))
+        ;; hi-lock-face-buffer also turns on hi-lock mode, which asks
+        ;; about reading file patterns. This is annoying. So use the following instead:
+        (hi-lock-set-pattern regexp (hi-lock-read-face-name))))))
 
 (defun boon-cur-regexp ()
   (when hi-lock-interactive-patterns (car (car hi-lock-interactive-patterns))))
