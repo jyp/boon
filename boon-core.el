@@ -41,13 +41,32 @@ Any move is also a valid region selector, see `boon-moves-map'.")
 See also `boon-special-mode-list'.
 
 \\{boon-special-map}")
+;; Alternate maps
+(defvar boon-alt-command-map (make-sparse-keymap)
+  "Alternate keymap used in Boon command mode.
+
+\\{boon-alt-command-map}")
+(suppress-keymap boon-alt-command-map 't)
+(defvar boon-alt-moves-map (make-sparse-keymap)
+  "Alternate keymap for moves (subset of alt command mode).
+
+\\{boon-alt-moves-map}")
+(set-keymap-parent boon-alt-command-map boon-alt-moves-map)
+
+(defvar boon-alt-select-map (make-sparse-keymap)
+  "Alternate keymap for text regions selectors.
+\\{boon-alt-select-map}
+
+Any move is also a valid region selector, see `boon-alt-moves-map'.")
 
 (defvar-local boon-mode-map-alist nil)
 (push 'boon-mode-map-alist emulation-mode-map-alists)
 
 ;; States
+(defvar boon-using-altp nil "Non-nil when the alternate keymap is active.")
 (defvar-local boon-off-state nil "Used to disable boon altogether without fiddling with emulation-mode-map-alists")
 (defvar-local boon-command-state nil "Non-nil when boon command mode is activated. (Boon commands can be entered in this mode.)")
+(defvar-local boon-alt-command-state nil "Non-nil when boon alt command mode is activated. (Boon alt commands can be entered in this mode.)")
 (defvar-local boon-insert-state nil "Non-nil when boon insert mode is activated.")
 (defvar-local boon-special-state nil "Non-nil when special state is
 activated. Special is active when special-mode buffers (see `boon-special-mode-list') are
@@ -60,6 +79,7 @@ those. See `boon-special-map' for exceptions.")
 
 (defcustom boon-default-cursor-type 'bar "Default `cursor-type', also used for the minibuffer." :group 'boon :type 'sexp)
 (defcustom boon-command-cursor-type 'box "`cursor-type' for command mode." :group 'boon :type 'sexp)
+(defcustom boon-alt-command-cursor-type 'box "`cursor-type' for command mode." :group 'boon :type 'sexp)
 (defcustom boon-insert-cursor-type 'bar "`cursor-type' for insert mode." :group 'boon :type 'sexp)
 (defcustom boon-special-cursor-type 'box "`cursor-type' for special mode." :group 'boon :type 'sexp)
 
@@ -76,6 +96,13 @@ of `boon-command-cursor-color', `boon-insert-cursor-color' and
   :type 'string)
 (defcustom
   boon-command-cursor-color
+  nil
+  "`cursor-color' for command mode.  `boon-default-cursor-color'
+must also be set."
+  :group 'boon
+  :type 'string)
+(defcustom
+  boon-alt-command-cursor-color
   nil
   "`cursor-color' for command mode.  `boon-default-cursor-color'
 must also be set."
@@ -104,6 +131,7 @@ must also be set."
         (cond
          (boon-insert-state (list boon-insert-cursor-type boon-insert-cursor-color))
          (boon-command-state (list boon-command-cursor-type boon-command-cursor-color))
+         (boon-alt-command-state (list boon-alt-command-cursor-type boon-alt-command-cursor-color))
          (boon-special-state (list boon-special-cursor-type boon-special-cursor-color))
          (t (list boon-default-cursor-type boon-default-cursor-color)))
       (setq cursor-type type)
@@ -173,10 +201,11 @@ input-method is reset to nil.)")
   "Set the boon state (as STATE) for this buffer."
   (when boon-insert-state (setq-local boon-input-method current-input-method))
   (setq boon-command-state nil)
+  (setq boon-alt-command-state nil)
   (setq boon-insert-state nil)
   (setq boon-special-state nil)
   (set state t)
-  (cond (boon-command-state
+  (cond ((or boon-command-state boon-alt-command-state)
          (deactivate-input-method)
          (when (and boon/insert-command boon/insert-command-history)
            (push `(,@boon/insert-command
@@ -210,7 +239,28 @@ input-method is reset to nil.)")
 
 (defun boon-set-command-state ()
   "Switch to command state."
-  (interactive) (boon-set-state 'boon-command-state))
+  (interactive)
+  (setq boon-using-altp nil)
+  (boon-set-state 'boon-command-state))
+
+(defun boon-set-alt-command-state ()
+  "Switch to alt command state."
+  (interactive)
+  (setq boon-using-altp t)
+  (boon-set-state 'boon-alt-command-state))
+
+(defun boon-restore-command-state ()
+  "Switch to command or alt command mode."
+  (interactive)
+  (if boon-using-altp
+      (boon-set-alt-command-state)
+    (boon-set-command-state)))
+
+(defun boon-toggle-alt ()
+  "Swap between command-mode and alt-command-mode globally."
+  (interactive)
+  (setq boon-using-altp (not boon-using-altp))
+  (boon-restore-command-state))
 
 (defun boon-set-special-state ()
   "Switch to special state."
@@ -254,6 +304,13 @@ input-method is reset to nil.)")
       (-some 'eval boon-special-conditions)
       (memq major-mode boon-special-mode-list)))
 
+(defun boon-initialize-state ()
+  (cond ((boon-special-mode-p) (boon-set-state 'boon-special-state))
+          ((-some 'eval boon-insert-conditions) (boon-set-insert-state))
+          (t (boon-restore-command-state))))
+
+(add-hook 'buffer-list-update-hook #'boon-initialize-state)
+
 ;;; Initialisation and activation
 
 (define-minor-mode boon-local-mode
@@ -265,13 +322,12 @@ input-method is reset to nil.)")
       (boon-set-state 'boon-off-state)
     (setq boon-mode-map-alist
           (list (cons 'boon-command-state (or (get major-mode 'boon-map) boon-command-map))
+                (cons 'boon-alt-command-state (or (get major-mode 'boon-map) boon-alt-command-map))
                 (cons 'boon-special-state boon-special-map)
                 (cons 'boon-insert-state  boon-insert-map)))
     (unless (memq 'boon/after-change-hook after-change-functions)
       (push 'boon/after-change-hook after-change-functions))
-    (cond ((boon-special-mode-p) (boon-set-state 'boon-special-state))
-          ((-some 'eval boon-insert-conditions) (boon-set-insert-state))
-          (t (boon-set-command-state)))))
+    (boon-initialize-state)))
 
 (add-hook 'minibuffer-setup-hook 'boon-minibuf-hook)
 
@@ -312,6 +368,7 @@ the buffer changes."
   "Return a string describing the current state."
   (cond
    (boon-command-state "CMD")
+   (boon-alt-command-state "ACMD")
    (boon-insert-state  "INS")
    (boon-special-state "SPC")
    (t "???")))

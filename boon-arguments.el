@@ -302,8 +302,8 @@ subregions or when repeating a command.  The bounds that are
 eventually returned are in the form of a list of regs.  See
 boon-regs.el."
   (let ((my-prefix-arg 0)
-        (kmv boon-moves-map)
-        (kms boon-select-map))
+        (kmv (if boon-using-altp boon-alt-moves-map boon-moves-map))
+        (kms (if boon-using-altp boon-alt-select-map boon-select-map)))
     ;; We read a move or selection, in both keymaps in parallel. First command found wins.
     (while (and (or kmv kms) (not (commandp kms)) (not (commandp kmv)))
       (let ((last-char (read-event (format "%s %s" msg my-prefix-arg))))
