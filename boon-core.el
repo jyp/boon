@@ -206,6 +206,13 @@ input-method is reset to nil.)")
   "Switch to insert state."
   (when (and buffer-read-only (not (boon-shell-mode-p)))
     (error "Buffer is read only, can't insert in it"))
+  (when (get-text-property (point) 'read-only)
+    (if-let ((writeable-pos (next-single-property-change (point) 'read-only nil (line-end-position))))
+        (progn
+          (when (get-text-property writeable-pos 'read-only)
+            (error "Rest of the line is read only."))
+          (goto-char writeable-pos))
+      (error "Rest of the buffer is read only.")))
   (boon-set-state 'boon-insert-state))
 
 (defun boon-set-command-state ()
