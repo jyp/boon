@@ -140,6 +140,7 @@ This item is either the symbol at point, or, if this fails, the sexp at point."
                           result))
                   result)))))
 
+
 (defun boon-select-document () (interactive) (lambda () (boon-regs-from-bounds (cons (point-min) (point-max)))))
 (defun boon-select-paragraph      (count) (interactive "p") (boon-select-n count 'paragraph))
 (defun boon-select-word           (count) (interactive "p") (boon-select-n-copies count 'word))
@@ -163,6 +164,12 @@ This item is either the symbol at point, or, if this fails, the sexp at point."
                                     (save-excursion
                                       (boon-jump-over-blanks-forward)
                                       (point))))))
+
+(defun boon-select-to-mark (count)
+  (interactive "p")
+  (lambda ()
+    (boon-regs-from-bounds (cons (point) (nth (1- count) (cons (mark t) mark-ring))))))
+    
 (defun boon-select-block ()
   "Select the lines contiguous with the current line and have same indentation or more."
   (interactive)
@@ -329,7 +336,7 @@ boon-regs.el."
             (lambda ()
               (save-excursion
                 (let ((orig (point))
-                      (current-prefix-arg my-prefix-arg)) ;; dynamic bindig so env remains clean
+                      (current-prefix-arg my-prefix-arg)) ;; dynamic binding so env remains clean
                   (call-interactively kmv)
                   (list (boon-mk-reg orig (point) nil))))))
           (setq boon-selected-by-move (not (commandp kms))))

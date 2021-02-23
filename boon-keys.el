@@ -51,7 +51,7 @@
 (define-key boon-select-map "#"  'boon-select-all)
 (define-key boon-select-map " "  'boon-select-line)
 (define-key boon-select-map  "\"" 'boon-select-outside-quotes)
-(define-key boon-moves-map  "'" 'boon-switch-mark)
+(define-key boon-select-map  "'" 'boon-select-to-mark)
 (define-key boon-moves-map  (kbd "<left>") 'left-char)
 (define-key boon-moves-map  (kbd "<right>") 'right-char)
 (define-key boon-moves-map  (kbd "<up>") 'previous-line)
