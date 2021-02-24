@@ -10,6 +10,7 @@
 (require 'dash)
 (require 'hi-lock)
 (require 'pcre2el) ; rxt- functions
+(require 'rx)
 
 
 (defun boon-fold-set (set)
@@ -19,7 +20,7 @@
                       (cons (upcase a) (upcase z)))) ; not always correct (characters can mix low and upper carse), but good enough for now.
     ('lower '(or lower upper))
     ('upper '(or lower upper))
-    ((pred symbolp) rx) ;; digit, alpha, etc.
+    ((pred symbolp) set) ;; digit, alpha, etc.
     ((pred integerp) (list (downcase set) (upcase set)))))
 
 (defun boon-fold-rx (rx)
@@ -120,13 +121,14 @@ search regexp."
   (boon-set-regexp regexp))
 
 
-(with-eval-after-load 'dap
+(with-eval-after-load 'cmap
+  (defvar cmap-hi-lock-regexp-map)
   (defun boon-re-next (regexp)
     (boon-re-search regexp t))
   (defun boon-re-previous (regexp)
     (boon-re-search regexp nil))
-  (define-key dap-hi-lock-regexp-map [remap re-search-forward] 'boon-re-next)
-  (define-key dap-hi-lock-regexp-map [remap re-search-backward] 'boon-re-previous))
+  (define-key cmap-hi-lock-regexp-map [remap re-search-forward] 'boon-re-next)
+  (define-key cmap-hi-lock-regexp-map [remap re-search-backward] 'boon-re-previous))
 
 ;;;###autoload
 (defun boon-qsearch-next ()
