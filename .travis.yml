@@ -1,6 +1,6 @@
 language: emacs-lisp
 env:
-  - EVM_EMACS=emacs-26.1-travis
+  - EVM_EMACS=emacs-25.1-travis
 
 before_install:
   - git clone https://github.com/rejeep/evm.git $HOME/.evm
