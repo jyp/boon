@@ -83,20 +83,20 @@ Face names from this list come from `boon-hi-lock-face-defaults'.")
   "List of hi-lock'ed patterns at point"
   (--filter
    (let* ((pat-face (plist-get (cdr it) :face))
-           (limit (point))
-           (pos (if (memq pat-face (get-text-property (1- (point)) 'face))
-                    (1- (point))
-                    (point))))
-       (while (memq pat-face (get-text-property limit 'face))
-         (setq limit (next-single-property-change limit 'face)))
-       (while (and (not (boon--pattern-at it pos limit))
-                   (memq pat-face (get-text-property pos 'face)))
-         (setq pos (previous-single-property-change pos 'face)))
-       (boon--pattern-at it pos limit))
-     boon-hi-lock-interactive-patterns))
+          (limit (point))
+          (pos (if (memq pat-face (get-text-property (1- (point)) 'face))
+                   (1- (point))
+                 (point))))
+     (while (memq pat-face (get-text-property limit 'face))
+       (setq limit (next-single-property-change limit 'face)))
+     (while (and (not (boon--pattern-at it pos limit))
+                 (memq pat-face (get-text-property pos 'face)))
+       (setq pos (previous-single-property-change pos 'face)))
+     (boon--pattern-at it pos limit))
+   boon-hi-lock-interactive-patterns))
     
 (defun boon-hi-lock-read-face-name ()
-  "Face for highlighting.
+  "Get face for highlighting.
 The next available face. With a prefix argument, read a face from
 the minibuffer with completion and history."
   (unless boon-hi-lock--unused-faces
@@ -115,23 +115,29 @@ the minibuffer with completion and history."
          (add-to-list 'boon-hi-lock-face-defaults face t)
          face))
 
-(defun boon-hi-lock-add (regexp face &optional lighter case-fold spaces-regexp)
+(defun boon-hi-lock-add (regexp face &optional lighter
+                                case-fold spaces-regexp)
   "Highlight SUBEXP of REGEXP with face FACE.
 If omitted or nil, SUBEXP defaults to zero, i.e. the entire
 REGEXP is highlighted.  LIGHTER is a human-readable string to
 display instead of a regexp.  Non-nil CASE-FOLD ignores case.
 SPACES-REGEXP is a regexp to substitute spaces in font-lock search."
-  (setq lighter (or lighter regexp))
   (setq face (or face (boon-hi-lock-read-face-name)))
-  (let ((kw (list (lambda (limit)
+  (let ((id (list regexp case-fold spaces-regexp)))
+    (if-let ((ix (--find-index (equal id (plist-get (cdr it) :id))
+                               boon-hi-lock-interactive-patterns)))
+        (setq boon-hi-lock-interactive-patterns
+              (cons (nth ix boon-hi-lock-interactive-patterns)
+                    (-remove-at ix boon-hi-lock-interactive-patterns)))
+      (let ((kw (list (lambda (limit)
                     (let ((case-fold-search case-fold)
                           (search-spaces-regexp spaces-regexp))
                       (re-search-forward regexp limit t)))
-                  (list 0 (list 'quote face) 'prepend)))  ;; 0 = subexp
-        (id (list regexp case-fold spaces-regexp)))
-    (push (list lighter :kw kw :face face :id id) boon-hi-lock-interactive-patterns)
-    (font-lock-add-keywords nil (list kw) t)
-    (font-lock-flush)))
+                  (list 0 (list 'quote face) 'prepend)))) ;; 0 = subexp
+        (push (list (or lighter regexp) :kw kw :face face :id id)
+              boon-hi-lock-interactive-patterns)
+        (font-lock-add-keywords nil (list kw) t)
+        (font-lock-flush)))))
 
 (provide 'boon-hi-lock)
 
