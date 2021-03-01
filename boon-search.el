@@ -46,7 +46,7 @@ the beginning of the match."
 (defun boon-qsearch-next-at-point ()
   "Search the next occurence of the current string at point and select the match."
   (interactive)
-  (boon-set-user-regexp (regexp-quote (boon-stuff-at-point)))
+  (boon-hl-symbol (boon-stuff-at-point))
   (boon-qsearch t)
   (deactivate-mark))
 
@@ -54,7 +54,7 @@ the beginning of the match."
 (defun boon-qsearch-previous-at-point ()
   "Search the previous occurence of the current string at point and select the match."
   (interactive)
-  (boon-set-user-regexp (regexp-quote (boon-stuff-at-point)))
+  (boon-hl-symbol (boon-stuff-at-point))
   (boon-qsearch nil)
   (deactivate-mark))
 
