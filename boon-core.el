@@ -365,11 +365,11 @@ the buffer changes."
 
 (defadvice isearch-exit (after boon-isearch-set-search activate compile)
   "After isearch, highlight the search term."
-  (boon-set-user-regexp (if isearch-regexp isearch-string (regexp-quote isearch-string))))
+  (boon-hl-regexp (if isearch-regexp isearch-string (regexp-quote isearch-string))))
 
 (defadvice swiper--action (after boon-swiper-set-search activate compile)
   "After swiper, highlight the search term."
-  (boon-set-user-regexp (car regexp-search-ring)))
+  (boon-hl-regexp (car regexp-search-ring)))
 
 (provide 'boon-core)
 ;;; boon-core ends here
