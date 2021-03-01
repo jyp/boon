@@ -21,6 +21,34 @@ Turn off Boon in the current buffer." t nil)
 
 ;;;***
 
+;;;### (autoloads nil "boon-hl" "boon-hl.el" (0 0 0 0))
+;;; Generated autoloads from boon-hl.el
+
+(autoload 'boon-hl-regexp "boon-hl" "\
+Set face of each match REGEXP to FACE using font-lock.
+  
+If FACE is nil, choose a face from `boon-hl-face-defaults'
+or prompt if universal argument is non-nil.  If REGEXP contains
+upper case characters (excluding those preceded by `\\') and
+`search-upper-case' is non-nil, the matching is case-sensitive.
+
+\(fn REGEXP &optional FACE)" t nil)
+
+(autoload 'boon-hl-symbol "boon-hl" "\
+Like `book-hi-lock-regexp', but on STRING instead of regexp,
+and do not mess with case-fold.
+
+\(fn STRING &optional FACE)" t nil)
+
+(autoload 'boon-hl-remove "boon-hl" "\
+
+
+\(fn PATTERN)" t nil)
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "boon-hl" '("boon-")))
+
+;;;***
+
 ;;;### (autoloads nil "boon-keys" "boon-keys.el" (0 0 0 0))
 ;;; Generated autoloads from boon-keys.el
 
@@ -280,18 +308,6 @@ Pop the mark ring until we find ourselves on a different line." t nil)
 ;;;### (autoloads nil "boon-search" "boon-search.el" (0 0 0 0))
 ;;; Generated autoloads from boon-search.el
 
-(autoload 'boon-set-user-regexp "boon-search" "\
-Set REGEXP as current search. Apply case-folding as necessary.
-
-\(fn REGEXP)" t nil)
-
-(autoload 'boon-set-regexp "boon-search" "\
-Set REGEXP as current search. No case folding is applied on REGEXP.
-This function ensures that REGEXP is highlighted using `hi-lock'
-and on the `car' of `hi-lock-interactive-patterns'.
-
-\(fn REGEXP)" t nil)
-
 (autoload 'boon-qsearch-next "boon-search" "\
 Search the next occurence of the current search regexp." t nil)
 
@@ -303,12 +319,6 @@ Search the next occurence of the current string at point and select the match." 
 
 (autoload 'boon-qsearch-previous-at-point "boon-search" "\
 Search the previous occurence of the current string at point and select the match." t nil)
-
-(autoload 'boon-hi-lock-next "boon-search" "\
-Search forward for any `hi-lock-interactive-patterns'." t nil)
-
-(autoload 'boon-hi-lock-previous "boon-search" "\
-Search backwards for any `hi-lock-interactive-patterns'." t nil)
 
 (autoload 'boon-navigate "boon-search" "\
 Go to the next item of interest, FORWARD or backwards.
@@ -357,9 +367,9 @@ Open a buffer with boon tutorial." t nil)
 
 ;;;***
 
-;;;### (autoloads nil nil ("boon-colemak.el" "boon-emacs.el" "boon-pkg.el"
-;;;;;;  "boon-qwerty.el" "boon-qwertz.el" "boon-spaceline.el" "boon-test.el"
-;;;;;;  "boon-workman.el" "boon.el") (0 0 0 0))
+;;;### (autoloads nil nil ("boon-colemak.el" "boon-dvorak.el" "boon-emacs.el"
+;;;;;;  "boon-pkg.el" "boon-qwerty.el" "boon-qwertz.el" "boon-spaceline.el"
+;;;;;;  "boon-test.el" "boon-workman.el" "boon.el") (0 0 0 0))
 
 ;;;***
 

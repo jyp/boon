@@ -350,12 +350,6 @@ Replace the region if it is active."
     (message "Executing the command bound to %c" char)
     (call-interactively cmd nil [char])))
 
-;;;###autoload
-(defun boon-unhighlight ()
-  "Pop a highlight regexp."
-  (interactive)
-  (when (bound-and-true-p hi-lock-interactive-patterns)
-    (hi-lock-unface-buffer (car (car hi-lock-interactive-patterns)))))
 
 ;;;###autoload
 (defun boon-quit ()
@@ -374,9 +368,9 @@ Replace the region if it is active."
    ((bound-and-true-p multiple-cursors-mode)
     (message "Exitted from multiple cursors")
     (multiple-cursors-mode 0))
-   ((bound-and-true-p hi-lock-interactive-patterns)
+   (boon-hl-patterns
     (message "Removed highlighting")
-    (boon-unhighlight))
+    (boon-hl-remove (car boon-hl-patterns)))
    (t
     (keyboard-quit))))
 
