@@ -1,13 +1,19 @@
-language: emacs-lisp
+#
+# Use nix-emacs-ci for travis CI
+# URL: https://github.com/purcell/nix-emacs-ci
+#
+
+language: nix
+
+os:
+  - linux
+
 env:
-  - EVM_EMACS=emacs-25.1-travis
+  - EMACS_CI=emacs-27-1
 
-before_install:
-  - git clone https://github.com/rejeep/evm.git $HOME/.evm
-  - export PATH=$HOME/.evm/bin:$PATH
-
-  - evm config path /tmp
-  - evm install $EVM_EMACS --use --skip
+install:
+  # The default "emacs" executable on the $PATH will now be the version named by $EMACS_CI
+  - bash <(curl https://raw.githubusercontent.com/purcell/nix-emacs-ci/master/travis-install)
 
 script:
   - make test
