@@ -11,6 +11,7 @@
 (require 'boon-core)
 (require 'boon-utils)
 (require 'boon-arguments)
+(require 'boon-hl)
 (require 'multiple-cursors)
 (require 'subr-x)
 (require 'dash)
