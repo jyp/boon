@@ -52,7 +52,8 @@ upper case characters (excluding those preceded by `\\') and
   "`book-hi-lock-regexp' (regexp-quote STRING) FACE.
 Additionally, do not mess with case-fold."
   (interactive "sSymbol to highlight:")
-  (boon-hl-add (hi-lock-regexp-okay (format "\\_<%s\\_>" (regexp-quote string))) face string case-fold-search))
+  (boon-hl-add (hi-lock-regexp-okay (format "\\_<%s\\_>" (regexp-quote string)))
+               face string font-lock-keywords-case-fold-search))
 
 (defvar-local boon-hl--unused-faces nil
   "List of faces that is not used and is available for highlighting new text.
