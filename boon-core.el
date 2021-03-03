@@ -10,6 +10,7 @@
 
 (require 'cl-macs)
 (require 'dash)
+(require 'subr-x)
 
 (defgroup boon nil "Boon" :group 'Editing)
 
@@ -77,43 +78,44 @@ of `boon-command-cursor-color', `boon-insert-cursor-color' and
 (defcustom
   boon-command-cursor-color
   nil
-  "`cursor-color' for command mode.  `boon-default-cursor-color'
-must also be set."
+  "`cursor-color' for command mode.
+`boon-default-cursor-color' must also be set."
   :group 'boon
   :type 'string)
 (defcustom
   boon-insert-cursor-color
   nil
-  "`cursor-color' for insert mode.  `boon-default-cursor-color'
-must also be set."
+  "`cursor-color' for insert mode.
+`boon-default-cursor-color' must also be set."
   :group 'boon
   :type 'string)
 (defcustom
   boon-special-cursor-color
   nil
-  "`cursor-color' for special mode.  `boon-default-cursor-color'
-must also be set."
+  "`cursor-color' for special mode.
+`boon-default-cursor-color' must also be set."
   :group 'boon
   :type 'string)
 
 (defun boon-update-cursor ()
   "Update the cursor depending on the current boon mode."
   (with-current-buffer (window-buffer)
-    (seq-let
-        [type color]
+    (pcase
         (cond
          (boon-insert-state (list boon-insert-cursor-type boon-insert-cursor-color))
          (boon-command-state (list boon-command-cursor-type boon-command-cursor-color))
          (boon-special-state (list boon-special-cursor-type boon-special-cursor-color))
          (t (list boon-default-cursor-type boon-default-cursor-color)))
-      (setq cursor-type type)
-      ;; The default value for all cursor colors is `nil', which skips calling
-      ;; `set-cursor-color' completely. This avoids accidentaly changing the
-      ;; behaviour as it's difficult to provide a single meaningful default
-      ;; color name, e.g. because the user could change the theme while using
-      ;; Boon.
-      (when (or color boon-default-cursor-color)
-        (set-cursor-color (or color boon-default-cursor-color))))))
+      (`(,type ,color)
+        
+       (setq cursor-type type)
+       ;; The default value for all cursor colors is `nil', which skips calling
+       ;; `set-cursor-color' completely. This avoids accidentaly changing the
+       ;; behaviour as it's difficult to provide a single meaningful default
+       ;; color name, e.g. because the user could change the theme while using
+       ;; Boon.
+       (when (or color boon-default-cursor-color)
+         (set-cursor-color (or color boon-default-cursor-color)))))))
 
 (add-hook 'buffer-list-update-hook #'boon-update-cursor)
 
@@ -128,7 +130,7 @@ optional list of changes as its last argument."
 
 (defun boon/after-change-hook (begin end old-len)
   "Remember the change defined by BEGIN END OLD-LEN in `boon/insert-command-history'."
-  (when (and boon-insert-state (not mc--executing-command-for-fake-cursor))
+  (when (and boon-insert-state (not (bound-and-true-p mc--executing-command-for-fake-cursor)))
     ;; (message "bach: %s" boon/insert-command-history (list begin end old-len))
     (cond ((and boon/insert-command-history
                 (string= "" (nth 2 (car boon/insert-command-history))) ;; no insert
@@ -210,9 +212,9 @@ input-method is reset to nil.)")
     (if-let ((writeable-pos (next-single-property-change (point) 'read-only nil (line-end-position))))
         (progn
           (when (get-text-property writeable-pos 'read-only)
-            (error "Rest of the line is read only."))
+            (error "Rest of the line is read only"))
           (goto-char writeable-pos))
-      (error "Rest of the buffer is read only.")))
+      (error "Rest of the buffer is read only")))
   (boon-set-state 'boon-insert-state))
 
 (defun boon-set-command-state ()
@@ -242,6 +244,7 @@ input-method is reset to nil.)")
     :type '(repeat symbol))
 
 (defun boon-shell-mode-p ()
+  "Is the `major-mode' any of the shell modes?"
   (derived-mode-p 'comint-mode 'eshell-mode 'term-mode 'vterm-mode))
 
 (defcustom boon-special-conditions
@@ -288,10 +291,11 @@ This is because no command mode is activated in the minibuffer."
   (setq cursor-type 'bar))
 
 (defun boon-initialize ()
-  "Setup boon in the current buffer. Should only be used to
+  "Setup boon in the current buffer.
+Should only be used to
 initialize `boon-local-mode' from the globalized minor-mode
-`boon-mode'. It is called whenever boon is enabled in a buffer
-for the first time or when boon is active and the major-mode of
+`boon-mode'.  It is called whenever boon is enabled in a buffer
+for the first time or when boon is active and the `major-mode' of
 the buffer changes."
   (unless (minibufferp)
     (boon-local-mode 1)))
