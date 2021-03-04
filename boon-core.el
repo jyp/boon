@@ -227,9 +227,11 @@ input-method is reset to nil.)")
 
 (defcustom boon-special-mode-list
   '(Buffer-menu-mode
+    cfw:calendar-mode
     debugger-mode
     ediff-mode
     ediff-meta-mode
+    finder-mode
     git-rebase-mode
     mu4e-headers-mode
     mu4e-view-mode
@@ -238,7 +240,7 @@ input-method is reset to nil.)")
     notmuch-show-mode
     notmuch-tree-mode
     org-agenda-mode
-    cfw:calendar-mode)
+    view-mode)
     "A List of modes which should use `boon-special-state'."
     :group 'boon
     :type '(repeat symbol))
@@ -260,7 +262,6 @@ input-method is reset to nil.)")
   "Should the mode use `boon-special-state'?"
   (or (and (eq (get major-mode 'mode-class) 'special)
            (not (boon-shell-mode-p)))
-      view-mode
       (-some 'eval boon-special-conditions)
       (memq major-mode boon-special-mode-list)))
 
