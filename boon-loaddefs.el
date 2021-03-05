@@ -35,13 +35,13 @@ upper case characters (excluding those preceded by `\\') and
 \(fn REGEXP &optional FACE)" t nil)
 
 (autoload 'boon-hl-symbol "boon-hl" "\
-Like `book-hi-lock-regexp', but on STRING instead of regexp,
-and do not mess with case-fold.
+`book-hi-lock-regexp' (regexp-quote STRING) FACE.
+Additionally, do not mess with case-fold.
 
 \(fn STRING &optional FACE)" t nil)
 
 (autoload 'boon-hl-remove "boon-hl" "\
-
+Remove PATTERN highlight.
 
 \(fn PATTERN)" t nil)
 
