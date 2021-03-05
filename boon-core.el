@@ -240,6 +240,7 @@ input-method is reset to nil.)")
     notmuch-show-mode
     notmuch-tree-mode
     org-agenda-mode
+    pass-mode
     view-mode)
     "A List of modes which should use `boon-special-state'."
     :group 'boon
