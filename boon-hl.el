@@ -136,13 +136,13 @@ If omitted or nil, SUBEXP defaults to zero, i.e. the entire
 REGEXP is highlighted.  LIGHTER is a human-readable string to
 display instead of a regexp.  Non-nil CASE-FOLD ignores case.
 SPACES-REGEXP is a regexp to substitute spaces in font-lock search."
-  (setq face (or face (boon-hl-read-face-name)))
   (let ((id (list regexp case-fold spaces-regexp)))
     (if-let* ((ix (--find-index (equal id (plist-get (cdr it) :id))
                                 boon-hl-patterns)))
         (setq boon-hl-patterns
               (cons (nth ix boon-hl-patterns)
                     (-remove-at ix boon-hl-patterns)))
+      (setq face (or face (boon-hl-read-face-name)))
       (let ((kw (list (lambda (limit &optional backward)
                     (let ((case-fold-search case-fold)
                           (search-spaces-regexp spaces-regexp))
