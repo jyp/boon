@@ -353,6 +353,13 @@ Replace the region if it is active."
 
 
 ;;;###autoload
+(defun boon-unhighlight (&optional n)
+  "Pop N highlighted patterns, by calling `boon-hl-remove'."
+  (interactive "p")
+  (dotimes (_ (or n 1))
+    (boon-hl-remove (car boon-hl-patterns))))
+
+;;;###autoload
 (defun boon-quit ()
   "Exit the current modes we're in until no special state is remaining."
   (interactive)
@@ -371,7 +378,7 @@ Replace the region if it is active."
     (multiple-cursors-mode 0))
    (boon-hl-patterns
     (message "Removed highlighting")
-    (boon-hl-remove (car boon-hl-patterns)))
+    (boon-unhighlight))
    (t
     (keyboard-quit))))
 

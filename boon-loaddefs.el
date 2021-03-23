@@ -183,7 +183,9 @@ Execute the command which were bound to the character CHAR if boon was not enabl
 \(fn CHAR)" t nil)
 
 (autoload 'boon-unhighlight "boon-main" "\
-Pop a highlight regexp." t nil)
+Pop N highlighted patterns, by calling `boon-hl-remove'.
+
+\(fn &optional N)" t nil)
 
 (autoload 'boon-quit "boon-main" "\
 Exit the current modes we're in until no special state is remaining." t nil)
