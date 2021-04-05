@@ -304,8 +304,6 @@ input-method is reset to nil.)")
           ((-some 'eval boon-insert-conditions) (boon-set-insert-state))
           (t (boon-restore-command-state))))
 
-(add-hook 'buffer-list-update-hook #'boon-initialize-state)
-
 ;;; Initialisation and activation
 
 (define-minor-mode boon-local-mode
