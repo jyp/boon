@@ -344,9 +344,11 @@ Replace the region if it is active."
 (defun boon-quote-character (char)
   "Execute the command which were bound to the character CHAR if boon was not enabled."
   (interactive (list (read-char))) ;; use read-char so that multiple-cursors advice kicks in.
-  (let ((cmd (lookup-key (make-composed-keymap
-                          (let ((boon-mode-map-alist nil)) (current-active-maps)))
-                         (vector char))))
+  (let* ((keymap (make-composed-keymap
+                  (let ((boon-mode-map-alist nil)) (current-active-maps))))
+         (cmd (lookup-key keymap (vector char)))
+         (cmd (or (command-remapping cmd nil keymap)
+                  cmd)))
     (setq last-command-event char)
     (message "Executing the command bound to %c" char)
     (call-interactively cmd nil [char])))
