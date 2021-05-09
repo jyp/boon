@@ -11,7 +11,8 @@
 (require 'spaceline-config nil t) ; on a distribution such as guix this line forces the installation of spaceline (https://git.savannah.gnu.org/cgit/guix.git/tree/gnu/packages/emacs-xyz.scm#n12076) making the package bigger than needed
 
 ;; This requires https://github.com/TheBB/spaceline/pull/201/commits/45c4c4b26d923c541ede138c3b3834e2f75778f8 to work.
-;; (This patch was merged, then broken. currently only this version actually works: https://github.com/jyp/spaceline)
+;; This patch was never released on melpa stable.
+
 (spaceline-define-segment boon
   "Boon status"
   (boon-state-string)
