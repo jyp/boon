@@ -82,7 +82,7 @@
   (interactive "p")
   (dotimes (_number count)
     (boon-jump-over-blanks-backward)
-    (let ((back-limit (- (point) 5))) ;; looking back at comment delimiter
+    (let ((back-limit (- (point) 5)))
       (cond
        ((boon-looking-at-comment -1)
         (forward-comment -1))
@@ -107,9 +107,10 @@
 
 ;;;###autoload
 (defun boon-smarter-forward (count)
-  "Move forward, over COUNT whole syntactic unit."
+  "Move forward, over COUNT whole syntactic units."
   (interactive "p")
   (dotimes (_number count)
+    
     (boon-jump-over-blanks-forward)
     (cond
      ((boon-looking-at-line-comment-start-p)
@@ -124,15 +125,23 @@
         (forward-sexp)))
      ((looking-at "\\s(")
       (forward-list))
-     ((looking-at "\\s_") ;; symbol
-      (skip-syntax-forward "_"))
+     ;; ((looking-at "\\s$") ;; math and haskell `x` ;; TODO
+     ;;  (skip-syntax-forward "."))
+     ((looking-at "\\s.") ;; punctuation
+      (skip-syntax-forward "."))
      ((looking-at "\\s)")
       (forward-char))
      ((looking-at "\\s!")  ;; generic comment delimiter
       (skip-syntax-forward "!"))
-     ((looking-at "\\sw")
-      (if (not (looking-back "\\(\\s-\\|\\s(\\|\\s)\\)" (1- (point))))
-          (skip-syntax-forward "w")
+     ((and (bound-and-true-p subword-mode)
+           (looking-at "\\sw")
+           (looking-back "\\sw" (1- (point))))
+           (subword-forward-internal))
+     ((looking-at "\\sw\\|\\s_")
+      (if (looking-back "\\sw\\|\\s_" (1- (point)))
+          (progn
+            (skip-syntax-forward "_")
+            (skip-syntax-forward "w"))
         (skip-syntax-forward "w_")))
      (t
       (forward-char)))))
