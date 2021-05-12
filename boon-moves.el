@@ -92,16 +92,23 @@
           (goto-char char)))
        ((looking-back "\\s)" back-limit)
         (backward-list))
-       ((looking-back "\\s_" back-limit)  ;; symbol
-        (skip-syntax-backward "_"))
+       ((looking-back "\\s$") ;; math and haskell `x`
+        (let ((end-pos (scan-sexps (point) -1)))
+          (if (>= end-pos (line-beginning-position))
+              (goto-char end-pos)
+            (backward-char))))
+       ((looking-back "\\s.") ;; punctuation
+        (skip-syntax-backward "."))
        ((looking-back "\\s(" back-limit)
         (backward-char))
        ((looking-back "\\s!" back-limit)  ;; generic comment delimiter
         (skip-syntax-backward "!"))
-       ((looking-back "\\sw" back-limit)
-        (if (not (looking-at "\\(\\s-\\|\\s(\\|\\s)\\)"))
-            (skip-syntax-backward "w")
-          (skip-syntax-backward "w_")))
+       ((looking-back "\\sw\\|\\s_" back-limit)
+      (if (looking-at "\\sw\\|\\s_")
+          (progn
+            (skip-syntax-backward "_")
+            (skip-syntax-backward "w"))
+        (skip-syntax-backward "w_")))
        (t
         (backward-char))))))
 
@@ -110,8 +117,8 @@
   "Move forward, over COUNT whole syntactic units."
   (interactive "p")
   (dotimes (_number count)
-    
     (boon-jump-over-blanks-forward)
+    
     (cond
      ((boon-looking-at-line-comment-start-p)
       (end-of-line)
@@ -125,12 +132,15 @@
         (forward-sexp)))
      ((looking-at "\\s(")
       (forward-list))
-     ;; ((looking-at "\\s$") ;; math and haskell `x` ;; TODO
-     ;;  (skip-syntax-forward "."))
-     ((looking-at "\\s.") ;; punctuation
-      (skip-syntax-forward "."))
      ((looking-at "\\s)")
       (forward-char))
+     ((looking-at "\\s$") ;; math and haskell `x` ;; TODO
+      (let ((end-pos (scan-sexps (point) 1)))
+        (if (<= end-pos (line-end-position))
+          (goto-char end-pos)
+          (forward-char))))
+     ((looking-at "\\s.") ;; punctuation
+      (skip-syntax-forward "."))
      ((looking-at "\\s!")  ;; generic comment delimiter
       (skip-syntax-forward "!"))
      ((and (bound-and-true-p subword-mode)
