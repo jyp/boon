@@ -107,12 +107,16 @@
         (backward-char))
        ((looking-back "\\s!" back-limit)  ;; generic comment delimiter
         (skip-syntax-backward "!"))
+       ((and (bound-and-true-p subword-mode)
+             (looking-at "\\sw")
+             (looking-back "\\sw" (1- (point))))
+        (subword-backward))
        ((looking-back "\\sw\\|\\s_" back-limit)
-      (if (looking-at "\\sw\\|\\s_")
-          (progn
-            (skip-syntax-backward "_")
-            (skip-syntax-backward "w"))
-        (skip-syntax-backward "w_")))
+        (if (looking-at "\\sw\\|\\s_")
+            (progn
+              (skip-syntax-backward "_")
+              (skip-syntax-backward "w"))
+          (skip-syntax-backward "w_")))
        (t
         (backward-char))))))
 
@@ -154,7 +158,7 @@
      ((and (bound-and-true-p subword-mode)
            (looking-at "\\sw")
            (looking-back "\\sw" (1- (point))))
-           (subword-forward-internal))
+           (subword-forward))
      ((looking-at "\\sw\\|\\s_")
       (if (looking-back "\\sw\\|\\s_" (1- (point)))
           (progn
