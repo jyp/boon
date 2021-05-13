@@ -93,10 +93,14 @@
        ((looking-back "\\s)" back-limit)
         (backward-list))
        ((looking-back "\\s$") ;; math and haskell `x`
-        (let ((end-pos (scan-sexps (point) -1)))
-          (if (>= end-pos (line-beginning-position))
-              (goto-char end-pos)
-            (backward-char))))
+        (condition-case nil
+            (let ((end-pos (scan-sexps (point) -1)))
+              (if (>= end-pos (line-beginning-position))
+                  (goto-char end-pos)
+                (backward-char)))
+          (scan-error
+           (message "matching thing not found")
+           (backward-char))))
        ((looking-back "\\s.") ;; punctuation
         (skip-syntax-backward "."))
        ((looking-back "\\s(" back-limit)
@@ -135,10 +139,14 @@
      ((looking-at "\\s)")
       (forward-char))
      ((looking-at "\\s$") ;; math and haskell `x` ;; TODO
-      (let ((end-pos (scan-sexps (point) 1)))
-        (if (<= end-pos (line-end-position))
-          (goto-char end-pos)
-          (forward-char))))
+      (condition-case nil
+          (let ((end-pos (scan-sexps (point) 1)))
+            (if (<= end-pos (line-end-position))
+                (goto-char end-pos)
+              (forward-char)))
+        (scan-error
+         (message "matching thing not found")
+         (forward-char))))
      ((looking-at "\\s.") ;; punctuation
       (skip-syntax-forward "."))
      ((looking-at "\\s!")  ;; generic comment delimiter
