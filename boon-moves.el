@@ -8,12 +8,10 @@
 
 ;;; Code:
 (require 'boon-core)
-(require 'boon-utils)
 (require 'er-basic-expansions)
 (require 'find-func)
 (require 'boon-utils)
 (require 'subr-x)
-(require 'seq)
 
 ;;;###autoload
 (defun boon-find-char-backward (char)
