@@ -93,7 +93,7 @@
           (goto-char char)))
        ((looking-back "\\s)" back-limit)
         (backward-list))
-       ((looking-back "\\s$") ;; math and haskell `x`
+       ((looking-back "\\s$" back-limit) ;; math and haskell `x`
         (condition-case nil
             (let ((end-pos (scan-sexps (point) -1)))
               (if (>= end-pos (line-beginning-position))
@@ -108,7 +108,8 @@
         (backward-char))
        ((looking-back "\\s!" back-limit)  ;; generic comment delimiter
         (skip-syntax-backward "!"))
-       ((and (bound-and-true-p subword-mode)
+       ((and (fboundp 'subword-backward)
+             (bound-and-true-p subword-mode)
              (looking-at "\\sw")
              (looking-back "\\sw" (1- (point))))
         (subword-backward))
@@ -156,7 +157,8 @@
       (skip-syntax-forward "."))
      ((looking-at "\\s!")  ;; generic comment delimiter
       (skip-syntax-forward "!"))
-     ((and (bound-and-true-p subword-mode)
+     ((and (fboundp 'subword-forward)
+           (bound-and-true-p subword-mode)
            (looking-at "\\sw")
            (looking-back "\\sw" (1- (point))))
            (subword-forward))
