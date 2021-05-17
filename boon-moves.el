@@ -13,6 +13,7 @@
 (require 'find-func)
 (require 'boon-utils)
 (require 'subr-x)
+(require 'seq)
 
 ;;;###autoload
 (defun boon-find-char-backward (char)
@@ -101,7 +102,7 @@
           (scan-error
            (message "matching thing not found")
            (backward-char))))
-       ((looking-back "\\s.") ;; punctuation
+       ((looking-back "\\s." back-limit) ;; punctuation
         (skip-syntax-backward "."))
        ((looking-back "\\s(" back-limit)
         (backward-char))
