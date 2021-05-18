@@ -8,7 +8,6 @@
 
 ;;; Code:
 (require 'boon-core)
-(require 'boon-utils)
 (require 'er-basic-expansions)
 (require 'find-func)
 (require 'boon-utils)
@@ -82,7 +81,7 @@
   (interactive "p")
   (dotimes (_number count)
     (boon-jump-over-blanks-backward)
-    (let ((back-limit (- (point) 5))) ;; looking back at comment delimiter
+    (let ((back-limit (- (point) 5)))
       (cond
        ((boon-looking-at-comment -1)
         (forward-comment -1))
@@ -92,25 +91,42 @@
           (goto-char char)))
        ((looking-back "\\s)" back-limit)
         (backward-list))
-       ((looking-back "\\s_" back-limit)  ;; symbol
-        (skip-syntax-backward "_"))
+       ((looking-back "\\s$" back-limit) ;; math and haskell `x`
+        (condition-case nil
+            (let ((end-pos (scan-sexps (point) -1)))
+              (if (>= end-pos (line-beginning-position))
+                  (goto-char end-pos)
+                (backward-char)))
+          (scan-error
+           (message "matching thing not found")
+           (backward-char))))
+       ((looking-back "\\s." back-limit) ;; punctuation
+        (skip-syntax-backward "."))
        ((looking-back "\\s(" back-limit)
         (backward-char))
        ((looking-back "\\s!" back-limit)  ;; generic comment delimiter
         (skip-syntax-backward "!"))
-       ((looking-back "\\sw" back-limit)
-        (if (not (looking-at "\\(\\s-\\|\\s(\\|\\s)\\)"))
-            (skip-syntax-backward "w")
+       ((and (fboundp 'subword-backward)
+             (bound-and-true-p subword-mode)
+             (looking-at "\\sw")
+             (looking-back "\\sw" (1- (point))))
+        (subword-backward))
+       ((looking-back "\\sw\\|\\s_" back-limit)
+        (if (looking-at "\\sw\\|\\s_")
+            (progn
+              (skip-syntax-backward "_")
+              (skip-syntax-backward "w"))
           (skip-syntax-backward "w_")))
        (t
         (backward-char))))))
 
 ;;;###autoload
 (defun boon-smarter-forward (count)
-  "Move forward, over COUNT whole syntactic unit."
+  "Move forward, over COUNT whole syntactic units."
   (interactive "p")
   (dotimes (_number count)
     (boon-jump-over-blanks-forward)
+    
     (cond
      ((boon-looking-at-line-comment-start-p)
       (end-of-line)
@@ -124,15 +140,31 @@
         (forward-sexp)))
      ((looking-at "\\s(")
       (forward-list))
-     ((looking-at "\\s_") ;; symbol
-      (skip-syntax-forward "_"))
      ((looking-at "\\s)")
       (forward-char))
+     ((looking-at "\\s$") ;; math and haskell `x` ;; TODO
+      (condition-case nil
+          (let ((end-pos (scan-sexps (point) 1)))
+            (if (<= end-pos (line-end-position))
+                (goto-char end-pos)
+              (forward-char)))
+        (scan-error
+         (message "matching thing not found")
+         (forward-char))))
+     ((looking-at "\\s.") ;; punctuation
+      (skip-syntax-forward "."))
      ((looking-at "\\s!")  ;; generic comment delimiter
       (skip-syntax-forward "!"))
-     ((looking-at "\\sw")
-      (if (not (looking-back "\\(\\s-\\|\\s(\\|\\s)\\)" (1- (point))))
-          (skip-syntax-forward "w")
+     ((and (fboundp 'subword-forward)
+           (bound-and-true-p subword-mode)
+           (looking-at "\\sw")
+           (looking-back "\\sw" (1- (point))))
+           (subword-forward))
+     ((looking-at "\\sw\\|\\s_")
+      (if (looking-back "\\sw\\|\\s_" (1- (point)))
+          (progn
+            (skip-syntax-forward "_")
+            (skip-syntax-forward "w"))
         (skip-syntax-forward "w_")))
      (t
       (forward-char)))))
