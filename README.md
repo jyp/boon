@@ -187,6 +187,16 @@ to:
     (require 'boon-powerline)
     (boon-powerline-theme) ;; if you want use powerline with Boon
 
+- Per-mode keybinding can be implemented by setting the boon-map
+  property of the mode symbol. Example:
+
+
+     (let ((map (make-sparse-keymap)))
+       (set-keymap-parent map boon-command-map)
+       (define-key map "j" 'org-open-at-point-global)
+       (put 'org-mode 'boon-map map))
+
+
 
 Comparison with other modal layers for Emacs
 ---------------------------------------------
