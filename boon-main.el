@@ -350,6 +350,7 @@ Replace the region if it is active."
          (cmd (or (command-remapping cmd nil keymap)
                   cmd)))
     (setq last-command-event char)
+    (setq this-command cmd)
     (message "Executing the command bound to %c" char)
     (call-interactively cmd nil [char])))
 
@@ -418,6 +419,7 @@ sequence."
     (cond
      ((not binding) (error "No command bound to %s" prompt))
      ((commandp binding)
+      (setq this-command binding)
       (let ((current-prefix-arg arg)) (call-interactively binding)))
      (t (error "Key not bound to a command: %s" binding)))))
 
