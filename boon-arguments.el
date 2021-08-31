@@ -25,6 +25,7 @@
         (?a . ("<" ">"))
         (?b . ("[" "]"))
         (?c . ("{-" "-}"))
+        (?l . ("⦇" "⦈")) ;; lenses
         (?d . ("\"" "\"")) ;; double quotes
         (?D . ("``" "''")) ;; Double quotes
         (?f . ("«" "»")) ;; french quotes (or, more precisely, Russian quotes)
@@ -37,6 +38,7 @@
         (?q . ("'" "'")) ;; single quotes
         (?Q . ("`" "'")) ;; british Quotes
         (?r . ("{" "}")) ;; bRaces
+        (?R . ("⦃" "⦄")) ;; thick bRaces
         (?t . ("~" "~")) ;; tilda
         )
         "Enclosures to use with the `boon-enclose' command."
