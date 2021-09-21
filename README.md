@@ -90,7 +90,8 @@ Emacs integration
    arguments.
 
 5. Customize-friendly. Quick customization is easily done using M-x
-   customize-group boon.
+   customize-group boon. (re)-Defining keys in the boon-...-keymaps is
+   also supported.
 
 6. Multiple-cursors support. System of selectors supports
    multiple-cursors: (multiple regions will be returned when multiple
@@ -101,9 +102,9 @@ Modular design
 
 Boon is designed as set of modules, largely independent of each
 other. Each module is customizable and provides reusable components,
-in full agreement with the Emacs spirit. This means that even if you
-disagree with the design choices explained above, you may still want
-to use some parts of Boon. The structure of Boon is as follows:
+in following the Emacs spirit of hackability. This means that even if
+you disagree with the design choices explained above, you may still
+want to use some parts of Boon. The structure of Boon is as follows:
 
 1. boon-moves.el and boon-search.el provide a set of move and search
    commands. These work the same way as standard Emacs commands ---
