@@ -17,7 +17,6 @@
 (define-key boon-select-map "t"  'boon-select-with-spaces)
 (define-key boon-select-map "T"  'boon-select-org-tree)
 (define-key boon-select-map "d"  'boon-select-document)
-(define-key boon-select-map "E"  'boon-select-LaTeX-env-command)
 
 (define-key boon-select-map "z"  'boon-select-content) ;; inZide
 (define-key boon-select-map "x"  'boon-select-outside-pairs) ;; eXpression
