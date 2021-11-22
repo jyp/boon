@@ -143,6 +143,19 @@ This item is either the symbol at point, or, if this fails, the sexp at point."
                   result)))))
 
 
+(defun boon-select-LaTeX-env-command ()
+  (interactive)
+  (lambda ()
+    (list
+     (save-excursion
+       (LaTeX-find-matching-begin)
+       (forward-char 7)
+       (boon-mk-reg (point) (1- (search-forward "}"))))
+     (save-excursion
+       (LaTeX-find-matching-end)
+       (let ((end (1- (point))))
+         (boon-mk-reg (search-backward "{") end))))))
+
 (defun boon-select-document () (interactive) (lambda () (boon-regs-from-bounds (cons (point-min) (point-max)))))
 (defun boon-select-paragraph      (count) (interactive "p") (boon-select-n count 'paragraph))
 (defun boon-select-word           (count) (interactive "p") (boon-select-n-copies count 'word))
@@ -260,6 +273,7 @@ the region, in insertion mode.  Subregions won't be overlapping."
   "Return the contents (of size HOW-MUCH) of a region list REGS."
   (interactive (list (boon-spec-selector "select borders")))
   (lambda ()(mapcar 'boon-content (funcall regs))))
+
 
 (defun boon-bypass-mc ()
   "Should we bypass multiple cursors when gathering regions?"

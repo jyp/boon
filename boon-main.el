@@ -261,7 +261,7 @@ Regions are given by  REGS."
 This is done by calling PLACE-CURSOR for each element of REGS.
 If there is more than one, use mc/create-fake-cursor-at-point."
   (mc/remove-fake-cursors)
-  (dolist (reg (cdr regs))
+  (dolist (reg (cdr regs)) ; 1st region handled specially (not a fake cursor, but real one)
     (funcall place-cursor reg)
     (mc/create-fake-cursor-at-point))
   (funcall place-cursor (car regs))
