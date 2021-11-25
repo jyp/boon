@@ -154,7 +154,7 @@ This item is either the symbol at point, or, if this fails, the sexp at point."
      (save-excursion
        (LaTeX-find-matching-end)
        (let ((end (1- (point))))
-         (boon-mk-reg (search-backward "{") end))))))
+         (boon-mk-reg (1+ (search-backward "{")) end))))))
 
 (defun boon-select-document () (interactive) (lambda () (boon-regs-from-bounds (cons (point-min) (point-max)))))
 (defun boon-select-paragraph      (count) (interactive "p") (boon-select-n count 'paragraph))
