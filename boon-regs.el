@@ -29,7 +29,7 @@
   (boon-mk-reg (copy-marker (boon-reg-mark reg)) (copy-marker (boon-reg-point reg)) (boon-reg-cursor reg)))
 
 (defun boon-reg-from-markers (reg)
-  "Put convert markers to numbers in REG."
+  "Convert markers to numbers in REG."
   (boon-mk-reg (marker-position (boon-reg-mark reg)) (marker-position (boon-reg-point reg)) (boon-reg-cursor reg)))
 
 (defun boon-borders (reg how-much)
@@ -69,6 +69,10 @@ directed forward, or or before, if the region is backwards."
 (defun boon-reg-before (r1 r2)
   "Return non-nil when R1 occurs before R2."
   (< (boon-reg-begin r1) (boon-reg-end r2)))
+
+(defun boon-reg-after (r1 r2)
+  "Return non-nil when R2 occurs before R1."
+  (> (boon-reg-begin r1) (boon-reg-end r2)))
 
 (defun boon-reg-cur-after (r1 r2)
   (declare (obsolete "unused" "July 2017"))

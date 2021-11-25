@@ -287,21 +287,28 @@ If there is more than one, use mc/create-fake-cursor-at-point."
 
 ;;;###autoload
 (defun boon-take-region (regs)
-  "Kill the region given as REGS."
+  "Kill the region given as selector REGS."
   (interactive (list (boon-spec-select-top "take")))
-  ;; convert to markers, so that deleting text does not mess with
-  ;; positions
+  (boon-take-region-0 (boon-run-selector regs)))
+
+(defun boon-take-region-0 (regs)
+  "Kill the region given as REGS."
   (unless boon-selected-by-move (setq last-command 'not-a-kill))
-  (dolist (reg-group (-partition-by 'boon-reg-cursor
-                                    (mapcar 'boon-reg-to-markers (boon-run-selector regs))))
+  (dolist (reg-group
+           ;; work cursor-by-cursor, so that cursor-specific tricks in mc package work.
+           (-partition-by 'boon-reg-cursor
+                          ;; convert to markers, so that deleting text does not mess with
+                          ;; positions
+                          (-map #'boon-reg-to-markers regs)))
     (boon-execute-for-cursor (boon-reg-cursor (car reg-group))
-     (lambda ()
-       (dolist (reg (mapcar 'boon-reg-from-markers reg-group))
-         ;; We can't run 'kill-region' on markers. Indeed, using
-         ;; markers messes the logic used in kill-region to
-         ;; determine whether to prepend or append the thing
-         ;; just killed to the top of the kill ring.
-         (kill-region (boon-reg-mark reg) (boon-reg-point reg)))))))
+                             (lambda ()
+                               ;; We can't run 'kill-region' on markers. Indeed, using
+                               ;; markers messes the logic used in kill-region to
+                               ;; determine whether to prepend or append the thing
+                               ;; just killed to the top of the kill ring.
+                               (dolist (reg (-map #'boon-reg-from-markers
+                                                  (-sort #'boon-reg-after reg-group)))
+                                 (kill-region (boon-reg-mark reg) (boon-reg-point reg)))))))
 
 ;;;###autoload
 (defun boon-treasure-region (regs)
@@ -311,15 +318,17 @@ If there is more than one, use mc/create-fake-cursor-at-point."
     (kill-ring-save (boon-reg-begin reg) (boon-reg-end reg))))
 
 ;;;###autoload
-(defun boon-substitute-region (regs &optional changes)
+(defun boon-substitute-region (reg-sel &optional changes)
   "Kill the regions REGS, and switch to insertion mode or replay CHANGES."
   (interactive (list (boon-spec-select-top "replace")))
-  (boon-interactive-insert regs)
-  (let ((markers (mapcar 'boon-reg-to-markers (-sort 'boon-reg-before (boon-run-selector regs)))))
+  (boon-interactive-insert reg-sel)
+  
+  (let* ((regs (boon-run-selector reg-sel))
+         (markers (mapcar 'boon-reg-to-markers (-sort 'boon-reg-before regs))))
     ;; Sort so that the changes recorded will be relative to a consistent position.
     ;; (The actual cursor will be 1st and will not jump around).
     ;; Use markers so that deleting things does not mess the positions
-    (boon-take-region regs)
+    (boon-take-region-0 regs)
     (deactivate-mark t)
     (if changes ; if we have a change to apply then we do not want to lay new cursors, just apply the changes.
         (save-excursion
@@ -328,7 +337,7 @@ If there is more than one, use mc/create-fake-cursor-at-point."
             (boon/replay-changes changes)))
       (boon-lay-multiple-cursors (lambda (reg) (goto-char (boon-reg-point reg)))
                                  markers)
-      (boon-insert changes))))
+      (boon-insert nil))))
 
 ;;;###autoload
 (defun boon-replace-by-character (replacement)
