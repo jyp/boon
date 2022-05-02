@@ -309,15 +309,17 @@ If there is more than one, use mc/create-fake-cursor-at-point."
                           ;; convert to markers, so that deleting text does not mess with
                           ;; positions
                           (-map #'boon-reg-to-markers regs)))
-    (boon-execute-for-cursor (boon-reg-cursor (car reg-group))
-                             (lambda ()
-                               ;; We can't run 'kill-region' on markers. Indeed, using
-                               ;; markers messes the logic used in kill-region to
-                               ;; determine whether to prepend or append the thing
-                               ;; just killed to the top of the kill ring.
-                               (dolist (reg (-map #'boon-reg-from-markers
-                                                  (-sort #'boon-reg-after reg-group)))
-                                 (kill-region (boon-reg-mark reg) (boon-reg-point reg)))))))
+    (boon-execute-for-cursor
+     (boon-reg-cursor (car reg-group))
+     (lambda ()
+       ;; We can't run 'kill-region' on markers. Indeed, using
+       ;; markers messes the logic used in kill-region to
+       ;; determine whether to prepend or append the thing
+       ;; just killed to the top of the kill ring.
+       (dolist (reg (-map #'boon-reg-from-markers
+                          (-sort #'boon-reg-after reg-group)))
+         (kill-region (boon-reg-mark reg) (boon-reg-point reg))
+         (push-mark (boon-reg-mark reg) t nil))))))
 
 ;;;###autoload
 (defun boon-treasure-region (regs)
