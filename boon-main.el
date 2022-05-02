@@ -286,6 +286,15 @@ If there is more than one, use mc/create-fake-cursor-at-point."
     (funcall fun)))
 
 ;;;###autoload
+(defun boon-exchange (regs)
+  (interactive (list (boon-spec-select-top "exchange")))
+  (boon-take-region regs)
+  (insert-for-yank (nth 1 kill-ring))
+  (save-excursion
+    (goto-char (nth 0 mark-ring))
+    (insert-for-yank (nth 0 kill-ring))))
+
+;;;###autoload
 (defun boon-take-region (regs)
   "Kill the region given as selector REGS."
   (interactive (list (boon-spec-select-top "take")))
