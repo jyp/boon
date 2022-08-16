@@ -130,41 +130,39 @@ optional list of changes as its last argument."
 
 (defun boon/after-change-hook (begin end old-len)
   "Remember the change defined by BEGIN END OLD-LEN in `boon/insert-command-history'."
-  (when (and boon-insert-state (not (bound-and-true-p mc--executing-command-for-fake-cursor)))
+  (when (and boon-insert-state
+             (not (bound-and-true-p mc--executing-command-for-fake-cursor)))
     ;; (message "bach: %s" boon/insert-command-history (list begin end old-len))
-    (cond ((and boon/insert-command-history
-                (string= "" (nth 2 (car boon/insert-command-history))) ;; no insert
-                (eq begin end) ;; no insert
-                (eq (+ begin old-len) (+ boon/insert-origin
-                                         (car (car boon/insert-command-history)))))
-           ;; two consecutive deletes: concat them.
-           (setq boon/insert-command-history (cons (list (- begin boon/insert-origin)
-                                                         (+ old-len (nth 1 (car boon/insert-command-history)))
-                                                         "")
-                                                   (cdr boon/insert-command-history))))
-          ((and boon/insert-command-history
-                (eq 0 (nth 1 (car boon/insert-command-history))) ;; no delete
-                (eq 0 old-len) ;; no delete
-                (eq begin (+ boon/insert-origin
-                             (car (car boon/insert-command-history))
-                             (length (nth 2 (car boon/insert-command-history))))))
-           ;; two consecutive inserts: concat them.
-           (setq boon/insert-command-history (cons (list (car (car boon/insert-command-history))
-                                                         0
-                                                         (concat (nth 2 (car boon/insert-command-history)) (buffer-substring-no-properties begin end)))
-                                                   (cdr boon/insert-command-history))))
-          (t
-           (push (list (- begin boon/insert-origin) old-len (buffer-substring-no-properties begin end))
-                 boon/insert-command-history)))))
+    (pcase boon/insert-command-history
+      ((and `((,bb ,del-len "") . ,rest) ; no insert
+            (guard (eq begin end)) ; no insert
+            (guard (eq (+ begin old-len) (+ boon/insert-origin bb)))) ; consecutive
+       ;; two consecutive deletes: concat them.
+       (setq boon/insert-command-history
+             (cons (list (- begin boon/insert-origin) (+ old-len del-len) "")
+                   rest)))
+      ((and `((,bb 0 ,ins) . ,rest) ; no delete
+            (guard (eq old-len 0)) ; no delete
+            (guard (eq begin (+ boon/insert-origin bb (length ins))))) ; consecutive
+       ;; two consecutive inserts: concat them.
+       (setq boon/insert-command-history
+             (cons (list bb 0 (concat ins (buffer-substring-no-properties begin end)))
+                   rest)))
+      (_
+       (push (list (- begin boon/insert-origin) old-len
+                   (buffer-substring-no-properties begin end))
+             boon/insert-command-history)))))
 
-(defun boon/replay-changes (changes)
-  "Replay the CHANGES at the current point."
+(defun boon/replay-changes (chnges)
+  "Replay the CHNGES at the current point."
+  ;; (message "brc: %s" chnges)
   (let ((p0 (point)))
     (setq boon/insert-command nil) ;; did not go to insert mode after all
-    (dolist (change changes)
-      (goto-char (+ p0 (nth 0 change)))
-      (delete-region (+ p0 (nth 0 change)) (+ p0 (nth 0 change) (nth 1 change)))
-      (insert (nth 2 change)))))
+    (-each chnges (pcase-lambda (`(,start ,len ,txt))
+                    (goto-char (+ p0 start))
+                    (delete-region (+ p0 start) (+ p0 start len))
+                    (insert txt)
+                    (goto-char (+ p0 start (length txt)))))))
 
 (defvar-local boon-input-method nil
 "The input method to activate
