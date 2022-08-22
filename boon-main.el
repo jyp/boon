@@ -405,12 +405,11 @@ Replace the region if it is active."
    (t
     (keyboard-quit))))
 
-;;;###autoload
 (defun boon-god-control-swap (event)
   "Swap the control 'bit' in EVENT, unless C-c <event> is a prefix reserved for modes."
   (interactive (list (read-key)))
   (cond
-   ((memq event '(9 13 ?{ ?} ?\[ ?\] ?$ ?& ?= ?< ?> ?: ?\; ?/ ?? ?. ?, ?' ?\" )) event)
+   ((memq event '(9 13 ?{ ?} ?\[ ?\] ?$ ?& ?= ?< ?> ?: ?\; ?/ ?? ?. ?, ?' ?` ?\" )) event)
    ((<= event 27) (+ 96 event))
    ((not (eq 0 (logand (lsh 1 26) event))) (logxor (lsh 1 26) event))
    (t (list 'control event))))
