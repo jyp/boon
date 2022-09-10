@@ -3,7 +3,7 @@
 ;;;;;;  0))
 ;;; Generated autoloads from boon-arguments.el
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "boon-arguments" '("boon-")))
+(register-definition-prefixes "boon-arguments" '("boon-"))
 
 ;;;***
 
@@ -17,7 +17,7 @@ Turn on Boon in the current buffer." t nil)
 (autoload 'turn-off-boon-mode "boon-core" "\
 Turn off Boon in the current buffer." t nil)
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "boon-core" '("boon")))
+(register-definition-prefixes "boon-core" '("boon"))
 
 ;;;***
 
@@ -157,7 +157,7 @@ Mark the regions REGS.
 \(fn REGS)" t nil)
 
 (autoload 'boon-take-region "boon-main" "\
-Kill the region given as REGS.
+Kill the region given as selector REGS.
 
 \(fn REGS)" t nil)
 
@@ -169,7 +169,7 @@ Copy (kill-ring-save) the regions REGS.
 (autoload 'boon-substitute-region "boon-main" "\
 Kill the regions REGS, and switch to insertion mode or replay CHANGES.
 
-\(fn REGS &optional CHANGES)" t nil)
+\(fn REG-SEL &optional CHANGES)" t nil)
 
 (autoload 'boon-replace-by-character "boon-main" "\
 Replace the character at point by the REPLACEMENT character.
@@ -219,7 +219,7 @@ Narrow to the first region of REGS.
 
 \(fn REGS)" t nil)
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "boon-main" '("boon-execute-for-cursor")))
+(register-definition-prefixes "boon-main" '("boon-"))
 
 ;;;***
 
@@ -266,7 +266,7 @@ Move backward, over COUNT whole syntactic units.
 \(fn COUNT)" t nil)
 
 (autoload 'boon-smarter-forward "boon-moves" "\
-Move forward, over COUNT whole syntactic unit.
+Move forward, over COUNT whole syntactic units.
 
 \(fn COUNT)" t nil)
 
@@ -303,7 +303,7 @@ Pop the mark ring until we find ourselves on a different line." t nil)
 ;;;### (autoloads nil "boon-regs" "boon-regs.el" (0 0 0 0))
 ;;; Generated autoloads from boon-regs.el
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "boon-regs" '("boon-")))
+(register-definition-prefixes "boon-regs" '("boon-"))
 
 ;;;***
 
