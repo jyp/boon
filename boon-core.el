@@ -12,7 +12,7 @@
 (require 'dash)
 (require 'subr-x)
 
-(defgroup boon nil "Boon" :group 'Editing)
+(defgroup boon nil "Boon: An Ergonomic Command Mode." :group 'Editing)
 
 ;; Maps
 (defvar boon-x-map (let ((map (make-sparse-keymap))) (set-keymap-parent map ctl-x-map))
@@ -47,13 +47,14 @@ See also `boon-special-mode-list'.
 (push 'boon-mode-map-alist emulation-mode-map-alists)
 
 ;; States
-(defvar-local boon-off-state nil "Used to disable boon altogether without fiddling with emulation-mode-map-alists")
-(defvar-local boon-command-state nil "Non-nil when boon command mode is activated. (Boon commands can be entered in this mode.)")
+(defvar-local boon-off-state nil "State where boon is disabled boon altogether.") ;; without having to fiddle with `emulation-mode-map-alists'
+(defvar-local boon-command-state nil "Non-nil when boon command mode is activated.
+Boon commands can be entered in this mode.")
 (defvar-local boon-insert-state nil "Non-nil when boon insert mode is activated.")
-(defvar-local boon-special-state nil "Non-nil when special state is
-activated. Special is active when special-mode buffers (see `boon-special-mode-list') are
-activated. This buffers have their own set of commands, so we use
-those. See `boon-special-map' for exceptions.")
+(defvar-local boon-special-state nil "Non-nil when special state is activated.
+Special is active when `special-mode' buffers (see `boon-special-mode-list') are
+activated.  This buffers have their own set of commands, so we use
+those.  See `boon-special-map' for exceptions.")
 
 (defvar boon/insert-command-history nil "History of changes in this insertion round.")
 (defvar boon/insert-command nil "Command which started the insertion.")
@@ -129,7 +130,8 @@ optional list of changes as its last argument."
     (setq boon/insert-command (cons this-command (-map (lambda (x) (list 'quote x)) args)))))
 
 (defun boon/after-change-hook (begin end old-len)
-  "Remember the change defined by BEGIN END OLD-LEN in `boon/insert-command-history'."
+  "Remember the change in `boon/insert-command-history'.
+Change is defined by BEGIN END OLD-LEN."
   (when (and boon-insert-state
              (not (bound-and-true-p mc--executing-command-for-fake-cursor)))
     ;; (message "bach: %s" boon/insert-command-history (list begin end old-len))
@@ -165,9 +167,8 @@ optional list of changes as its last argument."
                     (goto-char (+ p0 start (length txt)))))))
 
 (defvar-local boon-input-method nil
-"The input method to activate
-when going to insert state. (When leaving insert state the
-input-method is reset to nil.)")
+"The input method to activate when going to insert state.
+When leaving insert state the input-method is reset to nil.")
 
 (defun boon-set-state (state)
   "Set the boon state (as STATE) for this buffer."
@@ -376,4 +377,4 @@ the buffer changes."
   (boon-hl-regexp (car regexp-search-ring)))
 
 (provide 'boon-core)
-;;; boon-core ends here
+;;; boon-core.el ends here
