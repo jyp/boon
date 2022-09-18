@@ -267,6 +267,12 @@ When leaving insert state the input-method is reset to nil.")
 
 ;;; Initialisation and activation
 
+(defun boon-set-natural-state ()
+  "Set the natural state for the buffer."
+  (cond ((boon-special-mode-p) (boon-set-state 'boon-special-state))
+        ((-some 'eval boon-insert-conditions) (boon-set-insert-state))
+        (t (boon-set-command-state))))
+
 (define-minor-mode boon-local-mode
   "Minor mode for setting up command mode in a single buffer."
   :init-value nil
@@ -280,9 +286,7 @@ When leaving insert state the input-method is reset to nil.")
                 (cons 'boon-insert-state  (or (get major-mode 'boon-insert-map) boon-insert-map))))
     (unless (memq 'boon/after-change-hook after-change-functions)
       (push 'boon/after-change-hook after-change-functions))
-    (cond ((boon-special-mode-p) (boon-set-state 'boon-special-state))
-          ((-some 'eval boon-insert-conditions) (boon-set-insert-state))
-          (t (boon-set-command-state)))))
+    (boon-set-natural-state)))
 
 (add-hook 'minibuffer-setup-hook 'boon-minibuf-hook)
 
@@ -367,6 +371,17 @@ the buffer changes."
                   boon-take-region
                   boon-toggle-character-case
                   boon-toggle-case))))
+
+;; When switching away from a window (for example by clicking in
+;; another window), return the buffer hosting it to its "natural"
+;; state (otherwise it's surprising to the user when coming back to it)
+(add-hook 'window-selection-change-functions
+          (defun boon-reset-state-for-switchw (window)
+            "Reset the boon state to natural when switching windows."
+            (let* ((old (old-selected-window))
+                   (prev-buf (window-buffer old)))
+              (with-current-buffer prev-buf
+                (boon-set-natural-state)))))
 
 (defadvice isearch-exit (after boon-isearch-set-search activate compile)
   "After isearch, highlight the search term."
