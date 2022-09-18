@@ -88,7 +88,7 @@ state and generally exit local states and modes." :group 'boon
 (define-key boon-special-map boon-quit-key 'boon-set-command-state)
 
 ;;  Insert mode rebinds
-(define-key boon-insert-map [remap newline] 'boon-newline-dwim)
+;; (define-key boon-insert-map [remap newline] 'boon-newline-dwim)
 (define-key boon-insert-map boon-quit-key 'boon-set-command-state)
 
 ;; Global rebinds
