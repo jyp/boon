@@ -417,7 +417,7 @@ command '\\[boon-drop-mark]', which is a convenient way to select some lines.
 >> Insert some replacement text and go back to command mode.
 
 When deleting the word under the cursor, it is sometimes a
-problem that an space remains. The argument-modifier
+problem that a space remains. The argument-modifier
 \\<boon-select-map>\\[boon-select-with-spaces] adds the extra
 space to the region.
 
