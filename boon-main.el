@@ -288,7 +288,8 @@ If there is more than one, use mc/create-fake-cursor-at-point."
 ;;;###autoload
 (defun boon-exchange (regs)
   (interactive (list (boon-spec-select-top "exchange")))
-  (boon-take-region regs)
+  (let ((last-command nil)) ;; we never want to append to the last kill here
+    (boon-take-region regs)) 
   (insert-for-yank (nth 1 kill-ring))
   (save-excursion
     (goto-char (nth 0 mark-ring))
@@ -317,9 +318,12 @@ If there is more than one, use mc/create-fake-cursor-at-point."
        ;; determine whether to prepend or append the thing
        ;; just killed to the top of the kill ring.
        (dolist (reg (-map #'boon-reg-from-markers
+                          ;; to later regions first so that killing
+                          ;; does not invalidate positions
                           (-sort #'boon-reg-after reg-group)))
-         (kill-region (boon-reg-mark reg) (boon-reg-point reg))
-         (push-mark (boon-reg-mark reg) t nil))))))
+         ;; push mark first, because kill-region will move text
+         (push-mark (boon-reg-mark reg) t nil)
+         (kill-region (boon-reg-mark reg) (boon-reg-point reg)))))))
 
 ;;;###autoload
 (defun boon-treasure-region (regs)
