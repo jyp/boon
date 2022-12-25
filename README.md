@@ -247,7 +247,7 @@ alternative was Evil.)
      keystroke).
 
   2. XFK binds digits to actions, boon leaves them for prefixes. (I
-      may be misunderstandig here --- perhaps they are bound to
+      may be misunderstanding here --- perhaps they are bound to
       special characters.)
 
   3. XFK seem to have less of a systematic assignment of keys to
@@ -290,7 +290,7 @@ alternative was Evil.)
   RYO modal has the same purpose as Modalka and boon-core; it is also
   a candidate to replace `boon-core.el`, but still falls
   short. Compared to Modalka, it provides support for repeating a
-  command, but . However boon can repeat insertion commands, while RYO
+  command. However boon can repeat insertion commands, while RYO
   modal cannot. Additionally it also suffers from having a single
   non-insertion state.
 
