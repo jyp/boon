@@ -242,6 +242,28 @@ then ask for the string interactively instead."
                                result))))
         result))))
 
+(defun boon-select-word-occurences (what-fun where)
+  "Return the occurences of WHAT-FUN as sub-regions of WHERE."
+  (interactive (list (boon-spec-string-lazy "occurences of what?") (boon-spec-selector "where?")))
+  (lambda ()
+    (let ((result nil)
+          (what (funcall what-fun)))
+      (save-excursion
+        (dolist (reg (funcall where))
+          (goto-char (boon-reg-begin reg))
+          (while (search-forward-regexp
+                  (rx-to-string
+                   `(seq word-start
+                         (literal ,what)
+                         word-end)
+                   t)
+                  (boon-reg-end reg) t)
+            (setq result (cons (boon-mk-reg (match-beginning 0)
+                                            (match-end 0)
+                                            (boon-reg-cursor reg))
+                               result))))
+        result))))
+
 (defun boon-select-all (what where)
   "Return a list of empty regions starting at the WHAT subregions of WHERE.
 Example: r#<spc>p places a cursor at every begining of line in

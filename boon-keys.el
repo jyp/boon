@@ -48,6 +48,7 @@
 (define-key boon-x-map "N" 'widen)
 
 (define-key boon-select-map "@"  'boon-select-occurences)
+(define-key boon-select-map "*"  'boon-select-word-occurences)
 (define-key boon-select-map "#"  'boon-select-all)
 (define-key boon-select-map " "  'boon-select-line)
 (define-key boon-select-map  "\"" 'boon-select-outside-quotes)
