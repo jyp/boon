@@ -374,12 +374,16 @@ the buffer changes."
 
 (defun boon-reset-state-for-switchw (frame-or-window)
   "Reset the boon state to natural when switching windows."
-  (let* ((old (if (framep frame-or-window)
-                  (frame-old-selected-window (old-selected-frame))
-                (old-selected-window)))
-         (prev-buf (window-buffer old)))
-    (with-current-buffer prev-buf
-      (boon-set-natural-state))))
+  (let* ((old-frame-or-window (old-selected-window))
+         (old-window (when old-frame-or-window
+                       (if (framep old-frame-or-window)
+                           (when (frame-live-p old-frame-or-window)
+                             (frame-old-selected-window old-frame-or-window))
+                         old-frame-or-window)))
+         (old-buffer (when old-window (window-buffer old-window))))
+    (when old-buffer
+      (with-current-buffer old-buffer
+        (boon-set-natural-state)))))
 
 ;; When switching away from a window (for example by clicking in
 ;; another window), return the buffer hosting it to its "natural"
