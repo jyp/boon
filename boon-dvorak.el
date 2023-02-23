@@ -114,8 +114,8 @@
 (define-key boon-command-map (kbd "C-t") 'scroll-down-line)
 (define-key boon-command-map (kbd "C-n") 'scroll-up-line)
 
-(define-key indent-rigidly-map "t" 'indent-rigidly-right)
-(define-key indent-rigidly-map "n" 'indent-rigidly-left)
+(define-key indent-rigidly-map "n" 'indent-rigidly-right)
+(define-key indent-rigidly-map "t" 'indent-rigidly-left)
 
 (provide 'boon-dvorak)
 ;;; boon-dvorak.el ends here
