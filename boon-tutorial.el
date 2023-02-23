@@ -235,11 +235,11 @@ You can also move to the beginning or end of the current line:
 Like '\\[previous-line]' and '\\[next-line]', the keys on the top row are line-related.
 
 When moving up and down, Emacs tries to manage the cursor position
-inside a line intelligently.  This often works, but sometimes one need
+inside a line intelligently.  This often works, but sometimes one needs
 to move quickly to the beginning or end of a line after moving up or
 down.  You can do all that by staying on the top row.
 
-If you want to moving up and down faster, use the shift key:
+If you want to move up and down faster, use the shift key:
 
 >> Type '\\[backward-paragraph]' (pay attention to case) to move to the previous paragraph.
 
@@ -258,7 +258,7 @@ Before trying the next two commands, remember that '\\[backward-paragraph]' and 
 by paragraph, use them to return to the next section after trying the
 following commands.
 
-Two less used cursor motion commands, moves you to the top or bottom of
+Two less used cursor motion commands move you to the top or bottom of
 the whole text.
 
 >> Type '\\[beginning-of-buffer]' to move to the beginning of the whole text.
@@ -397,7 +397,7 @@ use the kill command.
 
 Selecting text with '\\[boon-drop-mark]' can take a region argument, including
 left-hand once.  When this argument is a move command, then '\\[boon-drop-mark]'
-behaves like putting a mark at the the current point.
+behaves like putting a mark at the current point.
 
 >> Type '\\[boon-drop-mark] \\<boon-select-map>\\[boon-select-paragraph]\\<boon-command-map>' to select a paragraph.
 
@@ -423,7 +423,7 @@ space to the region.
 
 >> Move the cursor to a word you wish to kill (Cut).
 
->> Type '\\[boon-take-region] \\<boon-select-map>\\[boon-select-with-spaces] \\[boon-select-word]\\<boon-command-map>' to remove the word and it's surrounding spaces.
+>> Type '\\[boon-take-region] \\<boon-select-map>\\[boon-select-with-spaces] \\[boon-select-word]\\<boon-command-map>' to remove the word and its surrounding spaces.
 
 
 
@@ -451,7 +451,7 @@ A typical character replacement is a change of case. The command
 * (Copy, `kill-ring-save')
 --------------------------
 
-The command for coping is: '\\[boon-treasure-region]'. " (boon-mnemonic 'boon-treasure-region) "
+The command for copying is: '\\[boon-treasure-region]'. " (boon-mnemonic 'boon-treasure-region) "
 
 It adds the copied text to the `kill-ring' but doesn't remove it from
 the buffer.
