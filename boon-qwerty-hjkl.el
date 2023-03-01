@@ -40,5 +40,5 @@
 (define-key boon-moves-map "m" '("moon walk" . boon-switch-mark))
 (define-key boon-moves-map "M" 'xref-pop-marker-stack)
 
-(provide 'boon-qwerty-hjkl')
+(provide 'boon-qwerty-hjkl)
 ;;; boon-qwerty-hjkl ends here

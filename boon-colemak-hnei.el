@@ -35,7 +35,7 @@
 (define-key boon-moves-map "I"  '("→" . boon-smarter-forward))         ;word
 
 (define-key boon-moves-map "o"  '("hOp" . avy-goto-word-1))
-(define-key boon-moves-map "O"  'avy-goto-char))
+(define-key boon-moves-map "O"  'avy-goto-char)
 
 (provide 'boon-colemak-hnei)
 ;;; boon-colemak-hnei.el ends here
