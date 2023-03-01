@@ -1,4 +1,4 @@
-;;; boon/boon-qwerty-hjkl.el -*- lexical-binding: t; -*-
+;;; boon/boon-qwerty-hjkl.el --- An Ergonomic VIM-like Command Mode -*- lexical-binding: t; -*-
 
 ;;; Commentary:
 ;;; Boon-qwerty remapped to be more Vim-like.

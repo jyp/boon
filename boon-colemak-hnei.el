@@ -1,4 +1,4 @@
-;;; boon/boon-colemak-hnei.el -*- lexical-binding: t; -*-
+;;; boon/boon-colemak-hnei.el --- An Ergonomic VIM-like Command Mode -*- lexical-binding: t; -*-
 
 ;;; Commentary:
 ;;; Boon-colemak remapped to be more Vim-like.
