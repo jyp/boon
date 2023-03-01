@@ -1,5 +1,5 @@
 ;;; boon/boon-colemak-hnei.el -*- lexical-binding: t; -*-
-(require 'boon)
+(require 'boon-colemak)
 
 (define-key boon-moves-map "l"  '("⇤" . boon-beginning-of-line))
 (define-key boon-moves-map "u" 'backward-sentence)

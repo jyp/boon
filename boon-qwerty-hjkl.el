@@ -1,5 +1,5 @@
 ;;; boon/boon-qwerty-hjkl.el -*- lexical-binding: t; -*-
-(require 'boon)
+(require 'boon-qwerty)
 
 (define-key boon-moves-map "u"  '("⇤" . boon-beginning-of-line))
 (define-key boon-moves-map "i" 'backward-sentence)
