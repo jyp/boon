@@ -1,4 +1,22 @@
 ;;; boon/boon-qwerty-hjkl.el -*- lexical-binding: t; -*-
+
+;;; Commentary:
+;;; Boon-qwerty remapped to be more Vim-like.
+;;; Only the six of the eight movement keys (all except 'u' and 'p') have been changed:
+;;; 'i' = move backward by sentence
+;;; 'o' = move forward by sentence
+;;; 'H' = move backward smarter (by word, element, etc.)
+;;; 'h' = move backward by character
+;;; 'J' = move faster down (forward-paragraph)
+;;; 'j' = move down by line (next-line)
+;;; 'k' = move up by line (previous-line)
+;;; 'K' = move faster up (backward-paragraph)
+;;; 'l' = move forward by character
+;;; 'L' = move forward smarter (by word, element, etc.)
+;;; In addition, the move commands mapped to h/H have been moved to n/N. ("hop" has become "near")
+;;; The command mapped to n/N ("noon-walk") has been moved to m/M ("moon-walk")
+
+;;; Code:
 (require 'boon-qwerty)
 
 (define-key boon-moves-map "u"  '("⇤" . boon-beginning-of-line))

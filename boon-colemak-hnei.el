@@ -1,4 +1,21 @@
 ;;; boon/boon-colemak-hnei.el -*- lexical-binding: t; -*-
+
+;;; Commentary:
+;;; Boon-colemak remapped to be more Vim-like.
+;;; Only the six of the eight movement keys (all except 'l' and ';') have been changed:
+;;; 'u' = move backward by sentence
+;;; 'y' = move forward by sentence
+;;; 'H' = move backward smarter (by word, element, etc.)
+;;; 'h' = move backward by character
+;;; 'N' = move faster down (forward-paragraph)
+;;; 'n' = move down by line (next-line)
+;;; 'e' = move up by line (previous-line)
+;;; 'E' = move faster up (backward-paragraph)
+;;; 'i' = move forward by character
+;;; 'I' = move forward smarter (by word, element, etc.)
+;;; In addition, the move commands mapped to h/H have been moved to o/O.
+
+;;; Code:
 (require 'boon-colemak)
 
 (define-key boon-moves-map "l"  '("⇤" . boon-beginning-of-line))
