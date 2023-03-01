@@ -2,7 +2,7 @@
 
 ;;; Commentary:
 ;;; Boon-qwerty remapped to be more Vim-like.
-;;; Only the six of the eight movement keys (all except 'u' and 'p') have been changed:
+;;; Six of the eight movement keys (all except 'u' and 'p') have been changed:
 ;;; 'i' = move backward by sentence
 ;;; 'o' = move forward by sentence
 ;;; 'H' = move backward smarter (by word, element, etc.)

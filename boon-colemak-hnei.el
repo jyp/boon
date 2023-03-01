@@ -2,7 +2,7 @@
 
 ;;; Commentary:
 ;;; Boon-colemak remapped to be more Vim-like.
-;;; Only the six of the eight movement keys (all except 'l' and ';') have been changed:
+;;; Six of the eight movement keys (all except 'l' and ';') have been changed:
 ;;; 'u' = move backward by sentence
 ;;; 'y' = move forward by sentence
 ;;; 'H' = move backward smarter (by word, element, etc.)
