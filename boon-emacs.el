@@ -112,6 +112,8 @@
 (define-key boon-command-map "q" '("quit" . quit-window))
 (define-key boon-command-map "^" 'delete-indentation)
 (define-key boon-command-map "\\" 'indent-region)
+(define-key boon-command-map "v" 'scroll-up-command)
+(define-key boon-command-map "V" 'scroll-down-command)
 
 (define-key indent-rigidly-map "k" 'indent-rigidly-right)
 (define-key indent-rigidly-map "l" 'indent-rigidly-left)
