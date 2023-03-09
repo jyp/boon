@@ -54,7 +54,7 @@
 (define-key boon-select-map "T" 'boon-select-org-tree)
 (define-key boon-select-map "G" 'boon-select-org-table-cell)
 
-(define-key boon-moves-map "x" 'boon-switch-mark)
+(define-key boon-moves-map "@" 'boon-switch-mark)
 (define-key boon-moves-map "p" '("previous" . previous-line))
 (define-key boon-moves-map "n" '("next" . next-line))
 (define-key boon-moves-map "{" 'backward-paragraph)
