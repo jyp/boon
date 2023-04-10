@@ -27,10 +27,11 @@
         (?c . ("{-" "-}"))
         (?l . ("⦇" "⦈")) ;; lenses
         (?d . ("\"" "\"")) ;; double quotes
-        (?D . ("``" "''")) ;; Double quotes
+        (?D . ("``" "''")) ;; Double quotes in latex style
         (?f . ("«" "»")) ;; french quotes (or, more precisely, Russian quotes)
+        (?F . ("‹" "›")) ;; single variation of the above
         (?h . ("#" "#")) ;; hash
-        (?s . ("`" "'")) ;; symbol
+        (?s . ("`" "'")) ;; (emacs) Symbol 
         (?m . ("\\(" "\\)")) ;; Math
         (?M . ("\\[" "\\]")) ;; display Math
         (?o . ("⟦" "⟧")) ;; oxford brackets
@@ -40,6 +41,8 @@
         (?r . ("{" "}")) ;; bRaces
         (?R . ("⦃" "⦄")) ;; thick bRaces
         (?t . ("~" "~")) ;; tilda
+        (?u . ("‘" "’")) ;; "unicode"
+        (?U . ("“" "”")) ;; "unicode double"
         )
         "Enclosures to use with the `boon-enclose' command."
         :type '(alist :key-type character :value-type (group (string :tag "Open ") (string :tag "Close")))
