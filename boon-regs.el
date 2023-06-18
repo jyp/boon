@@ -40,8 +40,8 @@ The size of the borders is HOW-MUCH."
         (boon-mk-reg (boon-reg-begin reg) (+ (boon-reg-begin reg) how-much) (boon-reg-cursor reg))))
 
 (defun boon-include-surround-spaces (reg)
-  "Return REG, extended to include spaces around 'boon-reg-point'.
-The spaces are searched after 'boon-regpoint' if the region is
+  "Return REG, extended to include spaces around `boon-reg-point'.
+The spaces are searched after `boon-regpoint' if the region is
 directed forward, or or before, if the region is backwards."
   (save-excursion
     (let* ((mk (boon-reg-mark  reg))

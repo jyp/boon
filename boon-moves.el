@@ -67,7 +67,8 @@
 
 ;;;###autoload
 (defun boon-smarter-downward (count)
-  "Move downward, to a line with the same level of indentation or less, COUNT times."
+  "Move downward, to a line with the same level of indentation or less.
+Do so COUNT times."
   (interactive "p")
   (back-to-indentation)
   (dotimes (_number count)
@@ -228,8 +229,8 @@ line."
 ;;;###autoload
 (defun boon-switch-mark-quick ()
   "Pop the mark ring until we find ourselves on a different line."
-  (interactive)
   (declare (obsolete "annoying" "20160901"))
+  (interactive)
   (let ((orig-line (line-number-at-pos)))
     (while (> 1 (abs (- orig-line (line-number-at-pos))))
       (goto-char (mark))
