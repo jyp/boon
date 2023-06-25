@@ -12,11 +12,11 @@
 (defun boon-cur-pattern ()
   (car boon-hl-patterns))
               
-(defun boon-qsearch (forward)
-  "Search the `boon-cur-pattern'.
-Do so in the direction specified (as FORWARD).  Point is set at
-the beginning of the match."
-  (if-let ((pattern (boon-cur-pattern)))
+(defun boon-qsearch (forward &optional pattern)
+  "Search for PATTERN in the direction specified (as FORWARD).
+Point is set at the beginning of the match. If pattern is nil,
+then `boon-cur-pattern' is searched."
+  (if-let ((pattern (or pattern (boon-cur-pattern))))
       (setq isearch-success
             (save-excursion
           (goto-char (if forward (1+ (point)) (1- (point))))
@@ -31,16 +31,16 @@ the beginning of the match."
   (when isearch-success (goto-char (match-beginning 0))))
 
 ;;;###autoload
-(defun boon-qsearch-next ()
+(defun boon-qsearch-next (&optional pattern)
   "Search the next occurence of the current search regexp."
   (interactive)
-  (boon-qsearch t))
+  (boon-qsearch t pattern))
 
 ;;;###autoload
-(defun boon-qsearch-previous ()
+(defun boon-qsearch-previous (&optional pattern)
   "Search the previous occurence of the current search regexp."
   (interactive)
-  (boon-qsearch nil))
+  (boon-qsearch nil pattern))
 
 ;;;###autoload
 (defun boon-qsearch-next-at-point ()
