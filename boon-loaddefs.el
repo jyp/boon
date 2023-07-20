@@ -12,10 +12,10 @@
  (autoload 'boon-mode "boon" "Toggle boon in all buffers" t)
 
 (autoload 'turn-on-boon-mode "boon-core" "\
-Turn on Boon in the current buffer." t nil)
+Turn on Boon in the current buffer." t)
 
 (autoload 'turn-off-boon-mode "boon-core" "\
-Turn off Boon in the current buffer." t nil)
+Turn off Boon in the current buffer." t)
 
 (register-definition-prefixes "boon-core" '("boon"))
 
@@ -32,27 +32,38 @@ or prompt if universal argument is non-nil.  If REGEXP contains
 upper case characters (excluding those preceded by `\\') and
 `search-upper-case' is non-nil, the matching is case-sensitive.
 
-\(fn REGEXP &optional FACE)" t nil)
+\(fn REGEXP &optional FACE)" t)
 
 (autoload 'boon-hl-symbol "boon-hl" "\
 `book-hi-lock-regexp' (regexp-quote STRING) FACE.
 Additionally, do not mess with case-fold.
 
-\(fn STRING &optional FACE)" t nil)
+\(fn STRING &optional FACE)" t)
 
 (autoload 'boon-hl-remove "boon-hl" "\
 Remove PATTERN highlight.
 
-\(fn PATTERN)" t nil)
+\(fn PATTERN)" t)
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "boon-hl" '("boon-")))
+(autoload 'boon-hl-search "boon-hl" "\
+Search for PATTERN up to LIMIT.
+Search backward if DIRECTION is non-nil.
+
+\(fn PATTERN &optional DIRECTION LIMIT)")
+
+(autoload 'boon-hl-search-backward "boon-hl" "\
+Search for PATTERN up to LIMIT backward.
+
+\(fn PATTERN &optional LIMIT)")
+
+(register-definition-prefixes "boon-hl" '("boon-"))
 
 ;;;***
 
 ;;;### (autoloads nil "boon-keys" "boon-keys.el" (0 0 0 0))
 ;;; Generated autoloads from boon-keys.el
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "boon-keys" '("boon-quit-key")))
+(register-definition-prefixes "boon-keys" '("boon-quit-key"))
 
 ;;;***
 
@@ -63,137 +74,137 @@ Remove PATTERN highlight.
 Switch to special or insert state, depending on mode.
 When CHANGES are non-nil, replay those instead.
 
-\(fn &optional CHANGES)" t nil)
+\(fn &optional CHANGES)" t)
 
 (autoload 'boon-insert "boon-main" "\
 Switch to insert state.
 When CHANGES are non-nil, replay those instead.
 
-\(fn &optional CHANGES)" t nil)
+\(fn &optional CHANGES)" t)
 
 (autoload 'boon-repeat-command "boon-main" "\
 Repeat the most recent command in the history, COUNT times.
 
-\(fn COUNT)" t nil)
+\(fn COUNT)" t)
 
 (autoload 'boon-deactivate-mark "boon-main" "\
-Deactivate the mark robustly." nil nil)
+Deactivate the mark robustly.")
 
 (autoload 'boon-drop-mark "boon-main" "\
-Drop or deactivate the mark." t nil)
+Drop or deactivate the mark." t)
 
 (autoload 'boon-enclose "boon-main" "\
 Wrap with the given ENCLOSURE the regions given as REGS.
 
-\(fn ENCLOSURE REGS)" t nil)
+\(fn ENCLOSURE REGS)" t)
 
 (autoload 'boon-delete-region "boon-main" "\
-Delete the region if it is active." nil nil)
+Delete the region if it is active.")
 
 (autoload 'boon-insert-register "boon-main" "\
-Insert register, replacing the region if it is active." nil nil)
+Insert register, replacing the region if it is active.")
 
 (autoload 'boon-copy-to-register "boon-main" "\
-Copy to register and deactivate mark." t nil)
+Copy to register and deactivate mark." t)
 
 (autoload 'boon-splice "boon-main" "\
 Yank NUMBER-OF-COPIES times, replacing the region if it is active.
 When repeated, fix the spacing if necessary.
 
-\(fn NUMBER-OF-COPIES)" t nil)
+\(fn NUMBER-OF-COPIES)" t)
 
 (autoload 'boon-need-space "boon-main" "\
-Is it necessary to insert a space here to separate words or expressions?" nil nil)
+Is it necessary to insert a space here to separate words or expressions?")
 
 (autoload 'boon-fix-a-space "boon-main" "\
 Fix the text to have the right amout of spacing at the point.
-Return nil if no changes are made, t otherwise." t nil)
+Return nil if no changes are made, t otherwise." t)
 
 (autoload 'boon-splice-fix-spaces "boon-main" "\
 Yank, replacing the region if it is active.
 Fix the surroundings so that they become nicely spaced.
-Return nil if no changes are made." t nil)
+Return nil if no changes are made." t)
 
 (autoload 'boon-toggle-character-case "boon-main" "\
-Toggle the case of the character at point." t nil)
+Toggle the case of the character at point." t)
 
 (autoload 'boon-toggle-case "boon-main" "\
-Toggle the case of the character at point, or cycle the case of the region if it is active." t nil)
+Toggle the case of the character at point, or cycle the case of the region if it is active." t)
 
 (autoload 'boon-toggle-region-case "boon-main" "\
 Cycle regions through 3 capitalizations: UPPER CASE, lower case, Title Case.
 Regions are given by  REGS.
 
-\(fn REGS)" t nil)
+\(fn REGS)" t)
 
 (autoload 'boon-toggle-mark "boon-main" "\
-Toggle region activation." t nil)
+Toggle region activation." t)
 
 (autoload 'boon-open-line-and-insert "boon-main" "\
-Open a new line, indented as much as the current one, and switch to insert mode." t nil)
+Open a new line, indented as much as the current one, and switch to insert mode." t)
 
 (autoload 'boon-open-next-line-and-insert "boon-main" "\
-Open the line after the current one." t nil)
+Open the line after the current one." t)
 
 (autoload 'boon-open-line "boon-main" "\
-Open the line before the current one." t nil)
+Open the line before the current one." t)
 
 (autoload 'boon-split-line "boon-main" "\
-Split the current line." t nil)
+Split the current line." t)
 
 (autoload 'boon-newline-dwim "boon-main" "\
-Insert a new line do-what-i-mean style." t nil)
+Insert a new line do-what-i-mean style." t)
 
 (autoload 'boon-lay-multiple-cursors "boon-main" "\
 Create multiple cursor regions.
 This is done by calling PLACE-CURSOR for each element of REGS.
 If there is more than one, use mc/create-fake-cursor-at-point.
 
-\(fn PLACE-CURSOR REGS)" nil nil)
+\(fn PLACE-CURSOR REGS)")
 
 (autoload 'boon-mark-region "boon-main" "\
 Mark the regions REGS.
 
-\(fn REGS)" t nil)
+\(fn REGS)" t)
+
+(autoload 'boon-exchange "boon-main" "\
+
+
+\(fn REGS)" t)
 
 (autoload 'boon-take-region "boon-main" "\
 Kill the region given as selector REGS.
 
-\(fn REGS)" t nil)
+\(fn REGS)" t)
 
 (autoload 'boon-treasure-region "boon-main" "\
 Copy (kill-ring-save) the regions REGS.
 
-\(fn REGS)" t nil)
+\(fn REGS)" t)
 
 (autoload 'boon-substitute-region "boon-main" "\
 Kill the regions REGS, and switch to insertion mode or replay CHANGES.
 
-\(fn REG-SEL &optional CHANGES)" t nil)
+\(fn REG-SEL &optional CHANGES)" t)
 
 (autoload 'boon-replace-by-character "boon-main" "\
 Replace the character at point by the REPLACEMENT character.
 Replace the region if it is active.
 
-\(fn REPLACEMENT)" t nil)
+\(fn REPLACEMENT)" t)
 
 (autoload 'boon-quote-character "boon-main" "\
 Execute the command which were bound to the character CHAR if boon was not enabled.
 
-\(fn CHAR)" t nil)
+\(fn CHAR)" t)
 
 (autoload 'boon-unhighlight "boon-main" "\
 Pop N highlighted patterns, by calling `boon-hl-remove'.
 
-\(fn &optional N)" t nil)
+\(fn &optional N)" t)
 
 (autoload 'boon-quit "boon-main" "\
-Exit the current modes we're in until no special state is remaining." t nil)
-
-(autoload 'boon-god-control-swap "boon-main" "\
-Swap the control 'bit' in EVENT, unless C-c <event> is a prefix reserved for modes.
-
-\(fn EVENT)" t nil)
+Exit the current modes we're in until no special state is remaining." t)
 
 (autoload 'boon-c-god "boon-main" "\
 Input a key sequence, prepending C- to each key (unless such
@@ -201,23 +212,23 @@ key is already reserved for minor mode, see
 `boon-god-control-swap'), and run the command bound to that
 sequence.
 
-\(fn ARG)" t nil)
+\(fn ARG)" t)
 
 (autoload 'boon-adjust-indent "boon-main" "\
-Adjust indentation of the region or current line." t nil)
+Adjust indentation of the region or current line." t)
 
 (autoload 'boon-query-replace "boon-main" "\
-Query replace; but if the region is active, replace its contents." t nil)
+Query replace; but if the region is active, replace its contents." t)
 
 (autoload 'boon-toggle-comment "boon-main" "\
 Toggle comments in the regions REGS.
 
-\(fn REGS)" t nil)
+\(fn REGS)" t)
 
 (autoload 'boon-narrow "boon-main" "\
 Narrow to the first region of REGS.
 
-\(fn REGS)" t nil)
+\(fn REGS)" t)
 
 (register-definition-prefixes "boon-main" '("boon-"))
 
@@ -311,29 +322,39 @@ Pop the mark ring until we find ourselves on a different line." t nil)
 ;;; Generated autoloads from boon-search.el
 
 (autoload 'boon-qsearch-next "boon-search" "\
-Search the next occurence of the current search regexp." t nil)
+Search the next occurence of the current search regexp." t)
 
 (autoload 'boon-qsearch-previous "boon-search" "\
-Search the previous occurence of the current search regexp." t nil)
+Search the previous occurence of the current search regexp." t)
 
 (autoload 'boon-qsearch-next-at-point "boon-search" "\
-Search the next occurence of the current string at point and select the match." t nil)
+Search the next occurence of the current string at point and select the match." t)
 
 (autoload 'boon-qsearch-previous-at-point "boon-search" "\
-Search the previous occurence of the current string at point and select the match." t nil)
+Search the previous occurence of the current string at point and select the match." t)
 
 (autoload 'boon-navigate "boon-search" "\
 Go to the next item of interest, FORWARD or backwards.
 
-\(fn FORWARD)" nil nil)
+\(fn FORWARD)")
 
 (autoload 'boon-navigate-forward "boon-search" "\
-Go to the next item of interest." t nil)
+Go to the next item of interest." t)
 
 (autoload 'boon-navigate-backward "boon-search" "\
-Go to the next item of interest." t nil)
+Go to the next item of interest." t)
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "boon-search" '("boon-")))
+(autoload 'boon-search-char-forward "boon-search" "\
+
+
+\(fn COUNT CHAR)" t)
+
+(autoload 'boon-search-char-backward "boon-search" "\
+
+
+\(fn COUNT CHAR)" t)
+
+(register-definition-prefixes "boon-search" '("boon-"))
 
 ;;;***
 
@@ -343,22 +364,22 @@ Go to the next item of interest." t nil)
 (autoload 'boon-keymap-rev-look "boon-tutorial" "\
 Return an event yielding SUB from the keymap MAP.
 
-\(fn SUB MAP)" nil nil)
+\(fn SUB MAP)")
 
 (autoload 'boon-gen-key "boon-tutorial" "\
 Generate a suitable tutorial string to refer to command KEY.
 
-\(fn KEY)" t nil)
+\(fn KEY)" t)
 
 (autoload 'boon-gen-sel-key "boon-tutorial" "\
 Generate a suitable tutorial string to refer to selection KEY.
 
-\(fn KEY)" t nil)
+\(fn KEY)" t)
 
 (autoload 'boon-tutorial "boon-tutorial" "\
-Open a buffer with boon tutorial." t nil)
+Open a buffer with boon tutorial." t)
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "boon-tutorial" '("boon-")))
+(register-definition-prefixes "boon-tutorial" '("boon-"))
 
 ;;;***
 
@@ -369,9 +390,10 @@ Open a buffer with boon tutorial." t nil)
 
 ;;;***
 
-;;;### (autoloads nil nil ("boon-colemak.el" "boon-dvorak.el" "boon-emacs.el"
-;;;;;;  "boon-pkg.el" "boon-qwerty.el" "boon-qwertz.el" "boon-spaceline.el"
-;;;;;;  "boon-test.el" "boon-workman.el" "boon.el") (0 0 0 0))
+;;;### (autoloads nil nil ("boon-colemak-hnei.el" "boon-colemak.el"
+;;;;;;  "boon-dvorak.el" "boon-emacs.el" "boon-pkg.el" "boon-qwerty-hjkl.el"
+;;;;;;  "boon-qwerty.el" "boon-qwertz.el" "boon-spaceline.el" "boon-test.el"
+;;;;;;  "boon-workman.el" "boon.el") (0 0 0 0))
 
 ;;;***
 

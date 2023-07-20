@@ -72,11 +72,13 @@ Face names from this list come from `boon-hl-face-defaults'.")
         (delete pattern boon-hl-patterns))
   (font-lock-flush))
 
+;;;###autoload
 (defun boon-hl-search (pattern &optional direction limit)
   "Search for PATTERN up to LIMIT.
 Search backward if DIRECTION is non-nil."
   (funcall (car (plist-get (cdr pattern) :kw)) limit direction))
 
+;;;###autoload
 (defun boon-hl-search-backward (pattern &optional limit)
   "Search for PATTERN up to LIMIT backward."
   (boon-hl-search pattern t limit))
