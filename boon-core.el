@@ -279,19 +279,20 @@ When leaving insert state the input-method is reset to nil.")
   :lighter (:eval (boon-modeline-string))
   :keymap nil
   (if (not boon-local-mode)
-      (boon-set-state 'boon-off-state)
+      (progn
+        (remove-hook 'after-change-functions #'boon/after-change-hook)
+        (boon-set-state 'boon-off-state))
     (setq boon-mode-map-alist
           (list (cons 'boon-command-state (or (get major-mode 'boon-map) boon-command-map))
                 (cons 'boon-special-state (or (get major-mode 'boon-special-map) boon-special-map))
                 (cons 'boon-insert-state  (or (get major-mode 'boon-insert-map) boon-insert-map))))
-    (unless (memq 'boon/after-change-hook after-change-functions)
-      (push 'boon/after-change-hook after-change-functions))
+    (add-hook 'after-change-functions #'boon/after-change-hook nil t)
     (boon-set-natural-state)))
 
 (add-hook 'minibuffer-setup-hook 'boon-minibuf-hook)
 
 (defun boon-minibuf-hook ()
-  "Set the cursor type to 'bar'.
+  "Set the cursor type to `bar'.
 This is because no command mode is activated in the minibuffer."
   (setq cursor-type 'bar))
 
