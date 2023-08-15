@@ -66,6 +66,8 @@
 (define-key boon-command-map "`" 'boon-toggle-case)
 (define-key boon-moves-map "[" '("[-" . boon-navigate-backward))
 (define-key boon-moves-map "]" '("-]" . boon-navigate-forward))
+(define-key boon-moves-map "(" 'boon-find-char-backward)
+(define-key boon-moves-map ")" 'boon-find-char-forward)
 
 (define-key boon-command-map "!" 'shell-command)
 (define-key boon-command-map "|" 'shell-command-on-region)
