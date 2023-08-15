@@ -65,9 +65,7 @@ those.  See `boon-special-map' for exceptions.")
 (defcustom boon-insert-cursor-type 'bar "`cursor-type' for insert mode." :group 'boon :type 'sexp)
 (defcustom boon-special-cursor-type 'box "`cursor-type' for special mode." :group 'boon :type 'sexp)
 
-(defcustom
-  boon-default-cursor-color
-  nil
+(defcustom boon-default-cursor-color nil
   "Default `cursor-color', also used for the minibuffer.
 
 If you want to use different cursor colors in Boon, setting this
@@ -76,23 +74,20 @@ of `boon-command-cursor-color', `boon-insert-cursor-color' and
 `boon-special-cursor-color' to your liking."
   :group 'boon
   :type 'string)
-(defcustom
-  boon-command-cursor-color
-  nil
+
+(defcustom boon-command-cursor-color nil
   "`cursor-color' for command mode.
 `boon-default-cursor-color' must also be set."
   :group 'boon
   :type 'string)
-(defcustom
-  boon-insert-cursor-color
-  nil
+
+(defcustom boon-insert-cursor-color nil
   "`cursor-color' for insert mode.
 `boon-default-cursor-color' must also be set."
   :group 'boon
   :type 'string)
-(defcustom
-  boon-special-cursor-color
-  nil
+
+(defcustom boon-special-cursor-color nil
   "`cursor-color' for special mode.
 `boon-default-cursor-color' must also be set."
   :group 'boon
