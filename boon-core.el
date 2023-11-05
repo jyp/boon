@@ -373,9 +373,10 @@ the buffer changes."
 ;; surprising to the user when coming back to it).
 (defun boon-reset-state-for-switchw (new-frame)
   "Reset the boon state to natural when switching windows."
-  (let* ((old (old-selected-window))
-         (prev-buf (window-buffer old)))
-    (with-current-buffer prev-buf
+  (-when-let* ((old-frame-or-window (old-selected-window))  ; `old-selected-window' sometimes (surprisingly) returns a frame.
+               (old-window (and (windowp old-frame-or-window) old-frame-or-window))
+               (old-buffer (window-buffer old-window)))
+    (with-current-buffer old-buffer
       (boon-set-natural-state))))
 
 (add-hook 'window-selection-change-functions #'boon-reset-state-for-switchw)
