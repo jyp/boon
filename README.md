@@ -294,7 +294,7 @@ alternative was Evil.)
   modal cannot. Additionally it also suffers from having a single
   non-insertion state.
 
-- God-mode https://github.com/chrisdone/god-mode
+- God-mode https://github.com/emacsorphanage/god-mode
 
   God-mode is similar to "sticky modifier keys" in principle. Its
   simplicity allows to quickly get up to speed with it. However, it
