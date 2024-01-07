@@ -91,9 +91,10 @@ Search backward if DIRECTION is non-nil."
 
 
 (defun boon--faces-property (pos)
-  ""
-  (let ((x (get-text-property pos 'face)))
-    (if (listp x) x (list x))))
+  "Return the face properties at POS"
+  (and (> pos 0)
+       (let ((x (get-text-property pos 'face)))
+         (if (listp x) x (list x)))))
 
 (defun boon-hl-patterns-at-point ()
   "List of hl'ed patterns at point."
