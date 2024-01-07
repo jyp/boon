@@ -54,7 +54,7 @@
 (define-key boon-select-map "T" 'boon-select-org-tree)
 (define-key boon-select-map "G" 'boon-select-org-table-cell)
 
-(define-key boon-moves-map "x" 'boon-switch-mark)
+(define-key boon-moves-map "@" 'boon-switch-mark)
 (define-key boon-moves-map "p" '("previous" . previous-line))
 (define-key boon-moves-map "n" '("next" . next-line))
 (define-key boon-moves-map "{" 'backward-paragraph)
@@ -110,6 +110,10 @@
 (define-key boon-command-map "?" 'describe-mode)
 (define-key boon-command-map "h" 'describe-mode)
 (define-key boon-command-map "q" '("quit" . quit-window))
+(define-key boon-command-map "^" 'delete-indentation)
+(define-key boon-command-map "\\" 'indent-region)
+(define-key boon-command-map "v" 'scroll-up-command)
+(define-key boon-command-map "V" 'scroll-down-command)
 
 (define-key indent-rigidly-map "k" 'indent-rigidly-right)
 (define-key indent-rigidly-map "l" 'indent-rigidly-left)
