@@ -368,16 +368,18 @@ the buffer changes."
                   boon-toggle-character-case
                   boon-toggle-case))))
 
-;; When switching away from a window (for example by clicking in
-;; another window), return the buffer hosting it to its "natural"
-;; state (otherwise it's surprising to the user when coming back to it)
-(add-hook 'window-selection-change-functions
-          (defun boon-reset-state-for-switchw (window)
-            "Reset the boon state to natural when switching windows."
-            (let* ((old (old-selected-window))
-                   (prev-buf (window-buffer old)))
-              (with-current-buffer prev-buf
-                (boon-set-natural-state)))))
+;; When switching away from a window (for example by clicking in another
+;; window), return the buffer hosting it to its "natural" state (otherwise it's
+;; surprising to the user when coming back to it).
+(defun boon-reset-state-for-switchw (new-frame)
+  "Reset the boon state to natural when switching windows."
+  (-when-let* ((old-frame-or-window (old-selected-window))  ; `old-selected-window' sometimes (surprisingly) returns a frame.
+               (old-window (and (windowp old-frame-or-window) old-frame-or-window))
+               (old-buffer (window-buffer old-window)))
+    (with-current-buffer old-buffer
+      (boon-set-natural-state))))
+
+(add-hook 'window-selection-change-functions #'boon-reset-state-for-switchw)
 
 (defadvice isearch-exit (after boon-isearch-set-search activate compile)
   "After isearch, highlight the search term."
