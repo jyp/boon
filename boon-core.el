@@ -328,6 +328,19 @@ the buffer changes."
    (boon-special-state "SPC")
    (t "???")))
 
+(defface boon-modeline-cmd '((((background light)) :background "dodger blue") (((background dark)) :background "blue")) "Face for modeline indicator of boon command state" :group 'boon)
+(defface boon-modeline-ins '((((background light)) :background "indian red") (((background dark)) :background "red")) "Face for modeline indicator of boon insert state" :group 'boon)
+(defface boon-modeline-off '((t (:background "orange"))) "Face for modeline indicator of boon off state" :group 'boon)
+(defface boon-modeline-spc '((((background light)) :background "spring green") (((background dark)) :background "dark green")) "Face for modeline indicator of boon special state" :group 'boon)
+
+(defun boon-state-face ()
+  "Return a face appropriate for a powerline-style entry in the modeline."
+  (cond
+   (boon-command-state 'boon-modeline-cmd)
+   (boon-insert-state 'boon-modeline-ins)
+   (boon-special-state 'boon-modeline-spc)
+   (t 'boon-modeline-off)))
+
 (with-eval-after-load 'multiple-cursors
   (defvar mc--default-cmds-to-run-for-all)
   (defvar mc--default-cmds-to-run-once)
