@@ -341,7 +341,7 @@ cursor), you get a region for each cursor."
   "Non nil if the last selection was made by a move, nil otherwise.
 When killing, if a selection is made by a move, it makes sense to
 aggregate the region in the killring, but not so if it was made
-by a 'true' selector.")
+by a \"true\" selector.")
 
 (defun boon-spec-selector (msg)
   "Specify a region selector concisely using the keyboard.
