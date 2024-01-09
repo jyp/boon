@@ -156,7 +156,9 @@ Return nil if no changes are made."
 
 ;;;###autoload
 (defun boon-toggle-case ()
-  "Toggle the case of the character at point, or cycle the case of the region if it is active."
+  "Toggle the case.
+Cycle the case of the region if it is active.  If not toggle the
+case of the character at point."
   (interactive)
   (if (use-region-p)
       (call-interactively 'boon-toggle-region-case)
@@ -287,6 +289,7 @@ If there is more than one, use mc/create-fake-cursor-at-point."
 
 ;;;###autoload
 (defun boon-exchange (regs)
+  "WIP"
   (interactive (list (boon-spec-select-top "exchange")))
   (let ((last-command nil)) ;; we never want to append to the last kill here
     (boon-take-region regs)) 
@@ -334,7 +337,7 @@ If there is more than one, use mc/create-fake-cursor-at-point."
 
 ;;;###autoload
 (defun boon-substitute-region (reg-sel &optional changes)
-  "Kill the regions REGS, and switch to insertion mode or replay CHANGES."
+  "Kill the regions REG-SEL, and switch to insertion mode or replay CHANGES."
   (interactive (list (boon-spec-select-top "replace")))
   (boon-interactive-insert reg-sel)
   
@@ -366,7 +369,8 @@ Replace the region if it is active."
 
 ;;;###autoload
 (defun boon-quote-character (char)
-  "Execute the command which were bound to the character CHAR if boon was not enabled."
+  "Execute the command which would bound to the character CHAR.
+\(If boon was not enabled.\)"
   (interactive (list (read-char))) ;; use read-char so that multiple-cursors advice kicks in.
   (let* ((keymap (make-composed-keymap
                   (let ((boon-mode-map-alist nil)) (current-active-maps))))
@@ -410,12 +414,13 @@ Replace the region if it is active."
     (keyboard-quit))))
 
 (defun boon-god-control-swap (event)
-  "Swap the control 'bit' in EVENT, unless C-c <event> is a prefix reserved for modes."
+  "Swap the control \"bit\" in EVENT.
+Act as identity function if C-c <event> is a prefix reserved for modes."
   (interactive (list (read-key)))
   (cond
    ((memq event '(9 13 ?{ ?} ?\[ ?\] ?$ ?& ?= ?< ?> ?: ?\; ?/ ?? ?. ?, ?' ?` ?\" )) event)
    ((<= event 27) (+ 96 event))
-   ((not (eq 0 (logand (lsh 1 26) event))) (logxor (lsh 1 26) event))
+   ((not (eq 0 (logand (ash 1 26) event))) (logxor (ash 1 26) event))
    (t (list 'control event))))
 
 ;;;###autoload
@@ -423,7 +428,8 @@ Replace the region if it is active."
   "Input a key sequence, prepending C- to each key (unless such
 key is already reserved for minor mode, see
 `boon-god-control-swap'), and run the command bound to that
-sequence."
+sequence.  The universal argument ARG is forwarded to the
+inputted command."
   (interactive "P")
   (let ((keys '((control c)))
         (binding (key-binding (kbd "C-c")))
