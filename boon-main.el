@@ -289,14 +289,19 @@ If there is more than one, use mc/create-fake-cursor-at-point."
 
 ;;;###autoload
 (defun boon-exchange (regs)
-  "WIP"
+  "Exchange the REGS contents with the last kill.
+Do so at the position of the last kill, according to `mark-ring'."
   (interactive (list (boon-spec-select-top "exchange")))
-  (let ((last-command nil)) ;; we never want to append to the last kill here
-    (boon-take-region regs)) 
-  (insert-for-yank (nth 1 kill-ring))
-  (save-excursion
-    (goto-char (nth 0 mark-ring))
-    (insert-for-yank (nth 0 kill-ring))))
+  (let ((regp (use-region-p)))
+    (let ((last-command nil)) ;; we never want to append to the last kill here
+      (boon-take-region regs))
+    (when regp
+      ;; if the region is active then we pushed another mark which must be ignored.
+      (pop mark-ring))
+    (insert-for-yank (nth 1 kill-ring))
+    (save-excursion
+      (goto-char (nth 0 mark-ring))
+      (insert-for-yank (nth 0 kill-ring)))))
 
 ;;;###autoload
 (defun boon-take-region (regs)
