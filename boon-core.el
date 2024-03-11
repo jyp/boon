@@ -327,10 +327,10 @@ the buffer changes."
    (boon-special-state "SPC")
    (t "???")))
 
-(defface boon-modeline-cmd '((((background light)) :background "dodger blue") (((background dark)) :background "blue")) "Face for modeline indicator of boon command state" :group 'boon)
-(defface boon-modeline-ins '((((background light)) :background "indian red") (((background dark)) :background "red")) "Face for modeline indicator of boon insert state" :group 'boon)
-(defface boon-modeline-off '((t (:background "orange"))) "Face for modeline indicator of boon off state" :group 'boon)
-(defface boon-modeline-spc '((((background light)) :background "spring green") (((background dark)) :background "dark green")) "Face for modeline indicator of boon special state" :group 'boon)
+(defface boon-modeline-cmd '((((background light)) :background "dodger blue") (((background dark)) :background "blue")) "Face for modeline indicator of boon command state." :group 'boon)
+(defface boon-modeline-ins '((((background light)) :background "indian red") (((background dark)) :background "red")) "Face for modeline indicator of boon insert state." :group 'boon)
+(defface boon-modeline-off '((t (:background "orange"))) "Face for modeline indicator of boon off state." :group 'boon)
+(defface boon-modeline-spc '((((background light)) :background "spring green") (((background dark)) :background "dark green")) "Face for modeline indicator of boon special state." :group 'boon)
 
 (defun boon-state-face ()
   "Return a face appropriate for a powerline-style entry in the modeline."
@@ -383,8 +383,8 @@ the buffer changes."
 ;; When switching away from a window (for example by clicking in another
 ;; window), return the buffer hosting it to its "natural" state (otherwise it's
 ;; surprising to the user when coming back to it).
-(defun boon-reset-state-for-switchw (new-frame)
-  "Reset the boon state to natural when switching windows."
+(defun boon-reset-state-for-switchw (_new-frame)
+  "Reset the boon state to command when switching windows."
   (-when-let* ((old-frame-or-window (old-selected-window))  ; `old-selected-window' sometimes (surprisingly) returns a frame.
                (old-window (and (windowp old-frame-or-window) old-frame-or-window))
                (old-buffer (window-buffer old-window)))
