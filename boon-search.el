@@ -81,18 +81,17 @@ then `boon-cur-pattern' is searched."
   (boon-navigate nil))
 
 ;;;###autoload
-(defun boon-search-char-forward (count char)
+(defun boon-search-char-forward (count)
   ""
-  (interactive "pc")
-  (mc/execute-command-for-all-fake-cursors
-   (lambda () (interactive)
-     (search-forward (string char) (line-end-position) nil count))))
+  (interactive "p")
+  (let ((char (read-char)))
+       (search-forward (string char) (line-end-position) nil count)))
 
 ;;;###autoload
-(defun boon-search-char-backward (count char)
+(defun boon-search-char-backward (count)
   ""
-  (interactive "pc")
-  (boon-search-char-forward (if count (- count) (- 1)) char))
+  (interactive "p")
+  (boon-search-char-forward (if count (- count) (- 1))))
 
 
 (provide 'boon-search)
