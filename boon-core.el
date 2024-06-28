@@ -27,7 +27,8 @@
 
 (defvar boon-command-map (let ((map (make-sparse-keymap)))
                            (suppress-keymap map 't)
-                           (set-keymap-parent map boon-moves-map))
+                           (set-keymap-parent map boon-moves-map)
+                           map)
   "Keymap used in Boon command mode.
 \\{boon-command-map}")
 
