@@ -394,12 +394,13 @@ the buffer changes."
 
 (add-hook 'window-selection-change-functions #'boon-reset-state-for-switchw)
 
-(defadvice isearch-exit (after boon-isearch-set-search activate compile)
+(declare-function boon-hl-regexp (regexp &optional face))
+(define-advice isearch-exit (:after () boon-set-search)
   "After isearch, highlight the search term."
   (boon-hl-regexp (if isearch-regexp isearch-string (regexp-quote isearch-string))))
 
-(defadvice swiper--action (after boon-swiper-set-search activate compile)
-  "After swiper, highlight the search term."
+(define-advice  swiper--action (:after (_x) boon-set-search)
+  "After isearch, highlight the search term."
   (boon-hl-regexp (car regexp-search-ring)))
 
 (provide 'boon-core)
