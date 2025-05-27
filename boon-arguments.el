@@ -152,6 +152,8 @@ This item is either the symbol at point, or, if this fails, the sexp at point."
 (declare-function LaTeX-find-matching-begin "latex.el")
 (declare-function LaTeX-find-matching-end   "latex.el")
 (defun boon-select-LaTeX-env-command ()
+  "Selector of the enclosing environment name.
+There are two occurrences: one at begin and one at end."
   (interactive)
   (lambda ()
     (list
