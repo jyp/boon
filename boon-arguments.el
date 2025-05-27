@@ -31,7 +31,7 @@
         (?f . ("«" "»")) ;; french quotes (or, more precisely, Russian quotes)
         (?F . ("‹" "›")) ;; single variation of the above
         (?h . ("#" "#")) ;; hash
-        (?s . ("`" "'")) ;; (emacs) Symbol 
+        (?s . ("`" "'")) ;; (emacs) Symbol
         (?m . ("\\(" "\\)")) ;; Math
         (?M . ("\\[" "\\]")) ;; display Math
         (?o . ("⟦" "⟧")) ;; oxford brackets
@@ -56,7 +56,8 @@
     (if choice (cdr choice) (list s s))))
 
 (defun boon-select-from-region (select-fun)
-  "Return a region list with a single item: the region selected after calling SELECT-FUN (interactively)."
+  "Select the region selected after calling SELECT-FUN (interactively).
+A region list with a single item is returned."
   (lambda ()
     (save-mark-and-excursion
      (call-interactively select-fun)
@@ -193,7 +194,9 @@ This item is either the symbol at point, or, if this fails, the sexp at point."
     (boon-regs-from-bounds (cons (point) (nth (1- count) (cons (mark t) mark-ring))))))
     
 (defun boon-select-block ()
-  "Select the lines contiguous with the current line and have same indentation or more."
+  "Select a block.
+A block is defined as the lines contiguous with the current line and
+have same indentation or more."
   (interactive)
   (lambda ()
     (boon-regs-from-bounds
