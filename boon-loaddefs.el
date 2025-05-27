@@ -129,7 +129,9 @@ Return nil if no changes are made." t)
 Toggle the case of the character at point." t)
 
 (autoload 'boon-toggle-case "boon-main" "\
-Toggle the case of the character at point, or cycle the case of the region if it is active." t)
+Toggle the case.
+Cycle the case of the region if it is active.  If not toggle the
+case of the character at point." t)
 
 (autoload 'boon-toggle-region-case "boon-main" "\
 Cycle regions through 3 capitalizations: UPPER CASE, lower case, Title Case.
@@ -168,7 +170,8 @@ Mark the regions REGS.
 \(fn REGS)" t)
 
 (autoload 'boon-exchange "boon-main" "\
-
+Exchange the REGS contents with the last kill.
+Do so at the position of the last kill, according to `mark-ring'.
 
 \(fn REGS)" t)
 
@@ -183,7 +186,7 @@ Copy (kill-ring-save) the regions REGS.
 \(fn REGS)" t)
 
 (autoload 'boon-substitute-region "boon-main" "\
-Kill the regions REGS, and switch to insertion mode or replay CHANGES.
+Kill the regions REG-SEL, and switch to insertion mode or replay CHANGES.
 
 \(fn REG-SEL &optional CHANGES)" t)
 
@@ -194,7 +197,8 @@ Replace the region if it is active.
 \(fn REPLACEMENT)" t)
 
 (autoload 'boon-quote-character "boon-main" "\
-Execute the command which were bound to the character CHAR if boon was not enabled.
+Execute the command which would bound to the character CHAR.
+\(If boon was not enabled.)
 
 \(fn CHAR)" t)
 
@@ -210,7 +214,8 @@ Exit the current modes we're in until no special state is remaining." t)
 Input a key sequence, prepending C- to each key (unless such
 key is already reserved for minor mode, see
 `boon-god-control-swap'), and run the command bound to that
-sequence.
+sequence.  The universal argument ARG is forwarded to the
+inputted command.
 
 \(fn ARG)" t)
 
@@ -307,7 +312,7 @@ Pop the mark ring until we find ourselves on a different line." t nil)
 ;;;;;;  0))
 ;;; Generated autoloads from boon-powerline.el
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "boon-powerline" '("boon-")))
+(register-definition-prefixes "boon-powerline" '("boon-powerline-theme"))
 
 ;;;***
 
@@ -322,10 +327,14 @@ Pop the mark ring until we find ourselves on a different line." t nil)
 ;;; Generated autoloads from boon-search.el
 
 (autoload 'boon-qsearch-next "boon-search" "\
-Search the next occurence of the current search regexp." t)
+Search the next occurence of the current search regexp.
+
+\(fn &optional PATTERN)" t)
 
 (autoload 'boon-qsearch-previous "boon-search" "\
-Search the previous occurence of the current search regexp." t)
+Search the previous occurence of the current search regexp.
+
+\(fn &optional PATTERN)" t)
 
 (autoload 'boon-qsearch-next-at-point "boon-search" "\
 Search the next occurence of the current string at point and select the match." t)
@@ -347,12 +356,12 @@ Go to the next item of interest." t)
 (autoload 'boon-search-char-forward "boon-search" "\
 
 
-\(fn COUNT CHAR)" t)
+\(fn COUNT)" t)
 
 (autoload 'boon-search-char-backward "boon-search" "\
 
 
-\(fn COUNT CHAR)" t)
+\(fn COUNT)" t)
 
 (register-definition-prefixes "boon-search" '("boon-"))
 
