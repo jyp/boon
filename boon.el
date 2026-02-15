@@ -1,5 +1,10 @@
 ;;; boon.el --- An Ergonomic Command Mode  -*- lexical-binding: t -*-
 
+;; Package-Version: 1.3
+;; Package-Requires: ((emacs "26.1") (dash "2.12.0") (expand-region "0.10.0") (multiple-cursors "1.3.0"))
+
+;; SPDX-License-Identifier: GPL-3.0-only
+
 ;;; Commentary:
 
 ;; Boon brings modal editing capabilities to Emacs and...
