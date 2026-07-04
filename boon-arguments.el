@@ -19,6 +19,9 @@
 (require 'multiple-cursors)
 (require 'dash)
 
+;; Needed for boon-select-org-tree
+(eval-when-compile (require 'org-macs))
+
 (defcustom boon-enclosures
       '(
         (?A . ("⟨" "⟩"))
@@ -82,7 +85,6 @@ This item is either the symbol at point, or, if this fails, the sexp at point."
 (declare-function org-back-to-heading "org" (&optional invisible-ok))
 (declare-function org-end-of-subtree "org" (&optional invisible-ok to-heading))
 (declare-function org-at-heading-p "org" (&optional ignored))
-(declare-function org-with-limited-levels "org-macs" (&rest body))
 
 (defun boon-select-org-tree ()
   "Return the region corresponding to the current subtree."
